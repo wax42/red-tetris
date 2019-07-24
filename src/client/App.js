@@ -1,26 +1,23 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+// import logo from './logo.svg';
+import Game from './components/Game';
+import AppBoardInfo from './components/AppBoardInfo';
+import Spectrum from './components/Spectrum';
 
-function App() {
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <div className="app">
+        <div className="app-board">
+          <AppBoardInfo/>
+          <Game/>
+        </div>
+        <Spectrum className="app-spectrum"/>
+      </div>
   );
 }
 
 export default App;
+
+
+

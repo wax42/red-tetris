@@ -1,13 +1,87 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.app {
+  display: flex;
+  flex-direction: column;
+  background-color: goldenrod;
+  border: 1px solid black;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+
+.app-board {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+}
+
+.app-board-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-spectrum {
+  display: flex;
+}
+
+.game {
+  display: flex;
+  flex-direction: row;
+
+  /* background-color: black; */
+
+}
+.game-grid {
+  display: flex;
+  flex-direction: column;
+  border: 10px double red;
+}
+
+.game-pieces {
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+.line {
+  display: flex;
+  flex-direction: row;
+}
+
+.box {
+  width: 20px;
+  height: 20px;
+  background-color: aquamarine;
+  border: 1px solid black;
+}
+
+.color-form0 {
+  background-color: red;
+}
+
+.color-form1 {
+  background-color: red;
+}
+
+.color-form2 {
+  background-color: red;
+}
+
+.color-form3 {
+  background-color: red;
+}
+
+.color-form4 {
+  background-color: red;
+}
+
+.color-form5 {
+  background-color: red;
+}
+
+.color-form6 {
+  background-color: red;
+}
+
+.color-form7 {
+  background-color: red;
 }
