@@ -1,11 +1,7 @@
-import React from 'react';
+import React from "react";
 
 const Spectrum = () => {
-    return (
-      <div className="Spectrum">
-      Spectrum
-      </div>
-    );
-  }
-  
-  export default Spectrum;
+  return <div className="spectrum">Spectrum</div>;
+};
+
+export default Spectrum;

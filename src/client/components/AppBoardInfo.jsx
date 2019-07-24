@@ -1,28 +1,20 @@
-import React from 'react';
+import React from "react";
 
 const Info = () => {
-    return (
-      <div className="Info">
-          Info
-      </div>
-    );
-  }
+  return <div className="info">Info</div>;
+};
 
 const Title = () => {
-    return (
-      <div className="Title">
-          Red Tetris
-      </div>
-    );
-  }
+  return <div className="title">Red Tetris</div>;
+};
 
 const AppBoardInfo = () => {
-    return (
-        <div className="app-board-left">
-            <Title/>
-            <Info/>
-        </div>
-    )
-}
+  return (
+    <div className="app-board-left">
+      <Title />
+      <Info />
+    </div>
+  );
+};
 
 export default AppBoardInfo;
