@@ -1,4 +1,4 @@
-import { PLAY_GAME } from "../actions/actionTypes";
+import { START_GAME } from "../actions/actionTypes";
 
 const initialState = {
   name: "toto"
@@ -9,7 +9,7 @@ const reducers = (state = initialState, action) => {
   console.log(`Action: ${action}`);
 
   switch (action.type) {
-    case PLAY_GAME: {
+    case START_GAME: {
       //Modifier le state
       return state;
     }
