@@ -8,6 +8,7 @@ import { createStore, applyMiddleware } from "redux";
 import reducers from "./reducers/reducers";
 import socketMiddleware from "./middlewares/socketMiddleware";
 import { BrowserRouter as Router, Route } from "react-router-dom";
+import Home from "./components/Home";
 
 const store = createStore(reducers, applyMiddleware(socketMiddleware()));
 
@@ -27,7 +28,8 @@ const Root = () => {
   return (
     <Provider store={store}>
       <Router>
-        <Route path="/" component={App} />
+        <Route path="/app" component={App} />
+        <Route path="/home" component={Home} />
       </Router>
     </Provider>
   );
