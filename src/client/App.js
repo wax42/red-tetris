@@ -7,22 +7,30 @@ import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import reducers from "./reducers/reducers";
 import socketMiddleware from "./middlewares/socketMiddleware";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
-const store = createStore(reducers,
-  applyMiddleware(socketMiddleware()));
+const store = createStore(reducers, applyMiddleware(socketMiddleware()));
 
 const App = () => {
   return (
-    <Provider store={store}>
-      <div className="app">
-        <div className="app-board">
-          <AppBoardInfo />
-          <Game />
-        </div>
-        <Spectrum className="app-spectrum" />
+    <div className="app">
+      <div className="app-board">
+        <AppBoardInfo />
+        <Game />
       </div>
+      <Spectrum className="app-spectrum" />
+    </div>
+  );
+};
+
+const Root = () => {
+  return (
+    <Provider store={store}>
+      <Router>
+        <Route path="/" component={App} />
+      </Router>
     </Provider>
   );
 };
 
-export default App;
+export default Root;
