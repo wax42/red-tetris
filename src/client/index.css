@@ -195,4 +195,5 @@ input:focus {
   cursor: pointer;
   color: #833ab4;
   background-color: #ffdc80;
+  box-shadow: 0 0 25px #719ece;
 }
