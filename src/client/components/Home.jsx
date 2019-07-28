@@ -1,5 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
+import { FaHome, FaIdBadge } from "react-icons/fa";
 
 let roomName = "";
 let playerName = "";
@@ -26,38 +27,52 @@ const onSubmit = history => {
   console.log(roomName);
   console.log(playerName);
   if (roomName.length < 3 || playerName.length < 3) console.error("name < 3 ");
-  else 
-  history.push(`/#${roomName}[${playerName}]`);
+  else history.push(`/#${roomName}[${playerName}]`);
 };
 
 const Button = withRouter(({ history }) => (
   <button
+    className="home-btn"
     type="button"
     onClick={() => {
       onSubmit(history);
     }}
   >
-    Click Me!
+    Join the room
   </button>
 ));
 
 const Home = () => {
   return (
-    <div className="home">
-      <h1>Red Tetris</h1>
-      <div className="home-field">
-        Room name
-        <input type="text" name="room-name" onChange={e => getRoomName(e)} />
-      </div>
-      <div className="home-field">
-        Player name
-        <input
-          type="text"
-          name="player-name"
-          onChange={e => getPlayerName(e)}
-        />
-      </div>
-      <div>
+    <div>
+      <div className="home-title">Red Tetris</div>
+      <div className="home">
+        <div className="home-field">
+          <div className="home-field-title">
+            <FaHome className="home-icon" />
+            <div>Room name</div>
+          </div>
+
+          <input
+            className="home-input"
+            type="text"
+            name="room-name"
+            onChange={e => getRoomName(e)}
+          />
+        </div>
+        <div className="home-field">
+          <div className="home-field-title">
+            <FaIdBadge className="home-icon" />
+            <div>Player name</div>
+          </div>
+
+          <input
+            className="home-input"
+            type="text"
+            name="player-name"
+            onChange={e => getPlayerName(e)}
+          />
+        </div>
         <Button />
       </div>
     </div>

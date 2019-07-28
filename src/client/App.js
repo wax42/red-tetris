@@ -30,7 +30,7 @@ const App = () => {
 const Routing = () => {
   console.log(window.location.hash);
   if (true) {
-    return <App />;
+    return <Home />;
   } else {
     return <Home />;
   }
@@ -41,7 +41,9 @@ const Root = () => {
   console.log(window.location.hash);
   return (
     <Provider store={store}>
-      <Routing />
+      <Router>
+        <Routing />
+      </Router>
       {/* path={url} component={App} /> exact path="/" component={Home} /> */}
     </Provider>
   );
