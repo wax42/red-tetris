@@ -1,4 +1,4 @@
-import { EVENT } from '../common/common';
+// const EVENT = require { EVENT } from '../common/common';
 
 const handleClient = (socket) => {
     console.log('connect', socket.id);
@@ -23,6 +23,4 @@ const handleClient = (socket) => {
     });
 }
 
-
-
-export { handleClient };
+module.exports = { handleClient }
