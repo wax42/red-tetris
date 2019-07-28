@@ -126,6 +126,7 @@ body,
 .home {
   user-select: none;
   background: #00000071;
+  border: 1px solid #ffdc80;
   border-radius: 3px;
   display: flex;
   flex-direction: column;
@@ -143,9 +144,10 @@ body,
   font-size: 3.2vw;
   text-align: center;
   font-family: "Anton", sans-serif;
-  color: azure;
+  color: #fff;
   font-size: 40px;
   min-width: 200px;
+  text-shadow: -1px 0 #ffdc80, 0 1px #ffdc80, 1px 0 #ffdc80, 0 -1px #ffdc80;
 }
 
 .home-field {
@@ -181,11 +183,11 @@ input[type="text"] {
   font-weight: 100;
   color: #ffffff;
   text-align: center;
-  color: rgb(0, 0, 0);
+  color: #00000071;
 }
 
 .home-btn:hover {
   cursor: pointer;
   color: #833ab4;
-  background-color: #e7b9f5;
+  background-color: #ffdc80;
 }
