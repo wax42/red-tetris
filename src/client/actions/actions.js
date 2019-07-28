@@ -5,9 +5,20 @@ import {
   LIST_ROOM,
   ROOM_ADD_PLAYER,
   ROOM_DEL_PLAYER,
-  SEND_SPECTRUMS
+  SEND_SPECTRUMS,
+  PIECE_DOWN
 } from "./actionTypes";
 import { EVENT } from "../../common/common";
+
+/* ACTION  WITHOUT SERVER */
+
+export const pieceDown = () => {
+  return { type: PIECE_DOWN}
+}
+
+
+/* ACTION WITH EVENT */
+
 
 export const startGame = () => {
   return { type: START_GAME, event: EVENT.START_GAME };
