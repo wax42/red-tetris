@@ -1,9 +1,9 @@
 import React from "react";
-import { Redirect } from "react-router";
-import { Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 let roomName = "";
 let playerName = "";
+let url = "";
 
 //TODO validation
 function getRoomName(event) {
@@ -19,21 +19,38 @@ function getPlayerName(event) {
 }
 // return <Redirect to='/dashboard' />
 
-const OnSubmit = () => {
-  console.log("On submit");
+const onSubmit = history => {
+  /* console.log("On submit");
   if (playerName.length > 3) return <Link to="/app">Valider</Link>;
-  else return <div>error</div>;
+  else return <div>error</div>; */
+  console.log(roomName);
+  console.log(playerName);
+  if (roomName.length < 3 || playerName.length < 3) console.error("name < 3 ");
+  else 
+  history.push(`/#${roomName}[${playerName}]`);
 };
+
+const Button = withRouter(({ history }) => (
+  <button
+    type="button"
+    onClick={() => {
+      onSubmit(history);
+    }}
+  >
+    Click Me!
+  </button>
+));
 
 const Home = () => {
   return (
     <div className="home">
-      <div className="home-room">
-        <h4>Room Name</h4>
+      <h1>Red Tetris</h1>
+      <div className="home-field">
+        Room name
         <input type="text" name="room-name" onChange={e => getRoomName(e)} />
       </div>
-      <div className="home-player">
-        <h4>Player Name</h4>
+      <div className="home-field">
+        Player name
         <input
           type="text"
           name="player-name"
@@ -41,8 +58,7 @@ const Home = () => {
         />
       </div>
       <div>
-        <OnSubmit />
-        {/* <input type="submit" name="" id="" onClick={onSubmit} /> */}
+        <Button />
       </div>
     </div>
   );

@@ -13,23 +13,28 @@ import Home from "./components/Home";
 const store = createStore(reducers, applyMiddleware(socketMiddleware()));
 
 const App = () => {
-  return (
-    <div className="app">
-      <div className="app-board">
-        <AppBoardInfo />
-        <Game />
+  const isLog = true; //A definir dans les classes + state
+  if (isLog) {
+    return (
+      <div className="app">
+        <div className="app-board">
+          <AppBoardInfo />
+          <Game />
+        </div>
+        <Spectrum className="app-spectrum" />
       </div>
-      <Spectrum className="app-spectrum" />
-    </div>
-  );
+    );
+  } else return <div />;
 };
 
 const Root = () => {
+  const url = "/toto"; // Lire dans le state
+  console.log(window.location.hash);
   return (
     <Provider store={store}>
       <Router>
-        <Route path="/app" component={App} />
-        <Route path="/home" component={Home} />
+        <Route path={url} component={App} />
+        <Route exact path="/" component={Home} />
       </Router>
     </Provider>
   );
