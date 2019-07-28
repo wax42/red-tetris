@@ -27,15 +27,22 @@ const App = () => {
   } else return <div />;
 };
 
+const Routing = () => {
+  console.log(window.location.hash);
+  if (true) {
+    return <App />;
+  } else {
+    return <Home />;
+  }
+};
+
 const Root = () => {
   const url = "/toto"; // Lire dans le state
   console.log(window.location.hash);
   return (
     <Provider store={store}>
-      <Router>
-        <Route path={url} component={App} />
-        <Route exact path="/" component={Home} />
-      </Router>
+      <Routing />
+      {/* path={url} component={App} /> exact path="/" component={Home} /> */}
     </Provider>
   );
 };
