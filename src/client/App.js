@@ -10,9 +10,51 @@ import socketMiddleware from "./middlewares/socketMiddleware";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Home from "./components/Home";
 
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+
+import { pieceDown } from './actions/actions'
+
+const KEY_SPACE = 32;
+const KEY_DOWN = 40;
+const KEY_UP = 38;
+const KEY_LEFT = 37;
+const KEY_RIGHT = 39;
+
 const store = createStore(reducers, applyMiddleware(socketMiddleware()));
 
+
+const handleKey = (dispatch) => (event) => {
+  console.log(event.keyCode);
+  switch (event.keyCode) {
+    case KEY_DOWN:
+      console.log("handle key down");
+      dispatch(pieceDown())
+  }
+}
+
+
 const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const eventListner = handleKey(dispatch);
+
+    window.addEventListener(
+      'keydown',
+      eventListner,
+      false,
+    );
+
+    return () => {
+      window.removeEventListener(
+        'keydown',
+        eventListner,
+        false,
+      );
+    };
+  });
+
   const isLog = true; //A definir dans les classes + state
   if (isLog) {
     return (
@@ -22,6 +64,7 @@ const App = () => {
           <Game />
         </div>
         <Spectrum className="app-spectrum" />
+        <input type="text" onKeyPress={handleKey}/>
       </div>
     );
   } else return <div />;

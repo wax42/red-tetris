@@ -1,4 +1,4 @@
-import { START_GAME, PIECE_DOWN } from "../actions/actionTypes";
+import { START_GAME, PIECE_DOWN, PIECE_LEFT, PIECE_RIGHT, PIECE_SPACE, PIECE_ROTATE } from "../actions/actionTypes";
 
 const initialState = {
   grid: [
@@ -40,6 +40,26 @@ const initialState = {
       ['.', '1', '.', '.']
     ]
   },
+  listPieces: [
+      [
+        ['.', '1', '.', '.'],
+        ['.', '1', '.', '.'],
+        ['.', '1', '.', '.'],
+        ['.', '1', '.', '.']
+      ],
+      [
+          ['.', '.', '.', '.'],
+          ['.', '.', '.', '.'],
+          ['.', '2', '2', '.'],
+          ['.', '2', '2', '.']
+      ],
+      [
+          ['.', '.', '3', '3'],
+          ['.', '.', '.', '3'],
+          ['.', '.', '.', '3'],
+          ['.', '.', '.', '.']
+      ]
+    ],
   name: "toto"
 };
 
@@ -48,15 +68,29 @@ const reducers = (state = initialState, action) => {
   console.log(`Action: ${action}`);
 
   switch (action.type) {
-    case START_GAME: {
+    case START_GAME:
       //Modifier le state
       return state;
-    }
-    case PIECE_DOWN: {
-      
+    case PIECE_DOWN:
+      console.log("MAgie");
       
       return state;
-    }
+    case PIECE_LEFT:
+      console.log("MAgie");
+      
+      return state;
+    case PIECE_RIGHT:
+      console.log("MAgie");
+      
+      return state;
+    case PIECE_SPACE:
+      console.log("MAgie");
+      
+      return state;
+    case PIECE_ROTATE:
+      console.log("MAgie");
+      
+      return state;
     default:
       return state;
   }

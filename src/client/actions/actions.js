@@ -6,19 +6,38 @@ import {
   ROOM_ADD_PLAYER,
   ROOM_DEL_PLAYER,
   SEND_SPECTRUMS,
-  PIECE_DOWN
+  PIECE_DOWN,
+  PIECE_LEFT,
+  PIECE_RIGHT,
+  PIECE_SPACE,
+  PIECE_ROTATE
+
 } from "./actionTypes";
 import { EVENT } from "../../common/common";
 
 /* ACTION  WITHOUT SERVER */
 
 export const pieceDown = () => {
-  return { type: PIECE_DOWN}
+  return { type: PIECE_DOWN }
 }
 
+export const PieceLeft = () => {
+  return { type: PIECE_LEFT }
+}
+
+export const PieceRight = () => {
+  return { type: PIECE_RIGHT }
+}
+
+export const PieceSpace = () => {
+  return { type: PIECE_SPACE }
+}
+
+export const PieceRotate = () => {
+  return { type: PIECE_ROTATE }
+}
 
 /* ACTION WITH EVENT */
-
 
 export const startGame = () => {
   return { type: START_GAME, event: EVENT.START_GAME };

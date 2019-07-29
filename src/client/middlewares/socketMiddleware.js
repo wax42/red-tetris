@@ -4,9 +4,13 @@ const socketMiddleware = () => {
   const socket = io("http://localhost:3001");
 
   return ({ dispatch }) => next => (action) => {
-    /* if (typeof action === 'function') {
+    if (typeof action === 'function') {
       return next(action);
-    }   */
+    } 
+
+    // SI l'action ne doit pas passer par le serveur
+    if (action.event == undefined)
+      return next(action);
 
     let event = "test_server";
 
