@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { statements } from '@babel/template';
 
 const mapStateToProps = state => {
-    console.log(state);
+    console.log('game mapstatetoporps' ,state.grid);
     return state;
 };
 

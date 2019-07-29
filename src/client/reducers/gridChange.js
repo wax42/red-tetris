@@ -6,8 +6,8 @@ const cleanOldPiece = (grid, currentPiece) => {
     let x_piece = 0;
     let y_piece = 0;
 
-    for (y=currentPiece.y; y < currentPiece.y + 4 && y <= 24; y++) {
-        for (x=currentPiece.x; x < currentPiece.x + 4 && x <= 10; x++) {
+    for (let y=currentPiece.y; y < currentPiece.y + 4 && y <= 24; y++) {
+        for (let x=currentPiece.x; x < currentPiece.x + 4 && x <= 10; x++) {
             if (currentPiece.piece[y_piece][x_piece] == grid[y][x]) {
                 grid[y][x] = '.';
             }
@@ -25,8 +25,8 @@ const placePiece = (grid, currentPiece) => {
 
     // TODO test
 
-    for (y=currentPiece.y; y < currentPiece.y + 4 && y <= 24; y++) {
-        for (x=currentPiece.x; x < currentPiece.x + 4 && x <= 10; x++) {
+    for (let y=currentPiece.y; y < currentPiece.y + 4 && y <= 24; y++) {
+        for (let x=currentPiece.x; x < currentPiece.x + 4 && x <= 10; x++) {
 
 
             // Gerer l'ombre
@@ -41,12 +41,12 @@ const placePiece = (grid, currentPiece) => {
     return grid;
 }
 
-const pieceIsPlace = () => {
+const pieceIsPlace = (grid, currentPiece) => {
     let x_piece = 0;
     let y_piece = 0;
 
-    for (y=currentPiece.y; y < currentPiece.y + 4 && y <= 24; y++) {
-        for (x=currentPiece.x; x < currentPiece.x + 4 && x <= 10; x++) {
+    for (let y=currentPiece.y; y < currentPiece.y + 4 && y <= 24; y++) {
+        for (let x=currentPiece.x; x < currentPiece.x + 4 && x <= 10; x++) {
             
             if (grid[y + 1][x] != '.' && currentPiece.piece[y_piece][x_piece] != '.') {
                 return true;
@@ -72,28 +72,31 @@ const rotatePiece = (grid, currentPiece) => {
 
 
 // SpacePiece
-const downPiece = (grid, currentPiece) => {
+export const downPiece = (grid, currentPiece) => {
 
-   if (pieceIsPlace(grid, currentPiece) == true) {
-        nextPiece();
-        return { grid, currentPiece};
-   }    
+//    if (pieceIsPlace(grid, currentPiece) == true) {
+//         nextPiece();
+//         return { grid, currentPiece};
+//    }
+    
+   console.log(grid);
    grid = cleanOldPiece(grid, currentPiece)
    currentPiece.y += 1;
    grid = placePiece(grid, currentPiece);
+   console.log(grid);
 
    return { grid , currentPiece};
 }
 
 
-const leftPiece = (grid) => {
+const leftPiece = (grid, currentPiece) => {
     grid = cleanOldPiece(grid, currentPiece)
     currentPiece.x -= 1; // Checker 0
     grid = placePiece(grid, currentPiece);
     return { grid , currentPiece};
 }
 
-const rightPiece = (grid) => {
+const rightPiece = (grid, currentPiece) => {
     grid = cleanOldPiece(grid, currentPiece)
     currentPiece.x += 1;
     grid = placePiece(grid, currentPiece);

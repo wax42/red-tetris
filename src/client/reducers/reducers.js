@@ -1,13 +1,14 @@
 import { START_GAME, PIECE_DOWN, PIECE_LEFT, PIECE_RIGHT, PIECE_SPACE, PIECE_ROTATE } from "../actions/actionTypes";
 
+import { downPiece } from './gridChange';
+import _ from 'lodash';
+
+
 const initialState = {
   grid: [
     ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
     ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
     ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
-    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
-    // Heap of the gris
-    
     ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
     ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
     ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
@@ -64,17 +65,18 @@ const initialState = {
 };
 
 const reducers = (state = initialState, action) => {
-  console.log(`State: ${state}`);
+  console.log("Grid:", state.grid);
   console.log(`Action: ${action}`);
-
+  // let new_state = Object.assign({}, state)
+  let new_state =  _.cloneDeep(state);
   switch (action.type) {
     case START_GAME:
       //Modifier le state
       return state;
     case PIECE_DOWN:
       console.log("MAgie");
-      
-      return state;
+      new_state.grid = downPiece(new_state.grid, new_state.currentPiece);
+      return new_state;
     case PIECE_LEFT:
       console.log("MAgie");
       

@@ -29,7 +29,7 @@ const handleKey = (dispatch) => (event) => {
   switch (event.keyCode) {
     case KEY_DOWN:
       console.log("handle key down");
-      dispatch(pieceDown())
+      dispatch(pieceDown());
   }
 }
 
