@@ -1,6 +1,14 @@
 import { nextPiece } from "../actions/actions";
-
 // Utils
+
+const rotate = matrix => {
+  let result = [];
+  for (let i = 0; i < matrix[0].length; i++) {
+    let row = matrix.map(e => e[i]).reverse();
+    result.push(row);
+  }
+  return result;
+};
 
 const cleanOldPiece = (grid, currentPiece) => {
   let y_piece = 0;
@@ -112,35 +120,25 @@ const checkIsPos = (grid, currentPiece) => {
   return true;
 };
 
-// const pieceIsPlace = (grid, currentPiece) => {
-//   let y_piece = 0;
-//   for (let y = currentPiece.y; y < currentPiece.y + 4 && y < 24; y++) {
-//     let x_piece = 0;
-//     for (let x = currentPiece.x; x < currentPiece.x + 4 && x < 10; x++) {
-//       if (
-//         currentPiece.piece[y_piece][x_piece] != "." &&
-//         ((y_piece + 1 < 4 && // check overflow
-//         grid[y + 1][x] != "." && // check en dessous si y autre chose qu'un .
-//           currentPiece.piece[y_piece + 1][x_piece] == ".") || // check si la case appartient a notre piece
-//           y == 23)
-//       ) {
-//         // currentPiece.piece[y_piece][x_piece] != "."
-//         return true;
-//       }
-//       x_piece++;
-//     }
-//     y_piece++;
-//   }
-//   return false;
-// };
+export const downFloorPiece = state => {
+  state.grid = cleanOldPiece(state.grid, state.currentPiece);
 
-const rotatePiece = (grid, currentPiece) => {
-  let piece = currentPiece.piece;
-  // Askip ça marche
-  // _zip(...currentPiece.piece); // Il faut importe lodash
-  // unzip(currentPiece.piece);
-  // Ou ça
-  piece[0].map((col, i) => piece.map(row => row[i]));
+  if (checkIsPos(state.grid, state.currentPiece) == false) {
+    return null;
+  }
+  state.grid = placePiece(state.grid, state.currentPiece);
+  return state;
+};
+
+export const rotatePiece = state => {
+  state.grid = cleanOldPiece(state.grid, state.currentPiece);
+
+  state.currentPiece.piece = rotate(state.currentPiece.piece);
+  if (checkIsPos(state.grid, state.currentPiece) == false) {
+    return null;
+  }
+  state.grid = placePiece(state.grid, state.currentPiece);
+  return state;
 };
 
 // SpacePiece
@@ -154,29 +152,20 @@ export const downPiece = state => {
     state.currentPiece.y -= 1;
     state.grid = placePiece(state.grid, state.currentPiece);
     console.log("Piece is not posable");
-    // nextPiece();
     return state;
   }
-
   state.grid = placePiece(state.grid, state.currentPiece);
-
   return state;
 };
 
 export const leftPiece = state => {
   state.grid = cleanOldPiece(state.grid, state.currentPiece);
-  let n = 0;
-  for (let x = 0; x < 4; x++) {
-    for (let y = 0; y < 4; y++) {
-      if (state.currentPiece.piece[y][x] != ".") {
-        n = x;
-        break;
-      }
-    }
-  }
-  console.log(n, state.currentPiece.x);
-  if (state.currentPiece.x + n > 0) {
-    state.currentPiece.x -= 1;
+  state.currentPiece.x -= 1;
+  if (checkIsPos(state.grid, state.currentPiece) == false) {
+    state.currentPiece.x += 1;
+    state.grid = placePiece(state.grid, state.currentPiece);
+    console.log("Piece is not posable");
+    return state;
   }
   state.grid = placePiece(state.grid, state.currentPiece);
   return state;
@@ -184,18 +173,12 @@ export const leftPiece = state => {
 
 export const rightPiece = state => {
   state.grid = cleanOldPiece(state.grid, state.currentPiece);
-  let n = 0;
-  for (let x = 3; x >= 0; x--) {
-    for (let y = 0; y < 4; y++) {
-      if (state.currentPiece.piece[y][x] != ".") {
-        n = 3 - x;
-        break;
-      }
-    }
-  }
-  console.log("n", n);
-  if (state.currentPiece.x + n < 10) {
-    state.currentPiece.x += 1;
+  state.currentPiece.x += 1;
+  if (checkIsPos(state.grid, state.currentPiece) == false) {
+    state.currentPiece.x -= 1;
+    state.grid = placePiece(state.grid, state.currentPiece);
+    console.log("Piece is not posable");
+    return state;
   }
   state.grid = placePiece(state.grid, state.currentPiece);
   return state;

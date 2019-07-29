@@ -7,7 +7,7 @@ import {
   PIECE_ROTATE
 } from "../actions/actionTypes";
 
-import { downPiece, leftPiece, rightPiece } from "./gridChange";
+import { downPiece, leftPiece, rightPiece, rotatePiece } from "./gridChange";
 import _ from "lodash";
 
 const initialState = {
@@ -41,8 +41,18 @@ const initialState = {
     x: 0,
     y: 0,
     piece: [
-      [".", "1", "1", "."],
-      [".", ".", "1", "1"],
+      [".", "1", "1", "1"],
+      [".", ".", ".", "1"],
+      [".", ".", ".", "."],
+      [".", ".", ".", "."]
+    ]
+  },
+  shadow: {
+    x: 0,
+    y: 0,
+    piece: [
+      [".", "1", "1", "1"],
+      [".", ".", ".", "1"],
       [".", ".", ".", "."],
       [".", ".", ".", "."]
     ]
@@ -96,10 +106,14 @@ const reducers = (state = initialState, action) => {
       return state;
     case PIECE_ROTATE:
       console.log("Rotate");
-      return state;
+      if ((new_state = rotatePiece(new_state))) {
+        return new_state;
+      }
+      break;
     default:
       return state;
   }
+  return state;
 };
 
 export default reducers;

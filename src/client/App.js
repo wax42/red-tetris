@@ -17,7 +17,8 @@ import {
   pieceDown,
   pieceLeft,
   pieceRight,
-  pieceSpace
+  pieceSpace,
+  pieceRotate
 } from "./actions/actions";
 
 const KEY_SPACE = 32;
@@ -54,7 +55,7 @@ const handleKey = dispatch => event => {
     case KEY_UP:
       event.preventDefault();
       console.log("handle key up", event.keyCode);
-      // dispatch(pieceRight());
+      dispatch(pieceRotate());
       break;
     default:
       console.log("event.Keycode", event.keyCode);
