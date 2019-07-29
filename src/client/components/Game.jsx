@@ -1,54 +1,52 @@
-import React from 'react';
+import React from "react";
 import { connect } from "react-redux";
-import { statements } from '@babel/template';
+import { statements } from "@babel/template";
+import _ from "lodash";
 
 const mapStateToProps = state => {
-    console.log('game mapstatetoporps' ,state.grid);
-    return state;
+  const copy_state = _.cloneDeep(state);
+  return copy_state;
 };
 
-const GameGrid = (props) => {
-    const grid = props.grid;
-    return (
-        <div className="game-grid">
-                {grid.map((line, index) => {
-                    return (
-                        <div className="line" key={index}> 
-                            {line.map((value, index) => {
-                                let color = "color-form" + value;
-                                return (
-                                    <div className={`box ${color}`} key={index}/>
-                                );
-                            })}
-                        </div>
-                    );
-                })}
-        </div>
-    );
-}
-
-const GamePieces = (props) => {
-    const pieces = props.pieces; 
-    return (
-        <div className="game-pieces">
-            {pieces.map((piece, index) => {
-                return (
-                    <GameGrid key={index} grid={piece}/>
-                );
+const GameGrid = props => {
+  const grid = props.grid;
+  return (
+    <div className="game-grid">
+      {grid.map((line, index) => {
+        return (
+          <div className="line" key={index}>
+            {line.map((value, index) => {
+              let color = "color-form" + value;
+              return <div className={`box ${color}`} key={index} />;
             })}
-        </div>
-    );
-}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
+const GamePieces = props => {
+  const pieces = props.pieces;
+  return (
+    <div className="game-pieces">
+      {pieces.map((piece, index) => {
+        return <GameGrid key={index} grid={piece} />;
+      })}
+    </div>
+  );
+};
 
-const Game = (state) => {
-    // state.grid
-    return (
-      <div className="game">
-          <GameGrid grid={state.grid}/>
-          <GamePieces pieces={state.listPieces}/>
-      </div>
-    );
-  }
-  
-  export default connect(mapStateToProps)(Game);
+const Game = state => {
+  // state.grid
+  const grid = _.slice(state.grid, 0); // 4
+
+  return (
+    <div className="game">
+      <GameGrid grid={grid} />
+      <GamePieces pieces={state.listPieces} />
+    </div>
+  );
+};
+
+export default connect(mapStateToProps)(Game);
