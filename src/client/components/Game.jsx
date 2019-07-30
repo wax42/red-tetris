@@ -9,6 +9,9 @@ const mapStateToProps = state => {
 };
 
 const GameGrid = props => {
+  // setTimeout(() => {
+  //   dispatch()
+  // });
   const grid = props.grid;
   return (
     <div className="game-grid">

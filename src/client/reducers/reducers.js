@@ -14,6 +14,9 @@ import {
   rotatePiece,
   downFloorPiece
 } from "./gridChange";
+
+import { startGame } from "./gameManager";
+
 import _ from "lodash";
 
 const initialState = {
@@ -47,9 +50,9 @@ const initialState = {
     x: 0,
     y: 0,
     piece: [
-      [".", "1", "1", "."],
+      [".", ".", ".", "1"],
+      [".", ".", ".", "1"],
       [".", ".", "1", "1"],
-      [".", ".", ".", "."],
       [".", ".", ".", "."]
     ]
   },
@@ -57,10 +60,10 @@ const initialState = {
     x: 0,
     y: 0,
     piece: [
-      [".", "0", "0", "."],
-      [".", ".", "0", "0"],
-      [".", ".", ".", "."],
-      [".", ".", ".", "."]
+      [".", ".", ".", "0"],
+      [".", ".", ".", "0"],
+      [".", ".", ".", "0"],
+      [".", ".", ".", "0"]
     ]
   },
   listPieces: [
@@ -83,38 +86,45 @@ const initialState = {
       [".", ".", ".", "."]
     ]
   ],
+  timeId: null,
   name: "toto"
 };
 
+function DownPieceWithSecret() {
+  return dispatch => {};
+}
+
 const reducers = (state = initialState, action) => {
-  console.log("Grid:", state.grid);
-  console.log(`Action: ${action}`);
-  // let new_state = Object.assign({}, state)
-  let new_state = _.cloneDeep(state);
+  // console.log("Grid:", state.grid);
+  // console.log(`Action: ${action}`);
+  // let newState = Object.assign({}, state)
+  let newState = _.cloneDeep(state);
   switch (action.type) {
     case START_GAME:
       //Modifier le state
-      return state;
+      console.log("CLICK START GAME");
+      newState = startGame(newState);
+      return newState;
     case PIECE_DOWN:
+      newState = downPiece(newState);
       console.log("Down");
-      new_state = downPiece(new_state);
-      return new_state;
+      return newState;
     case PIECE_LEFT:
       console.log("Left");
-      new_state = leftPiece(new_state);
-      return new_state;
+      newState = leftPiece(newState);
+      return newState;
     case PIECE_RIGHT:
       console.log("Right");
-      new_state = rightPiece(new_state);
-      return new_state;
+      newState = rightPiece(newState);
+      return newState;
     case PIECE_SPACE:
       console.log("Space");
-      new_state = downFloorPiece(new_state);
-      return new_state;
+      newState = downFloorPiece(newState);
+      return newState;
     case PIECE_ROTATE:
       console.log("Rotate");
-      if ((new_state = rotatePiece(new_state))) {
-        return new_state;
+      if ((newState = rotatePiece(newState))) {
+        return newState;
       }
       break;
     default:

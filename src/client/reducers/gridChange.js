@@ -1,4 +1,4 @@
-import { nextPiece } from "../actions/actions";
+import { actionNextPiece } from "../actions/actions";
 import _ from "lodash";
 // Utils
 
@@ -96,12 +96,17 @@ const checkIsPos = (grid, currentPiece) => {
   // console.log("Space left", calculateSpaceLeft(currentPiece));
   // console.log("Space right", calculateSpaceRight(currentPiece));
   // console.log("Space up", calculateSpaceUp(currentPiece));
+  console.log(
+    "a la recherche du bug",
+    calculateSpaceLeft(currentPiece),
+    currentPiece.x
+  );
 
   if (
     currentPiece.y > 24 - 4 + calculateSpaceDown(currentPiece) ||
-    currentPiece.y < 0 - 4 + calculateSpaceUp(currentPiece) ||
-    currentPiece.x < 0 - 4 + calculateSpaceLeft(currentPiece) ||
-    currentPiece.x > 10 - 4 + calculateSpaceRight(currentPiece)
+    currentPiece.x > 10 - 4 + calculateSpaceRight(currentPiece) ||
+    currentPiece.x < 0 - calculateSpaceLeft(currentPiece) ||
+    currentPiece.y < 0 - calculateSpaceUp(currentPiece)
   ) {
     return false;
   }
@@ -110,6 +115,7 @@ const checkIsPos = (grid, currentPiece) => {
     let x_piece = 0;
     for (let x = currentPiece.x; x < currentPiece.x + 4 && x < 10; x++) {
       //console.log("x y x_piece y_piece", x, y, x_piece, y_piece);
+      console.log("ta mere", grid[y][x]);
       if (
         currentPiece.piece[y_piece][x_piece] !== "." &&
         (grid[y][x] != "." && grid[y][x] !== "0")

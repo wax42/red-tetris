@@ -16,58 +16,52 @@ import { EVENT } from "../../common/common";
 
 /* ACTION  WITHOUT SERVER */
 
-export const pieceDown = () => {
+export const actionPieceDown = () => {
   return { type: PIECE_DOWN };
 };
 
-export const pieceLeft = () => {
+export const actionPieceLeft = () => {
   return { type: PIECE_LEFT };
 };
 
-export const pieceRight = () => {
+export const actionPieceRight = () => {
   return { type: PIECE_RIGHT };
 };
 
-export const pieceSpace = () => {
+export const actionPieceSpace = () => {
   return { type: PIECE_SPACE };
 };
 
-export const pieceRotate = () => {
+export const actionPieceRotate = () => {
   return { type: PIECE_ROTATE };
 };
 
 /* ACTION WITH EVENT */
 
-export const startGame = () => {
+export const actionStartGame = () => {
   return { type: START_GAME, event: EVENT.START_GAME };
 };
 
-export const nextPiece = () => {
+export const actionNextPiece = () => {
   return { type: NEXT_PIECE, event: EVENT.NEXT_PIECE };
 };
 
-export const lineBreak = () => {
+export const actionLineBreak = () => {
   return { type: LINE_BREAK, event: EVENT.LINE_BREAK };
 };
 
-export const listRoom = () => {
+export const actionListRoom = () => {
   return { type: LIST_ROOM, event: EVENT.LIST_ROOM };
 };
 
-export const roomAddPlayer = () => {
+export const actionRoomAddPlayer = () => {
   return { type: ROOM_ADD_PLAYER, event: EVENT.ROOM_ADD_PLAYER };
 };
 
-export const roomDelPlayer = () => {
+export const actionRoomDelPlayer = () => {
   return { type: ROOM_DEL_PLAYER, event: EVENT.ROOM_DEL_PLAYER };
 };
 
-export const sendSpectrums = () => {
+export const actionSpectrums = () => {
   return { type: SEND_SPECTRUMS, event: EVENT.SEND_SPECTRUMS };
 };
-
-//TODO DELETE
-export function actionClick() {
-  console.log("actionClick");
-  return { type: "RER", name: "yoyo", text: "Cliiick" };
-}

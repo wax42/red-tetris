@@ -14,12 +14,21 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import {
-  pieceDown,
-  pieceLeft,
-  pieceRight,
-  pieceSpace,
-  pieceRotate
+  actionPieceDown,
+  actionPieceLeft,
+  actionPieceRight,
+  actionPieceSpace,
+  actionPieceRotate
 } from "./actions/actions";
+
+import { composeWithDevTools } from "redux-devtools-extension";
+
+/* let middleware = [a, b]
+if (process.env.NODE_ENV !== 'production') {
+  const c = require('./middlewares/socketMiddleware')
+  const d = require('./middleware/another-debug-middleware')
+  middleware = [...middleware, c, d]
+} */
 
 const KEY_SPACE = 32;
 const KEY_DOWN = 40;
@@ -27,7 +36,10 @@ const KEY_UP = 38;
 const KEY_LEFT = 37;
 const KEY_RIGHT = 39;
 
-const store = createStore(reducers, applyMiddleware(socketMiddleware()));
+const store = createStore(
+  reducers,
+  composeWithDevTools(applyMiddleware(socketMiddleware()))
+);
 
 const handleKey = dispatch => event => {
   console.log(event.keyCode);
@@ -35,27 +47,27 @@ const handleKey = dispatch => event => {
     case KEY_DOWN:
       event.preventDefault();
       console.log("handle key down", event.keyCode);
-      dispatch(pieceDown());
+      dispatch(actionPieceDown());
       break;
     case KEY_LEFT:
       event.preventDefault();
       console.log("handle key left", event.keyCode);
-      dispatch(pieceLeft());
+      dispatch(actionPieceLeft());
       break;
     case KEY_RIGHT:
       event.preventDefault();
       console.log("handle key right", event.keyCode);
-      dispatch(pieceRight());
+      dispatch(actionPieceRight());
       break;
     case KEY_SPACE:
       event.preventDefault();
       console.log("handle key space", event.keyCode);
-      dispatch(pieceSpace());
+      dispatch(actionPieceSpace());
       break;
     case KEY_UP:
       event.preventDefault();
       console.log("handle key up", event.keyCode);
-      dispatch(pieceRotate());
+      dispatch(actionPieceRotate());
       break;
     default:
       console.log("event.Keycode", event.keyCode);
