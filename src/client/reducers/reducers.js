@@ -7,17 +7,23 @@ import {
   PIECE_ROTATE
 } from "../actions/actionTypes";
 
-import { downPiece, leftPiece, rightPiece, rotatePiece } from "./gridChange";
+import {
+  downPiece,
+  leftPiece,
+  rightPiece,
+  rotatePiece,
+  downFloorPiece
+} from "./gridChange";
 import _ from "lodash";
 
 const initialState = {
   grid: [
-    [".", "1", ".", ".", ".", ".", ".", ".", ".", "."],
-    [".", "1", ".", ".", ".", ".", ".", ".", ".", "."],
-    [".", "1", ".", ".", ".", ".", ".", ".", ".", "."],
-    [".", "1", ".", ".", ".", ".", ".", ".", ".", "."],
     [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
     [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", "1 ", ".", ".", ".", ".", ".", "."],
+    [".", "1", "1", "1", ".", ".", ".", ".", ".", "."],
     [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
     [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
     [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
@@ -41,8 +47,8 @@ const initialState = {
     x: 0,
     y: 0,
     piece: [
-      [".", "1", "1", "1"],
-      [".", ".", ".", "1"],
+      [".", "1", "1", "."],
+      [".", ".", "1", "1"],
       [".", ".", ".", "."],
       [".", ".", ".", "."]
     ]
@@ -51,8 +57,8 @@ const initialState = {
     x: 0,
     y: 0,
     piece: [
-      [".", "1", "1", "1"],
-      [".", ".", ".", "1"],
+      [".", "0", "0", "."],
+      [".", ".", "0", "0"],
       [".", ".", ".", "."],
       [".", ".", ".", "."]
     ]
@@ -103,7 +109,8 @@ const reducers = (state = initialState, action) => {
       return new_state;
     case PIECE_SPACE:
       console.log("Space");
-      return state;
+      new_state = downFloorPiece(new_state);
+      return new_state;
     case PIECE_ROTATE:
       console.log("Rotate");
       if ((new_state = rotatePiece(new_state))) {

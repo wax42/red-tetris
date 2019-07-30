@@ -1,4 +1,5 @@
 import { nextPiece } from "../actions/actions";
+import _ from "lodash";
 // Utils
 
 const rotate = matrix => {
@@ -35,8 +36,11 @@ const placePiece = (grid, currentPiece) => {
   for (let y = currentPiece.y; y < currentPiece.y + 4 && y < 24; y++) {
     let x_piece = 0;
     for (let x = currentPiece.x; x < currentPiece.x + 4 && x < 10; x++) {
-      // Gerer l'ombre
-      if (grid[y][x] == "." || grid[y][x] == "0") {
+      // Gerer l'ombre)
+      if (
+        currentPiece.piece[y_piece][x_piece] != "." &&
+        (grid[y][x] == "." || grid[y][x] == "0")
+      ) {
         grid[y][x] = currentPiece.piece[y_piece][x_piece];
       }
       x_piece++;
@@ -88,10 +92,10 @@ const calculateSpaceRight = currentPiece => {
 
 const checkIsPos = (grid, currentPiece) => {
   let y_piece = 0;
-  console.log("Space down", calculateSpaceDown(currentPiece));
-  console.log("Space left", calculateSpaceLeft(currentPiece));
-  console.log("Space right", calculateSpaceRight(currentPiece));
-  console.log("Space up", calculateSpaceUp(currentPiece));
+  //console.log("Space down", calculateSpaceDown(currentPiece));
+  // console.log("Space left", calculateSpaceLeft(currentPiece));
+  // console.log("Space right", calculateSpaceRight(currentPiece));
+  // console.log("Space up", calculateSpaceUp(currentPiece));
 
   if (
     currentPiece.y > 24 - 4 + calculateSpaceDown(currentPiece) ||
@@ -105,10 +109,10 @@ const checkIsPos = (grid, currentPiece) => {
   for (let y = currentPiece.y; y < currentPiece.y + 4 && y < 24; y++) {
     let x_piece = 0;
     for (let x = currentPiece.x; x < currentPiece.x + 4 && x < 10; x++) {
-      console.log("x y x_piece y_piece", x, y, x_piece, y_piece);
+      //console.log("x y x_piece y_piece", x, y, x_piece, y_piece);
       if (
-        currentPiece.piece[y_piece][x_piece] != "." &&
-        (grid[y][x] != "." || y > 24 || x < 0 || x > 10)
+        currentPiece.piece[y_piece][x_piece] !== "." &&
+        (grid[y][x] != "." && grid[y][x] !== "0")
       ) {
         // console.log("x y x_piece y_piece", x, y, x_piece, y_piece);
         return false;
@@ -120,12 +124,48 @@ const checkIsPos = (grid, currentPiece) => {
   return true;
 };
 
+const placeShadow = (grid, shadow) => {
+  let y_piece = 0;
+  for (let y = shadow.y; y < shadow.y + 4 && y < 24; y++) {
+    let x_piece = 0;
+    for (let x = shadow.x; x < shadow.x + 4 && x < 10; x++) {
+      if (grid[y][x] == ".") {
+        grid[y][x] = shadow.piece[y_piece][x_piece];
+      }
+      x_piece++;
+    }
+    y_piece++;
+  }
+  return grid;
+};
+
+const positionShadow = state => {
+  state.grid = cleanOldPiece(state.grid, state.shadow);
+
+  state.shadow.x = state.currentPiece.x;
+  state.shadow.y = state.currentPiece.y;
+
+  state.shadow.piece = state.currentPiece.piece.map(line => {
+    return line.map(el => {
+      if (el !== ".") return "0";
+      else return ".";
+    });
+  });
+
+  state.shadow.y++;
+  while (checkIsPos(state.grid, state.shadow) === true) {
+    state.shadow.y++;
+  }
+  state.shadow.y--;
+  state.grid = placeShadow(state.grid, state.shadow);
+  return state;
+};
+
 export const downFloorPiece = state => {
   state.grid = cleanOldPiece(state.grid, state.currentPiece);
-
-  if (checkIsPos(state.grid, state.currentPiece) == false) {
-    return null;
-  }
+  state = positionShadow(state);
+  state.currentPiece.x = state.shadow.x;
+  state.currentPiece.y = state.shadow.y;
   state.grid = placePiece(state.grid, state.currentPiece);
   return state;
 };
@@ -137,6 +177,8 @@ export const rotatePiece = state => {
   if (checkIsPos(state.grid, state.currentPiece) == false) {
     return null;
   }
+  state = positionShadow(state);
+
   state.grid = placePiece(state.grid, state.currentPiece);
   return state;
 };
@@ -146,6 +188,7 @@ export const downPiece = state => {
   console.log("grid", JSON.stringify(state.grid));
 
   state.grid = cleanOldPiece(state.grid, state.currentPiece);
+  console.log("downPiece after cleanOldPiece ", state.grid);
 
   state.currentPiece.y += 1;
   if (checkIsPos(state.grid, state.currentPiece) == false) {
@@ -154,7 +197,12 @@ export const downPiece = state => {
     console.log("Piece is not posable");
     return state;
   }
+  state = positionShadow(state);
+  console.log("downPiece after positionShadow ", state.grid);
+
   state.grid = placePiece(state.grid, state.currentPiece);
+  console.log("downPiece after placePiece ", state.grid);
+
   return state;
 };
 
@@ -167,6 +215,8 @@ export const leftPiece = state => {
     console.log("Piece is not posable");
     return state;
   }
+  state = positionShadow(state);
+
   state.grid = placePiece(state.grid, state.currentPiece);
   return state;
 };
@@ -180,6 +230,8 @@ export const rightPiece = state => {
     console.log("Piece is not posable");
     return state;
   }
+  state = positionShadow(state);
+
   state.grid = placePiece(state.grid, state.currentPiece);
   return state;
 };

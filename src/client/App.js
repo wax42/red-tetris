@@ -50,7 +50,7 @@ const handleKey = dispatch => event => {
     case KEY_SPACE:
       event.preventDefault();
       console.log("handle key space", event.keyCode);
-      // dispatch(pieceRight());
+      dispatch(pieceSpace());
       break;
     case KEY_UP:
       event.preventDefault();
