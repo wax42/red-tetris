@@ -3,19 +3,15 @@ import { connect } from "react-redux";
 import { actionStartGame } from "../actions/actions";
 
 const handleClick = action => {
-  console.log("test");
   action();
 };
 
 const mapStateToProps = state => {
-  console.log(state);
-
   const test = state;
   return { test };
 };
 
 const Info = ({ test, actionStartGame }) => {
-  console.log("info");
   // console.log(actionClick);
   return (
     <div className="info">
