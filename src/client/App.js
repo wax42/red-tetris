@@ -105,7 +105,7 @@ const App = () => {
 const Routing = () => {
   console.log(window.location.hash);
   if (true) {
-    return <Home />;
+    return <App />;
   } else {
     return <Home />;
   }
