@@ -1,11 +1,12 @@
 import {
+  CREATE_ROOM,
   START_GAME,
   NEXT_PIECE,
   LINE_BREAK,
   LIST_ROOM,
   ROOM_ADD_PLAYER,
   ROOM_DEL_PLAYER,
-  SEND_SPECTRUMS,
+  SEND_SPECTRUM,
   PIECE_DOWN,
   PIECE_LEFT,
   PIECE_RIGHT,
@@ -13,6 +14,17 @@ import {
   PIECE_ROTATE
 } from "./actionTypes";
 import { EVENT } from "../../common/common";
+
+export const actionThunkUrl = (action, path) => {
+  return dispatch => {
+    dispatch(action);
+    window.history.push(path);
+  };
+};
+
+export const actionCreateRoom = (room, player) => {
+  return { type: CREATE_ROOM, room: room, player: player };
+};
 
 /* ACTION  WITHOUT SERVER */
 
@@ -63,5 +75,5 @@ export const actionRoomDelPlayer = () => {
 };
 
 export const actionSpectrums = () => {
-  return { type: SEND_SPECTRUMS, event: EVENT.SEND_SPECTRUMS };
+  return { type: SEND_SPECTRUM, event: EVENT.SEND_SPECTRUM };
 };

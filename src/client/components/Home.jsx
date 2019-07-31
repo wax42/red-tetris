@@ -1,48 +1,35 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, NavLink } from "react-router-dom";
 import { FaHome, FaIdBadge } from "react-icons/fa";
+import { connect } from "react-redux";
+import { actionCreateRoom, actionThunkUrl } from "../actions/actions";
 
 let roomName = "";
 let playerName = "";
 let url = "";
 
 //TODO validation
-function getRoomName(event) {
-  console.log("test player name");
+const getRoomName = event => {
   roomName = event.target.value;
-  console.log(roomName);
-}
-
-function getPlayerName(event) {
-  console.log("test player name");
-  playerName = event.target.value;
-  console.log(playerName);
-}
-// return <Redirect to='/dashboard' />
-
-const onSubmit = history => {
-  /* console.log("On submit");
-  if (playerName.length > 3) return <Link to="/app">Valider</Link>;
-  else return <div>error</div>; */
-  console.log(roomName);
-  console.log(playerName);
-  if (roomName.length < 3 || playerName.length < 3) console.error("name < 3 ");
-  else history.push(`/#${roomName}[${playerName}]`);
 };
 
-const Button = withRouter(({ history }) => (
-  <button
-    className="home-btn"
-    type="button"
-    onClick={() => {
-      onSubmit(history);
-    }}
-  >
-    Join the room
-  </button>
-));
+const getPlayerName = event => {
+  playerName = event.target.value;
+};
+// return <Redirect to='/dashboard' />
 
-const Home = () => {
+const handleClick = action => {
+  if (roomName.length < 3 || playerName.length < 3) {
+    console.error("name < 3 ");
+  } else {
+    action(roomName, playerName); // to complete
+    window.location.hash = "test[test]";
+
+    console.error("ui");
+  }
+};
+
+const Home = ({ actionCreateRoom }) => {
   return (
     <div>
       <div className="home-title">Red Tetris</div>
@@ -73,10 +60,19 @@ const Home = () => {
             onChange={e => getPlayerName(e)}
           />
         </div>
-        <Button />
+        <button
+          className="home-btn"
+          onClick={() => handleClick(actionCreateRoom)}
+          // to={{ pathname: "/", hash: "test[test]" }}
+        />
       </div>
     </div>
   );
 };
 
-export default Home;
+const HomeRedux = connect(
+  null,
+  { actionCreateRoom }
+)(Home);
+
+export default HomeRedux;

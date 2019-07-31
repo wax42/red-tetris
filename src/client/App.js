@@ -3,12 +3,14 @@ import React from "react";
 import Game from "./components/Game";
 import AppBoardInfo from "./components/AppBoardInfo";
 import Spectrum from "./components/Spectrum";
-import { Provider } from "react-redux";
+import { Provider, connect } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import reducers from "./reducers/reducers";
 import socketMiddleware from "./middlewares/socketMiddleware";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import Home from "./components/Home";
+import { HashRouter } from "react-router-dom";
+
+import HomeRedux from "./components/Home";
 
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -102,24 +104,60 @@ const App = () => {
   } else return <div />;
 };
 
-const Routing = () => {
+const mapStateToProps = state => {
+  const test = state;
+  console.log("Nique ton state", test);
+  return test;
+};
+
+const Routing = state => {
+  let lists_room = ["test", "test0", "test2", "test1"];
+  // socket event  on recuper la listes des rooms
+  // socket event  on recuper la listes des joueurs
+  let list_players = ["jack", "dennis", "alfred", "roger", "henri", "bobby"];
+
+  let room = "e";
   console.log(window.location.hash);
-  if (true) {
-    return <App />;
+  console.log("fdp", window.location.path);
+  console.log("hash", window.location.hash);
+
+  // Regarder dans le state si la room est excistante
+
+  // Sinon rediriger vers '/'
+
+  // let hash = window.location.hash;
+
+  let hash = window.location.hash;
+  let result = hash.split("[");
+
+  let error = false;
+  if (result.length == 2) {
+    let room_name = result[0].slice(1);
+    let player_name = result[1].slice(0, -1);
+
+    if (
+      /^[A-z0-9]+$/.test(room_name) === false ||
+      /^[A-z0-9]+$/.test(player_name) === false ||
+      lists_room.includes(room_name) === false ||
+      list_players.includes(player_name) === true
+    ) {
+      error = true;
+      return <HomeRedux />; // with the errror
+    } else {
+      // Il va falloir creer / add un nouveau player a la room
+      return <App />;
+    }
   } else {
-    return <Home />;
+    return <HomeRedux />;
   }
 };
 
+const RoutingRedux = connect(mapStateToProps)(Routing);
+
 const Root = () => {
-  const url = "/toto"; // xLire dans le state
-  console.log(window.location.hash);
   return (
     <Provider store={store}>
-      <Router>
-        <Routing />
-      </Router>
-      {/* path={url} component={App} /> exact path="/" component={Home} /> */}
+      <RoutingRedux />
     </Provider>
   );
 };

@@ -4,7 +4,8 @@ import {
   PIECE_LEFT,
   PIECE_RIGHT,
   PIECE_SPACE,
-  PIECE_ROTATE
+  PIECE_ROTATE,
+  CREATE_ROOM
 } from "../actions/actionTypes";
 
 import {
@@ -95,11 +96,18 @@ function DownPieceWithSecret() {
 }
 
 const reducers = (state = initialState, action) => {
-  // console.log("Grid:", state.grid);
+  console.log("Grid:", state.grid);
   // console.log(`Action: ${action}`);
   // let newState = Object.assign({}, state)
+
   let newState = _.cloneDeep(state);
   switch (action.type) {
+    case CREATE_ROOM:
+      console.log(
+        "JE VIENS DE RAFRACIHIE TOUTE L APPLCIATION DE LA CHATTE A TA MERTE"
+      );
+
+      return { ...state, room: action.room, player: action.player };
     case START_GAME:
       //Modifier le state
       console.log("CLICK START GAME");
