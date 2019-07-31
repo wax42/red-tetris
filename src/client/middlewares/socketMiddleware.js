@@ -15,6 +15,8 @@ const socketMiddleware = () => {
   const socket = io("http://localhost:3001");
 
   return store => next => action => {
+    console.log("MIDDLEWARE");
+
     //TODO Sécurité
     if (typeof action === "function") {
       console.error("passing function to the socket Middleware");

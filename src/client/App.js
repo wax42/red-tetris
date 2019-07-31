@@ -12,7 +12,7 @@ import { HashRouter } from "react-router-dom";
 
 import HomeRedux from "./components/Home";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import {
@@ -23,7 +23,10 @@ import {
   actionPieceRotate
 } from "./actions/actions";
 
+import io from "socket.io-client";
+
 import { composeWithDevTools } from "redux-devtools-extension";
+import { async } from "q";
 
 /* let middleware = [a, b]
 if (process.env.NODE_ENV !== 'production') {
@@ -105,16 +108,27 @@ const App = () => {
 };
 
 const mapStateToProps = state => {
-  const test = state;
-  console.log("Nique ton state", test);
-  return test;
+  const _state = state;
+  return _state;
 };
 
 const Routing = state => {
-  let lists_room = ["test", "test0", "test2", "test1"];
+  const [listRooms, setListRooms] = useState([]);
+  const [listPlayers, setListPlayers] = useState([]);
+
+  useEffect(() => {
+    const event = async () => {
+      await state.socket.emit("LIST_ROOMS_PLAYERS", null, (rooms, players) => {
+        setListPlayers(players);
+        setListRooms(rooms);
+      });
+    };
+    event();
+  }, []);
+
+  console.log(listPlayers, listRooms);
   // socket event  on recuper la listes des rooms
   // socket event  on recuper la listes des joueurs
-  let list_players = ["jack", "dennis", "alfred", "roger", "henri", "bobby"];
 
   let room = "e";
   console.log(window.location.hash);
@@ -138,16 +152,25 @@ const Routing = state => {
     if (
       /^[A-z0-9]+$/.test(room_name) === false ||
       /^[A-z0-9]+$/.test(player_name) === false ||
-      lists_room.includes(room_name) === false ||
-      list_players.includes(player_name) === true
+      listRooms.includes(room_name) === false ||
+      listPlayers.includes(player_name) === true
     ) {
       error = true;
+      console.log(
+        room_name,
+        /^[A-z0-9]+$/.test(player_name),
+        listPlayers.includes(player_name)
+      );
       return <HomeRedux />; // with the errror
     } else {
+      console.log("la");
+
       // Il va falloir creer / add un nouveau player a la room
       return <App />;
     }
   } else {
+    console.log("bah non");
+
     return <HomeRedux />;
   }
 };

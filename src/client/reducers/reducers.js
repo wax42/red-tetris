@@ -1,3 +1,4 @@
+import io from "socket.io-client";
 import {
   START_GAME,
   PIECE_DOWN,
@@ -21,6 +22,7 @@ import { startGame } from "./gameManager";
 import _ from "lodash";
 
 const initialState = {
+  socket: io("http://localhost:3001"),
   grid: [
     [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
     [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
@@ -97,6 +99,8 @@ function DownPieceWithSecret() {
 
 const reducers = (state = initialState, action) => {
   console.log("Grid:", state.grid);
+  console.log("REDUCERS");
+
   // console.log(`Action: ${action}`);
   // let newState = Object.assign({}, state)
 

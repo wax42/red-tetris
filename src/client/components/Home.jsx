@@ -23,7 +23,7 @@ const handleClick = action => {
     console.error("name < 3 ");
   } else {
     action(roomName, playerName); // to complete
-    window.location.hash = "test[test]";
+    window.location.hash = `#${roomName}[${playerName}]`;
 
     console.error("ui");
   }
