@@ -1,33 +1,29 @@
 import React from "react";
 import { connect } from "react-redux";
-import { actionClick } from "../actions/actions";
+import { actionStartGame } from "../actions/actions";
 
 const handleClick = action => {
-  console.log("test");
   action();
 };
 
 const mapStateToProps = state => {
-  console.log(state);
-
   const test = state;
   return { test };
 };
 
-const Info = ({ test, actionClick }) => {
-  console.log("info");
+const Info = ({ test, actionStartGame }) => {
   // console.log(actionClick);
   return (
     <div className="info">
       {test.name}
-      <button onClick={() => handleClick(actionClick)}>Click me</button>
+      <button onClick={() => handleClick(actionStartGame)}>Play</button>
     </div>
   );
 };
 
 const InfoRedux = connect(
   mapStateToProps,
-  { actionClick }
+  { actionStartGame }
 )(Info);
 
 const Title = () => {
