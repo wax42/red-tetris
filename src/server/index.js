@@ -19,6 +19,7 @@ const handleClient = client => {
         clientCallback("Succes Join ROOM: " + roomName);
       } else {
         // si ça rentre la c chelou
+        // si player existe on rentre ici - rien de creer cote serveur mais App rendue client
         console.log("JOIN ROOM chelou");
 
         clientCallback("Is not possible to join room:  " + roomName);

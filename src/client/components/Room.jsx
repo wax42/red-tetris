@@ -3,7 +3,7 @@ import Game from "./Game";
 import AppBoardInfo from "./AppBoardInfo";
 import Spectrum from "./Spectrum";
 import { connect } from "react-redux";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import {
   actionPieceDown,
@@ -12,7 +12,6 @@ import {
   actionPieceSpace,
   actionPieceRotate
 } from "../actions/actions";
-import { statement } from "@babel/template";
 
 const KEY_SPACE = 32;
 const KEY_DOWN = 40;

@@ -30,7 +30,11 @@ class RoomsManager {
     return true;
   }
   joinRoom(roomName, playerName, clientSocket) {
-    if (this.listRoomsName.includes(roomName) === false) {
+    //Check if player doesn't not exist
+    if (
+      this.listRoomsName.includes(roomName) === false ||
+      this.listPlayersName.includes(playerName) === true
+    ) {
       return false;
     }
     console.log("JoinRoom roomName: ", roomName);
