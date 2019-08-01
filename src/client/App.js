@@ -10,7 +10,7 @@ import socketMiddleware from "./middlewares/socketMiddleware";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { HashRouter } from "react-router-dom";
 
-import HomeRedux from "./components/Home";
+import Home from "./components/Home";
 
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -118,61 +118,76 @@ const Routing = state => {
 
   useEffect(() => {
     const event = async () => {
-      await state.socket.emit("LIST_ROOMS_PLAYERS", null, (rooms, players) => {
+      await state.socket.on("LIST_ROOMS_PLAYERS", (rooms, players) => {
         setListPlayers(players);
         setListRooms(rooms);
       });
     };
     event();
-  }, []);
+    console.log("updated component");
+  });
 
-  console.log(listPlayers, listRooms);
-  // socket event  on recuper la listes des rooms
-  // socket event  on recuper la listes des joueurs
-
-  let room = "e";
-  console.log(window.location.hash);
-  console.log("fdp", window.location.path);
-  console.log("hash", window.location.hash);
-
-  // Regarder dans le state si la room est excistante
-
-  // Sinon rediriger vers '/'
-
-  // let hash = window.location.hash;
+  console.log("ListPlayer andd rooms", listPlayers, listRooms);
 
   let hash = window.location.hash;
+
+  if (hash === "") {
+    console.log("hash empty");
+    return <Home />;
+  }
+
   let result = hash.split("[");
 
-  let error = false;
-  if (result.length == 2) {
-    let room_name = result[0].slice(1);
-    let player_name = result[1].slice(0, -1);
-
-    if (
-      /^[A-z0-9]+$/.test(room_name) === false ||
-      /^[A-z0-9]+$/.test(player_name) === false ||
-      listRooms.includes(room_name) === false ||
-      listPlayers.includes(player_name) === true
-    ) {
-      error = true;
-      console.log(
-        room_name,
-        /^[A-z0-9]+$/.test(player_name),
-        listPlayers.includes(player_name)
-      );
-      return <HomeRedux />; // with the errror
-    } else {
-      console.log("la");
-
-      // Il va falloir creer / add un nouveau player a la room
-      return <App />;
-    }
-  } else {
-    console.log("bah non");
-
-    return <HomeRedux />;
+  if (result.length != 2) {
+    console.log("lenght");
+    window.location.hash = "";
+    return <Home error="hash Invalid" />;
   }
+
+  let room_name = result[0].slice(1);
+  let player_name = result[1].slice(0, -1);
+
+  if (/^[A-z0-9]+$/.test(room_name) === false) {
+    window.location.hash = "";
+    console.log("room name invalid");
+
+    return <Home error="Room Name incorrect" />;
+  }
+
+  if (/^[A-z0-9]+$/.test(player_name) === false) {
+    window.location.hash = "";
+    console.log("player name invalid");
+
+    return <Home error="Player Name incorrect" />;
+  }
+
+  if (listRooms.includes(room_name) === false) {
+    // window.location.hash = "";
+    console.log("room don't exist", window.location.hash, window.location.path);
+
+    return <Home error="Room don't exist" />;
+  }
+
+  if (
+    listPlayers.includes(player_name) === true &&
+    player_name !== state.playerName
+  ) {
+    window.location.hash = "";
+    console.log("player already exist");
+
+    return <Home error="Player name already exists" />;
+  }
+
+  if (state.playerName !== player_name) {
+    console.log("JOIN ROOM");
+
+    // Il va falloir creer / add un nouveau player a la room
+    state.socket.emit("JOIN_ROOM", room_name, player_name, msg => {
+      // TODO gestion d'erreur
+      console.log(msg);
+    });
+  }
+  return <App />;
 };
 
 const RoutingRedux = connect(mapStateToProps)(Routing);

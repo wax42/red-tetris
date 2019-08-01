@@ -10,10 +10,10 @@ import {
   SEND_SPECTRUM
 } from "../actions/actionTypes";
 import { actionPieceDown, actionPieceLeft } from "../actions/actions";
+import EVENT from "../../common/common";
 
 const socketMiddleware = () => {
-  const socket = io("http://localhost:3001");
-
+  console.error("START SOCKET MIDDLEWARE");
   return store => next => action => {
     console.log("MIDDLEWARE");
 
@@ -29,6 +29,7 @@ const socketMiddleware = () => {
 
     // Les events qui communiquents avec le serveur et / ou qui dispatch une action
 
+    let state = store.getState();
     switch (action.type) {
       case START_GAME:
         let timeId = setInterval(() => {
@@ -37,19 +38,28 @@ const socketMiddleware = () => {
         store.dispatch(actionPieceDown());
         return next(action);
       case CREATE_ROOM:
-        socket.emit("CREATE_ROOM", "{NAME OF THE FUCKING ROOM");
+        console.log("Send CREATE_ROOM", action);
+        state.socket.emit(
+          EVENT.CREATE_ROOM,
+          action.room,
+          action.player,
+          msg => {
+            // TODO gestion d'erreur
+            console.log(msg);
+          }
+        );
         break;
       case LINE_BREAK:
-        socket.emit("ROOM line_break", "nbr de line break");
+        state.socket.emit("ROOM line_break", "nbr de line break");
         break;
       case ROOM_ADD_PLAYER:
-        socket.emit("ROOM ADD PLAYER", "nom du joueur");
+        state.socket.emit("ROOM ADD PLAYER", "nom du joueur");
         break;
       case ROOM_DEL_PLAYER:
-        socket.emit("ROOM DELL PLAYER", "nom du joueur");
+        state.socket.emit("ROOM DELL PLAYER", "nom du joueur");
         break;
       case SEND_SPECTRUM:
-        socket.emit("ROOM SEND_SPECTRUM", "le spectre de la grille");
+        state.socket.emit("ROOM SEND_SPECTRUM", "le spectre de la grille");
         break;
 
       // listenner dans le state

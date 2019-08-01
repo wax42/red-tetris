@@ -1,22 +1,31 @@
-import Game from "./Game.js";
-import Player from "./Player.js";
+const Game = require("./Game.js");
+const Player = require("./Player.js");
 
-export default class Room {
-  constructor(name, playerName, id) {
+class Room {
+  constructor(name, playerName, clientSocket) {
     this.name = name;
-    this.admin = id; // hash / id
+    this.admin = clientSocket.id; // hash / id
     // TODO add the admin in the lists of players
     this.game = null;
     this.players = [];
-    this.addPlayer(playerName, id);
+    this.addPlayer(playerName, clientSocket);
     // top score
   }
 
   newGame() {
     this.game = new Game(this.players);
   }
-  addPlayer(name, id) {
-    let newPlayer = new Player(name, id);
+  addPlayer(playerName, clientSocket) {
+    console.log(
+      "New player add in room: ",
+      this.name,
+      playerName,
+      clientSocket.id
+    );
+    let newPlayer = new Player(playerName, clientSocket.id);
+    // clientSocket.join(this.name);
     this.players.push(newPlayer);
   }
 }
+
+module.exports = Room;

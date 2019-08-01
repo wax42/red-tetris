@@ -25,11 +25,11 @@ const handleClick = action => {
     action(roomName, playerName); // to complete
     window.location.hash = `#${roomName}[${playerName}]`;
 
-    console.error("ui");
+    console.error("New HAsh", window.location.hash);
   }
 };
 
-const Home = ({ actionCreateRoom }) => {
+const Home = ({ error, actionCreateRoom }) => {
   return (
     <div>
       <div className="home-title">Red Tetris</div>
@@ -66,13 +66,12 @@ const Home = ({ actionCreateRoom }) => {
           // to={{ pathname: "/", hash: "test[test]" }}
         />
       </div>
+      <h1>{error}</h1>
     </div>
   );
 };
 
-const HomeRedux = connect(
+export default connect(
   null,
   { actionCreateRoom }
 )(Home);
-
-export default HomeRedux;

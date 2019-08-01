@@ -72,7 +72,7 @@
     "build": "node scripts/build.js",
     "test": "jest --watchAll --coverage",
     "client-dev": "",
-    "server-dev": " DEBUG=* nodemon src/server/index.js"
+    "server-dev": "nodemon src/server/index.js"
   },
   "eslintConfig": {
     "extends": "react-app"

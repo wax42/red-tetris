@@ -22,7 +22,7 @@ import { startGame } from "./gameManager";
 import _ from "lodash";
 
 const initialState = {
-  socket: io("http://localhost:3001"),
+  socket: null,
   grid: [
     [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
     [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
@@ -93,13 +93,12 @@ const initialState = {
   name: "toto"
 };
 
-function DownPieceWithSecret() {
-  return dispatch => {};
-}
-
 const reducers = (state = initialState, action) => {
-  console.log("Grid:", state.grid);
-  console.log("REDUCERS");
+  console.error("START REDUCER");
+  if (state.socket === null) {
+    state.socket = io("http://localhost:3001");
+    console.error("SOCKET INITILIALIZATIOn");
+  }
 
   // console.log(`Action: ${action}`);
   // let newState = Object.assign({}, state)
@@ -107,11 +106,7 @@ const reducers = (state = initialState, action) => {
   let newState = _.cloneDeep(state);
   switch (action.type) {
     case CREATE_ROOM:
-      console.log(
-        "JE VIENS DE RAFRACIHIE TOUTE L APPLCIATION DE LA CHATTE A TA MERTE"
-      );
-
-      return { ...state, room: action.room, player: action.player };
+      return { ...state, roomName: action.room, playerName: action.player };
     case START_GAME:
       //Modifier le state
       console.log("CLICK START GAME");

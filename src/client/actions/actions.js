@@ -13,17 +13,13 @@ import {
   PIECE_SPACE,
   PIECE_ROTATE
 } from "./actionTypes";
-import { EVENT } from "../../common/common";
+import EVENT from "../../common/common";
 
 export const actionThunkUrl = (action, path) => {
   return dispatch => {
     dispatch(action);
     window.history.push(path);
   };
-};
-
-export const actionCreateRoom = (room, player) => {
-  return { type: CREATE_ROOM, room: room, player: player };
 };
 
 /* ACTION  WITHOUT SERVER */
@@ -49,6 +45,15 @@ export const actionPieceRotate = () => {
 };
 
 /* ACTION WITH EVENT */
+
+export const actionCreateRoom = (room, player) => {
+  return {
+    type: CREATE_ROOM,
+    room: room,
+    player: player,
+    event: EVENT.CREATE_ROOM
+  };
+};
 
 export const actionStartGame = () => {
   return { type: START_GAME, event: EVENT.START_GAME };

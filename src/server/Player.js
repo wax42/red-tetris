@@ -1,12 +1,14 @@
 class Player {
-    constructor(name, id) {
-        this.score = 0;
-        this.name = name;
-        this.id = id;
+  constructor(name, clientSocket) {
+    this.score = 0;
+    this.name = name;
+    this.id = "yo";
 
-        this.grid = [];
-    }
-    generateSpectrum() {
-        // Take the grid and return a spectrum
-    }
+    this.grid = [];
+  }
+  generateSpectrum() {
+    // Take the grid and return a spectrum
+  }
 }
+
+module.exports = Player;
