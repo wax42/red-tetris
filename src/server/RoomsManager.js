@@ -18,11 +18,12 @@ class RoomsManager {
       return false;
     }
 
+    console.log("SOCKET ID CREATE ROOM ", clientSocket.id);
     let room = new Room(roomName, playerName, clientSocket);
 
     this.rooms[roomName] = room;
 
-    console.log("rooms OBJSS", this.rooms[roomName].players[0].id);
+    console.log("rooms OBJSS", this.rooms);
 
     this.listRoomsName.push(roomName);
     this.listPlayersName.push(playerName);
@@ -33,7 +34,7 @@ class RoomsManager {
       return false;
     }
     this.rooms[roomName].addPlayer(playerName, clientSocket);
-    // console.log("JOIN ROOM function", this.rooms[roomName]);
+    console.log("JOIN ROOM function", this.rooms[roomName]);
     return true;
   }
   sendListRoomsPlayers(io) {

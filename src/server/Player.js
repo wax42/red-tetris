@@ -1,8 +1,9 @@
 class Player {
-  constructor(name, clientSocket) {
+  constructor(name, id) {
+    console.log("CLIENT SOCKET CONSTRUCTOR PLAYER - ", id);
     this.score = 0;
     this.name = name;
-    this.id = "yo";
+    this.id = id;
 
     this.grid = [];
   }
