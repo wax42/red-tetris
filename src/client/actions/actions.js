@@ -1,5 +1,6 @@
 import {
   CREATE_ROOM,
+  JOIN_ROOM,
   START_GAME,
   NEXT_PIECE,
   LINE_BREAK,
@@ -52,6 +53,15 @@ export const actionCreateRoom = (room, player) => {
     room: room,
     player: player,
     event: EVENT.CREATE_ROOM
+  };
+};
+
+export const actionJoinRoom = (room, player) => {
+  return {
+    type: JOIN_ROOM,
+    room: room,
+    player: player,
+    event: EVENT.JOIN_ROOM
   };
 };
 

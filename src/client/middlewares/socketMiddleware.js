@@ -1,15 +1,14 @@
-import io from "socket.io-client";
 import {
   START_GAME,
-  PIECE_DOWN,
   CREATE_ROOM,
   LINE_BREAK,
   LIST_ROOM,
   ROOM_ADD_PLAYER,
   ROOM_DEL_PLAYER,
-  SEND_SPECTRUM
+  SEND_SPECTRUM,
+  JOIN_ROOM
 } from "../actions/actionTypes";
-import { actionPieceDown, actionPieceLeft } from "../actions/actions";
+import { actionPieceDown } from "../actions/actions";
 import EVENT from "../../common/common";
 
 const socketMiddleware = () => {
@@ -23,7 +22,7 @@ const socketMiddleware = () => {
       return next(action);
     }
 
-    if (action.event == undefined) {
+    if (action.event === undefined) {
       return next(action);
     }
 
@@ -32,7 +31,7 @@ const socketMiddleware = () => {
     let state = store.getState();
     switch (action.type) {
       case START_GAME:
-        let timeId = setInterval(() => {
+        setInterval(() => {
           store.dispatch(actionPieceDown());
         }, 1000);
         store.dispatch(actionPieceDown());
@@ -45,6 +44,21 @@ const socketMiddleware = () => {
           action.player,
           msg => {
             // TODO gestion d'erreur
+            // dispatch action error
+            console.log(msg);
+          }
+        );
+        break;
+      case JOIN_ROOM:
+        console.log("Send JOIN_ROOM", action);
+        state.socket.emit(
+          EVENT.JOIN_ROOM,
+          action.room,
+          action.player,
+          msg => {
+            // TODO gestion d'erreur
+
+            // dispatch action error
             console.log(msg);
           }
         );
@@ -65,6 +79,8 @@ const socketMiddleware = () => {
       // listenner dans le state
 
       case LIST_ROOM:
+        break;
+      default:
         break;
     }
 

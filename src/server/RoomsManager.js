@@ -33,6 +33,9 @@ class RoomsManager {
     if (this.listRoomsName.includes(roomName) === false) {
       return false;
     }
+    console.log("JoinRoom roomName: ", roomName);
+    console.log("JoinRoom playerName: ", playerName);
+    console.log("JoinRoom clientSocket: ", clientSocket);
     this.rooms[roomName].addPlayer(playerName, clientSocket);
     console.log("JOIN ROOM function", this.rooms[roomName]);
     return true;

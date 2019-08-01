@@ -1,6 +1,7 @@
 /* ACTION WITH EVENT */
 
 export const CREATE_ROOM = "CREATE_ROOM";
+export const JOIN_ROOM = "JOIN_ROOM";
 
 export const START_GAME = "START_GAME";
 export const LINE_BREAK = "LINE_BREAK";

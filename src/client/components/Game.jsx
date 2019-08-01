@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import { statements } from "@babel/template";
 import _ from "lodash";
 
 const mapStateToProps = state => {

@@ -2,7 +2,7 @@ const EVENT = require("../common/common");
 const RoomManager = require("./RoomsManager");
 
 const handleClient = client => {
-  console.log("connect", client.id);
+  console.log(EVENT.CONNECT, client.id);
 
   setTimeout(() => {
     roomsManager.sendListRoomsPlayers(io);
@@ -27,10 +27,15 @@ const handleClient = client => {
     } else {
       roomsManager.sendListRoomsPlayers(io);
       clientCallback("Succes Create new ROOM:  " + roomName);
+
+      setInterval(() => {
+        client.to(roomName).emit("blabla", "boubou");
+        console.log("SET INTERVAL EMIT");
+      }, 2000);
     }
   });
 
-  client.on("JOIN_ROOM", (roomName, playerName, clientCallback) => {
+  client.on(EVENT.JOIN_ROOM, (roomName, playerName, clientCallback) => {
     if (roomsManager.joinRoom(roomName, playerName, client) == false) {
       // Gestion error is not possible to join this room
       // Room is not create
@@ -41,7 +46,7 @@ const handleClient = client => {
     }
   });
 
-  client.on("disconnect", () => {
+  client.on(EVENT.DISCONNET, () => {
     console.log("disconnect", client.id);
   });
 };

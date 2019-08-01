@@ -6,7 +6,8 @@ import {
   PIECE_RIGHT,
   PIECE_SPACE,
   PIECE_ROTATE,
-  CREATE_ROOM
+  CREATE_ROOM,
+  JOIN_ROOM
 } from "../actions/actionTypes";
 
 import {
@@ -106,6 +107,8 @@ const reducers = (state = initialState, action) => {
   let newState = _.cloneDeep(state);
   switch (action.type) {
     case CREATE_ROOM:
+      return { ...state, roomName: action.room, playerName: action.player };
+    case JOIN_ROOM:
       return { ...state, roomName: action.room, playerName: action.player };
     case START_GAME:
       //Modifier le state

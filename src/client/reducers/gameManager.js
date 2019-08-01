@@ -1,6 +1,3 @@
-import { useDispatch } from "react-redux";
-import { actionPieceDown } from "../actions/actions";
-import { actionLineBreak } from "../actions/actions";
 import { placePiece } from "./gridChange";
 import _ from "lodash";
 
@@ -23,7 +20,7 @@ export const nextPiece = state => {
 export const lineBreak = state => {
   let nbr_line = 0;
   state.grid = state.grid.filter(line => {
-    if (_.difference(line, ["0", "."]).length == 10) {
+    if (_.difference(line, ["0", "."]).length === 10) {
       nbr_line++;
       return false;
     } else {

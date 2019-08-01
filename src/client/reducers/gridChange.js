@@ -1,6 +1,4 @@
-import { actionNextPiece } from "../actions/actions";
 import { nextPiece, lineBreak } from "./gameManager";
-// Utils
 
 const rotate = matrix => {
   let result = [];

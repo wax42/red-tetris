@@ -23,7 +23,7 @@ class Room {
       clientSocket.id
     );
     let newPlayer = new Player(playerName, clientSocket.id);
-    // clientSocket.join(this.name);
+    clientSocket.join(this.name);
     this.players.push(newPlayer);
   }
 }

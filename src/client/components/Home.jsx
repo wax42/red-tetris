@@ -1,12 +1,10 @@
 import React from "react";
-import { withRouter, NavLink } from "react-router-dom";
 import { FaHome, FaIdBadge } from "react-icons/fa";
 import { connect } from "react-redux";
-import { actionCreateRoom, actionThunkUrl } from "../actions/actions";
+import { actionCreateRoom } from "../actions/actions";
 
 let roomName = "";
 let playerName = "";
-let url = "";
 
 //TODO validation
 const getRoomName = event => {
