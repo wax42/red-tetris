@@ -2,7 +2,7 @@ const Room = require("./Room.js");
 
 class RoomsManager {
   constructor() {
-    this.listRoomsName = ["room"];
+    this.listRoomsName = [];
     this.listPlayersName = [];
     this.rooms = {};
     // top score
@@ -45,6 +45,7 @@ class RoomsManager {
     return true;
   }
   sendListRoomsPlayers(io) {
+    console.log("Serveur send list rooms players");
     io.emit("LIST_ROOMS_PLAYERS", this.listRoomsName, this.listPlayersName);
   }
 }

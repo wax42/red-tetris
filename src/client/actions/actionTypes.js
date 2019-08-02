@@ -2,10 +2,10 @@
 
 export const CREATE_ROOM = "CREATE_ROOM";
 export const JOIN_ROOM = "JOIN_ROOM";
+export const LIST_ROOM_PLAYER = "LIST_ROOM_PLAYER";
 
 export const START_GAME = "START_GAME";
 export const LINE_BREAK = "LINE_BREAK";
-export const LIST_ROOM = "LIST_ROOM";
 export const ROOM_ADD_PLAYER = "ROOM_ADD_PLAYER";
 export const ROOM_DEL_PLAYER = "ROOM_DEL_PLAYER";
 export const SEND_SPECTRUM = "SEND_SPECTRUM";

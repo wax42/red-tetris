@@ -4,7 +4,7 @@ import {
   START_GAME,
   NEXT_PIECE,
   LINE_BREAK,
-  LIST_ROOM,
+  LIST_ROOM_PLAYER,
   ROOM_ADD_PLAYER,
   ROOM_DEL_PLAYER,
   SEND_SPECTRUM,
@@ -14,7 +14,7 @@ import {
   PIECE_SPACE,
   PIECE_ROTATE
 } from "./actionTypes";
-import EVENT from "../../common/common";
+import eventSocket from "../../common/common";
 
 export const actionThunkUrl = (action, path) => {
   return dispatch => {
@@ -45,14 +45,18 @@ export const actionPieceRotate = () => {
   return { type: PIECE_ROTATE };
 };
 
-/* ACTION WITH EVENT */
+/* ACTION WITH eventSocket */
+
+export const actionListRoomPlayer = () => {
+  return { type: LIST_ROOM_PLAYER, eventSocket: eventSocket.LIST_ROOM_PLAYER };
+};
 
 export const actionCreateRoom = (room, player) => {
   return {
     type: CREATE_ROOM,
     room: room,
     player: player,
-    event: EVENT.CREATE_ROOM
+    eventSocket: eventSocket.CREATE_ROOM
   };
 };
 
@@ -61,34 +65,30 @@ export const actionJoinRoom = (room, player) => {
     type: JOIN_ROOM,
     room: room,
     player: player,
-    event: EVENT.JOIN_ROOM
+    eventSocket: eventSocket.JOIN_ROOM
   };
 };
 
 export const actionStartGame = () => {
-  return { type: START_GAME, event: EVENT.START_GAME };
+  return { type: START_GAME, eventSocket: eventSocket.START_GAME };
 };
 
 export const actionNextPiece = () => {
-  return { type: NEXT_PIECE, event: EVENT.NEXT_PIECE };
+  return { type: NEXT_PIECE, eventSocket: eventSocket.NEXT_PIECE };
 };
 
 export const actionLineBreak = () => {
-  return { type: LINE_BREAK, event: EVENT.LINE_BREAK };
-};
-
-export const actionListRoom = () => {
-  return { type: LIST_ROOM, event: EVENT.LIST_ROOM };
+  return { type: LINE_BREAK, eventSocket: eventSocket.LINE_BREAK };
 };
 
 export const actionRoomAddPlayer = () => {
-  return { type: ROOM_ADD_PLAYER, event: EVENT.ROOM_ADD_PLAYER };
+  return { type: ROOM_ADD_PLAYER, eventSocket: eventSocket.ROOM_ADD_PLAYER };
 };
 
 export const actionRoomDelPlayer = () => {
-  return { type: ROOM_DEL_PLAYER, event: EVENT.ROOM_DEL_PLAYER };
+  return { type: ROOM_DEL_PLAYER, eventSocket: eventSocket.ROOM_DEL_PLAYER };
 };
 
 export const actionSpectrums = () => {
-  return { type: SEND_SPECTRUM, event: EVENT.SEND_SPECTRUM };
+  return { type: SEND_SPECTRUM, eventSocket: eventSocket.SEND_SPECTRUM };
 };

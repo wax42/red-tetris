@@ -1,5 +1,5 @@
 // import logo from './logo.svg';
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Provider, connect } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import reducers from "./reducers/reducers";
@@ -20,20 +20,11 @@ const mapStateToProps = state => {
 };
 
 const Routing = ({ _state, actionJoinRoom }) => {
-  const [listRooms, setListRooms] = useState([]);
-  const [listPlayers, setListPlayers] = useState([]);
+  // const [listRooms, setListRooms] = useState([]);
+  // const [listPlayers, setListPlayers] = useState([]);
+  const { listRooms, listPlayers } = _state;
 
-  useEffect(() => {
-    const event = async () => {
-      await _state.socket.on("LIST_ROOMS_PLAYERS", (rooms, players) => {
-        setListPlayers(players);
-        setListRooms(rooms);
-      });
-    };
-    event();
-    console.log("updated component");
-  });
-
+  console.log("Routing mounted", window.location.hash);
   console.log("ListPlayer andd rooms", listPlayers, listRooms);
 
   window.location.path = "/";

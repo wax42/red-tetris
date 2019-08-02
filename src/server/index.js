@@ -1,14 +1,14 @@
-const EVENT = require("../common/common");
+const eventSocket = require("../common/common");
 const RoomManager = require("./RoomsManager");
 
 const handleClient = client => {
-  console.log(EVENT.CONNECT, client.id);
+  console.log(eventSocket.CONNECT, client.id);
 
   setTimeout(() => {
     roomsManager.sendListRoomsPlayers(io);
   }, 1000); // le temps que le components soit creer
 
-  client.on(EVENT.CREATE_ROOM, (roomName, playerName, clientCallback) => {
+  client.on(eventSocket.CREATE_ROOM, (roomName, playerName, clientCallback) => {
     // Check si la room existe deja !!!!! apres manger
     if (roomsManager.createRoom(roomName, playerName, client) === false) {
       if (roomsManager.joinRoom(roomName, playerName, client) == true) {
@@ -29,14 +29,14 @@ const handleClient = client => {
       roomsManager.sendListRoomsPlayers(io);
       clientCallback("Succes Create new ROOM:  " + roomName);
 
-      setInterval(() => {
-        client.to(roomName).emit("blabla", "boubou");
-        console.log("SET INTERVAL EMIT");
-      }, 2000);
+      //   setInterval(() => {
+      //     client.to(roomName).emit("blabla", "boubou");
+      //     console.log("SET INTERVAL EMIT");
+      //   }, 2000);
     }
   });
 
-  client.on(EVENT.JOIN_ROOM, (roomName, playerName, clientCallback) => {
+  client.on(eventSocket.JOIN_ROOM, (roomName, playerName, clientCallback) => {
     if (roomsManager.joinRoom(roomName, playerName, client) == false) {
       // Gestion error is not possible to join this room
       // Room is not create
@@ -47,7 +47,7 @@ const handleClient = client => {
     }
   });
 
-  client.on(EVENT.DISCONNET, () => {
+  client.on(eventSocket.DISCONNET, () => {
     console.log("disconnect", client.id);
   });
 };

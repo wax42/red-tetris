@@ -7,7 +7,8 @@ import {
   PIECE_SPACE,
   PIECE_ROTATE,
   CREATE_ROOM,
-  JOIN_ROOM
+  JOIN_ROOM,
+  LIST_ROOM_PLAYER
 } from "../actions/actionTypes";
 
 import {
@@ -90,22 +91,32 @@ const initialState = {
       [".", ".", ".", "."]
     ]
   ],
+  listRooms: [],
+  listPlayers: [],
   timeId: null,
   name: "toto"
 };
 
 const reducers = (state = initialState, action) => {
-  console.error("START REDUCER");
   if (state.socket === null) {
     state.socket = io("http://localhost:3001");
     console.error("SOCKET INITILIALIZATIOn");
   }
+  if (action.eventSocket !== undefined) {
+    return state;
+  }
+  console.error("START REDUCER", action);
 
-  // console.log(`Action: ${action}`);
   // let newState = Object.assign({}, state)
 
   let newState = _.cloneDeep(state);
   switch (action.type) {
+    case LIST_ROOM_PLAYER:
+      return {
+        ...state,
+        listRooms: action.listRooms,
+        listPlayers: action.listPlayers
+      };
     case CREATE_ROOM:
       return { ...state, roomName: action.room, playerName: action.player };
     case JOIN_ROOM:

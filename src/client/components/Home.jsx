@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FaHome, FaIdBadge } from "react-icons/fa";
-import { connect } from "react-redux";
-import { actionCreateRoom } from "../actions/actions";
+import { connect, useDispatch } from "react-redux";
+import { actionCreateRoom, actionListRoomPlayer } from "../actions/actions";
 
 let roomName = "";
 let playerName = "";
@@ -20,14 +20,21 @@ const handleClick = action => {
   if (roomName.length < 3 || playerName.length < 3) {
     console.error("name < 3 ");
   } else {
-    action(roomName, playerName); // to complete
     window.location.hash = `#${roomName}[${playerName}]`;
+    action(roomName, playerName); // to complete
 
+    console.log(window.location.hash);
     console.error("New HAsh", window.location.hash);
   }
 };
 
 const Home = ({ error, actionCreateRoom }) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    console.log("Home mounted ! What is the phoque");
+    dispatch(actionListRoomPlayer());
+  }, [dispatch]);
+
   return (
     <div>
       <div className="home-title">Red Tetris</div>

@@ -2,14 +2,14 @@ import {
   START_GAME,
   CREATE_ROOM,
   LINE_BREAK,
-  LIST_ROOM,
+  LIST_ROOM_PLAYER,
   ROOM_ADD_PLAYER,
   ROOM_DEL_PLAYER,
   SEND_SPECTRUM,
   JOIN_ROOM
 } from "../actions/actionTypes";
 import { actionPieceDown } from "../actions/actions";
-import EVENT from "../../common/common";
+import eventSocket from "../../common/common";
 
 const socketMiddleware = () => {
   console.error("START SOCKET MIDDLEWARE");
@@ -22,11 +22,11 @@ const socketMiddleware = () => {
       return next(action);
     }
 
-    if (action.event === undefined) {
+    if (action.eventSocket === undefined) {
       return next(action);
     }
 
-    // Les events qui communiquents avec le serveur et / ou qui dispatch une action
+    // Les eventSockets qui communiquents avec le serveur et / ou qui dispatch une action
 
     let state = store.getState();
     switch (action.type) {
@@ -37,9 +37,10 @@ const socketMiddleware = () => {
         store.dispatch(actionPieceDown());
         return next(action);
       case CREATE_ROOM:
+        action.eventSocket = undefined;
         console.log("Send CREATE_ROOM", action);
         state.socket.emit(
-          EVENT.CREATE_ROOM,
+          eventSocket.CREATE_ROOM,
           action.room,
           action.player,
           msg => {
@@ -50,9 +51,12 @@ const socketMiddleware = () => {
         );
         break;
       case JOIN_ROOM:
+        action.eventSocket = undefined;
+
+        // del eventSocket in action
         console.log("Send JOIN_ROOM", action);
         state.socket.emit(
-          EVENT.JOIN_ROOM,
+          eventSocket.JOIN_ROOM,
           action.room,
           action.player,
           msg => {
@@ -78,7 +82,17 @@ const socketMiddleware = () => {
 
       // listenner dans le state
 
-      case LIST_ROOM:
+      case LIST_ROOM_PLAYER:
+        console.log(
+          "Socket middleware create Listenner LIST ROOM PLAYER",
+          action
+        );
+        state.socket.on("LIST_ROOMS_PLAYERS", (rooms, players) => {
+          console.log("on a enntendu henri LIST_ROOMS_PLAYERS");
+
+          action.eventSocket = undefined;
+          store.dispatch({ ...action, listRooms: rooms, listPlayers: players });
+        });
         break;
       default:
         break;
