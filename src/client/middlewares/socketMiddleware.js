@@ -8,8 +8,15 @@ import {
   SEND_SPECTRUM,
   JOIN_ROOM
 } from "../actions/actionTypes";
-import { actionPieceDown } from "../actions/actions";
+import { actionPieceDown, actionIsNewAdmin } from "../actions/actions";
 import eventSocket from "../../common/common";
+
+const launchGame = dispatch => {
+  setInterval(() => {
+    dispatch(actionPieceDown());
+  }, 1000);
+  dispatch(actionPieceDown());
+};
 
 const socketMiddleware = () => {
   console.error("START SOCKET MIDDLEWARE");
@@ -31,10 +38,9 @@ const socketMiddleware = () => {
     let state = store.getState();
     switch (action.type) {
       case START_GAME:
-        setInterval(() => {
-          store.dispatch(actionPieceDown());
-        }, 1000);
-        store.dispatch(actionPieceDown());
+        launchGame(store.dispatch);
+        state.socket.emit(eventSocket.START_GAME);
+
         return next(action);
       case CREATE_ROOM:
         action.eventSocket = undefined;
@@ -66,6 +72,15 @@ const socketMiddleware = () => {
             console.log(msg);
           }
         );
+        state.socket.on(eventSocket.START_GAME, () => {
+          console.error("L'autre client a lance la partie");
+          launchGame(store.dispatch);
+        });
+        state.socket.on(eventSocket.IS_NEW_ADMIN, () => {
+          store.dispatch(actionIsNewAdmin());
+          console.error("Je suis le nouvel admin");
+        });
+
         break;
       case LINE_BREAK:
         state.socket.emit("ROOM line_break", "nbr de line break");

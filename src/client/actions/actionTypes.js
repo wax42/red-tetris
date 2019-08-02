@@ -18,3 +18,4 @@ export const PIECE_LEFT = "PIECE_LEFT";
 export const PIECE_RIGHT = "PIECE_RIGHT";
 export const PIECE_SPACE = "PIECE_SPACE";
 export const PIECE_ROTATE = "PIECE_ROTATE";
+export const IS_NEW_ADMIN = "IS_NEW_ADMIN";

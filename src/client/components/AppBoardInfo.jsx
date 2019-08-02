@@ -6,25 +6,34 @@ const handleClick = action => {
   action();
 };
 
-const mapStateToProps = state => {
-  const test = state;
-  return { test };
+const mapStateToProps = _state => {
+  const state = _state;
+  return { state };
 };
 
-const Info = ({ test, actionStartGame }) => {
+const Play = ({ admin, actionStartGame }) => {
+  if (admin === true) {
+    return <button onClick={() => handleClick(actionStartGame)}>Play</button>;
+  }
+  return <span />;
+};
+
+const PlayButton = connect(
+  null,
+  { actionStartGame }
+)(Play);
+
+const Info = ({ state }) => {
   // console.log(actionClick);
   return (
     <div className="info">
-      {test.name}
-      <button onClick={() => handleClick(actionStartGame)}>Play</button>
+      {state.name}
+      <PlayButton admin={state.admin} />
     </div>
   );
 };
 
-const InfoRedux = connect(
-  mapStateToProps,
-  { actionStartGame }
-)(Info);
+const InfoRedux = connect(mapStateToProps)(Info);
 
 const Title = () => {
   return <div className="title">Red Tetris</div>;

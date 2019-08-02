@@ -14,74 +14,56 @@ const store = createStore(
   composeWithDevTools(applyMiddleware(socketMiddleware()))
 );
 
-const mapStateToProps = state => {
-  const _state = state;
-  return { _state };
+const mapStateToProps = _state => {
+  const state = {
+    playerName: _state.playerName,
+    listRooms: _state.listRooms,
+    listPlayers: _state.listPlayers
+  };
+  return { state };
 };
 
-const Routing = ({ _state, actionJoinRoom }) => {
-  // const [listRooms, setListRooms] = useState([]);
-  // const [listPlayers, setListPlayers] = useState([]);
-  const { listRooms, listPlayers } = _state;
+const routeHashError = (hash, state, actionJoinRoom) => {
+  let result = hash.split("[");
 
-  console.log("Routing mounted", window.location.hash);
-  console.log("ListPlayer andd rooms", listPlayers, listRooms);
+  if (result.length !== 2) {
+    return "Hash invalid";
+  }
+  let room_name = result[0].slice(1);
+  let player_name = result[1].slice(0, -1);
 
+  if (/^[A-z0-9]{3,}$/.test(room_name) === false) {
+    return "Room Name incorrect";
+  }
+  if (/^[A-z0-9]{3,}$/.test(player_name) === false) {
+    return "Player Name incorrect";
+  }
+  if (state.listRooms.includes(room_name) === false) {
+    return "Room don't exist";
+  }
+  if (
+    state.listPlayers.includes(player_name) === true &&
+    player_name !== state.playerName
+  ) {
+    return "Player name already exists";
+  }
+  if (state.playerName !== player_name) {
+    actionJoinRoom(room_name, player_name);
+  }
+  return "";
+};
+
+const Routing = ({ state, actionJoinRoom }) => {
   window.location.path = "/";
   let hash = window.location.hash;
 
   if (hash === "") {
-    console.log("hash empty");
     return <Home />;
   }
+  let error = routeHashError(hash, state, actionJoinRoom);
 
-  let result = hash.split("[");
-
-  if (result.length !== 2) {
-    console.log("lenght");
-    window.location.hash = "";
-    return <Home error="hash Invalid" />;
-  }
-
-  let room_name = result[0].slice(1);
-  let player_name = result[1].slice(0, -1);
-
-  if (/^[A-z0-9]+$/.test(room_name) === false) {
-    window.location.hash = "";
-    console.log("room name invalid");
-
-    return <Home error="Room Name incorrect" />;
-  }
-
-  if (/^[A-z0-9]+$/.test(player_name) === false) {
-    window.location.hash = "";
-    console.log("player name invalid");
-
-    return <Home error="Player Name incorrect" />;
-  }
-
-  if (listRooms.includes(room_name) === false) {
-    // window.location.hash = "";
-    console.log("room don't exist", window.location.hash, window.location.path);
-
-    return <Home error="Room don't exist" />;
-  }
-
-  if (
-    listPlayers.includes(player_name) === true &&
-    player_name !== _state.playerName
-  ) {
-    window.location.hash = "";
-    console.log("player already exist");
-
-    return <Home error="Player name already exists" />;
-  }
-
-  if (_state.playerName !== player_name) {
-    console.log("JOIN ROOM");
-
-    actionJoinRoom(room_name, player_name);
-    // Il va falloir creer / add un nouveau player a la room
+  if (error !== "") {
+    return <Home error={error} />;
   }
   return <Room />;
 };

@@ -1,3 +1,5 @@
+const _ = require("lodash");
+
 const Room = require("./Room.js");
 
 class RoomsManager {
@@ -27,6 +29,8 @@ class RoomsManager {
 
     this.listRoomsName.push(roomName);
     this.listPlayersName.push(playerName);
+    clientSocket.roomName = roomName;
+    clientSocket.playerName = playerName;
     return true;
   }
   joinRoom(roomName, playerName, clientSocket) {
@@ -37,16 +41,34 @@ class RoomsManager {
     ) {
       return false;
     }
-    console.log("JoinRoom roomName: ", roomName);
-    console.log("JoinRoom playerName: ", playerName);
-    console.log("JoinRoom clientSocket: ", clientSocket);
     this.rooms[roomName].addPlayer(playerName, clientSocket);
+
+    this.listPlayersName.push(playerName);
+    clientSocket.roomName = roomName;
+    clientSocket.playerName = playerName;
+
     console.log("JOIN ROOM function", this.rooms[roomName]);
     return true;
   }
   sendListRoomsPlayers(io) {
-    console.log("Serveur send list rooms players");
     io.emit("LIST_ROOMS_PLAYERS", this.listRoomsName, this.listPlayersName);
+  }
+  deletePlayer(clientSocket) {
+    this.listPlayersName = _.filter(this.listPlayersName, name => {
+      return clientSocket.playerName !== name;
+    });
+    if (
+      this.rooms[clientSocket.roomName].deletePlayer(clientSocket) === false
+    ) {
+      this.deleteRoom(clientSocket.roomName);
+    }
+  }
+
+  deleteRoom(roomName) {
+    this.listRoomsName = _.filter(this.listRoomsName, name => {
+      return roomName !== name;
+    });
+    delete this.rooms[roomName];
   }
 }
 

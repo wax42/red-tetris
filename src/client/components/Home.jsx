@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FaHome, FaIdBadge } from "react-icons/fa";
 import { connect, useDispatch } from "react-redux";
 import { actionCreateRoom, actionListRoomPlayer } from "../actions/actions";
@@ -16,19 +16,24 @@ const getPlayerName = event => {
 };
 // return <Redirect to='/dashboard' />
 
-const handleClick = action => {
-  if (roomName.length < 3 || playerName.length < 3) {
-    console.error("name < 3 ");
+const handleClick = (action, setStateError) => {
+  if (roomName.length < 3) {
+    setStateError("Room name should have 3 characters at least");
+  } else if (playerName.length < 3) {
+    setStateError("Player name should have 3 characters at least");
+  } else if (/^[A-z0-9]+$/.test(roomName) === false) {
+    setStateError("Room name invalid");
+  } else if (/^[A-z0-9]+$/.test(playerName) === false) {
+    setStateError("Player name invalid");
   } else {
     window.location.hash = `#${roomName}[${playerName}]`;
     action(roomName, playerName); // to complete
-
-    console.log(window.location.hash);
-    console.error("New HAsh", window.location.hash);
   }
 };
 
-const Home = ({ error, actionCreateRoom }) => {
+const Home = ({ error = "", actionCreateRoom }) => {
+  const [stateError, setStateError] = useState("");
+
   const dispatch = useDispatch();
   useEffect(() => {
     console.log("Home mounted ! What is the phoque");
@@ -67,11 +72,13 @@ const Home = ({ error, actionCreateRoom }) => {
         </div>
         <button
           className="home-btn"
-          onClick={() => handleClick(actionCreateRoom)}
+          onClick={() => handleClick(actionCreateRoom, setStateError)}
           // to={{ pathname: "/", hash: "test[test]" }}
         />
       </div>
-      <h1>{error}</h1>
+      <h1>
+        {error} {stateError}
+      </h1>
     </div>
   );
 };

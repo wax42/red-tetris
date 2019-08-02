@@ -12,18 +12,16 @@ import {
   PIECE_LEFT,
   PIECE_RIGHT,
   PIECE_SPACE,
-  PIECE_ROTATE
+  PIECE_ROTATE,
+  IS_NEW_ADMIN
 } from "./actionTypes";
 import eventSocket from "../../common/common";
 
-export const actionThunkUrl = (action, path) => {
-  return dispatch => {
-    dispatch(action);
-    window.history.push(path);
-  };
-};
-
 /* ACTION  WITHOUT SERVER */
+
+export const actionIsNewAdmin = () => {
+  return { type: IS_NEW_ADMIN };
+};
 
 export const actionPieceDown = () => {
   return { type: PIECE_DOWN };

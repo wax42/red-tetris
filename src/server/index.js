@@ -1,5 +1,5 @@
 const eventSocket = require("../common/common");
-const RoomManager = require("./RoomsManager");
+const RoomsManager = require("./RoomsManager");
 
 const handleClient = client => {
   console.log(eventSocket.CONNECT, client.id);
@@ -48,13 +48,17 @@ const handleClient = client => {
   });
 
   client.on(eventSocket.DISCONNET, () => {
+    if (client.playerName !== undefined) {
+      roomsManager.deletePlayer(client);
+    }
     console.log("disconnect", client.id);
+    console.log(roomsManager.rooms);
   });
 };
 
 const server = require("http").createServer();
 const io = require("socket.io")(server);
-let roomsManager = new RoomManager();
+let roomsManager = new RoomsManager();
 
 io.on("connect", client => handleClient(client));
 

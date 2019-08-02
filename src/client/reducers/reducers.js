@@ -8,7 +8,8 @@ import {
   PIECE_ROTATE,
   CREATE_ROOM,
   JOIN_ROOM,
-  LIST_ROOM_PLAYER
+  LIST_ROOM_PLAYER,
+  IS_NEW_ADMIN
 } from "../actions/actionTypes";
 
 import {
@@ -91,6 +92,7 @@ const initialState = {
       [".", ".", ".", "."]
     ]
   ],
+  admin: false,
   listRooms: [],
   listPlayers: [],
   timeId: null,
@@ -118,7 +120,12 @@ const reducers = (state = initialState, action) => {
         listPlayers: action.listPlayers
       };
     case CREATE_ROOM:
-      return { ...state, roomName: action.room, playerName: action.player };
+      return {
+        ...state,
+        roomName: action.room,
+        playerName: action.player,
+        admin: true
+      };
     case JOIN_ROOM:
       return { ...state, roomName: action.room, playerName: action.player };
     case START_GAME:
@@ -148,6 +155,8 @@ const reducers = (state = initialState, action) => {
         return newState;
       }
       break;
+    case IS_NEW_ADMIN:
+      return { ...state, admin: true };
     default:
       return state;
   }
