@@ -14,7 +14,7 @@ export const startGame = state => {
 export const nextPiece = state => {
   console.log("CONSOLE LOG");
   // if (state.listPieces.length < 4) {
-  state.socket.emit(eventSocket.NEXT_PIECE);
+  // state.socket.emit(eventSocket.NEXT_PIECE);
   // }
 
   state.currentPiece.piece = state.listPieces.shift();

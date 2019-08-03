@@ -2,10 +2,10 @@ import React from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
 
-const mapStateToProps = state => {
-  const copy_state = _.cloneDeep(state);
-  return copy_state;
-};
+// const mapStateToProps = state => {
+//   const copy_state = _.cloneDeep(state);
+//   return copy_state;
+// };
 
 const GameGrid = props => {
   // setTimeout(() => {
@@ -39,8 +39,11 @@ const GamePieces = props => {
   );
 };
 
-const Game = state => {
+const Game = props => {
   // state.grid
+  // state = state.state;
+  const state = props.state;
+  console.log("Game components", state);
   const grid = _.slice(state.grid, 0); // 4
   const listPieces = _.slice(state.listPieces, 0); //3);
   return (
@@ -51,4 +54,4 @@ const Game = state => {
   );
 };
 
-export default connect(mapStateToProps)(Game);
+export default Game;
