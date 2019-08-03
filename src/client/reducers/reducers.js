@@ -9,7 +9,8 @@ import {
   CREATE_ROOM,
   JOIN_ROOM,
   LIST_ROOM_PLAYER,
-  IS_NEW_ADMIN
+  IS_NEW_ADMIN,
+  NEXT_PIECE
 } from "../actions/actionTypes";
 
 import {
@@ -93,6 +94,8 @@ const initialState = {
     ]
   ],
   admin: false,
+  nextPieceEvent: false,
+  lineBreakEvent: false,
   listRooms: [],
   listPlayers: [],
   timeId: null,
@@ -100,6 +103,8 @@ const initialState = {
 };
 
 const reducers = (state = initialState, action) => {
+  state.nextPieceEvent = false;
+
   if (state.socket === null) {
     state.socket = io("http://localhost:3001");
     console.error("SOCKET INITILIALIZATIOn");
@@ -157,6 +162,11 @@ const reducers = (state = initialState, action) => {
       break;
     case IS_NEW_ADMIN:
       return { ...state, admin: true };
+
+    case NEXT_PIECE:
+      let tmp = [...state.listPieces, action.piece];
+      console.error("REDUCER NEXT PIECE", action.piece);
+      return { ...state, listPieces: tmp };
     default:
       return state;
   }

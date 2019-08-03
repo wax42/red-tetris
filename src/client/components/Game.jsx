@@ -42,11 +42,11 @@ const GamePieces = props => {
 const Game = state => {
   // state.grid
   const grid = _.slice(state.grid, 0); // 4
-
+  const listPieces = _.slice(state.listPieces, 0); //3);
   return (
     <div className="game">
       <GameGrid grid={grid} />
-      <GamePieces pieces={state.listPieces} />
+      <GamePieces pieces={listPieces} />
     </div>
   );
 };

@@ -1,6 +1,8 @@
 import { placePiece } from "./gridChange";
 import _ from "lodash";
 
+import eventSocket from "../../common/common";
+
 export const startGame = state => {
   // TODO initialise the state with socket connection
   //   const dispatch = useDispatch();
@@ -10,10 +12,16 @@ export const startGame = state => {
 };
 
 export const nextPiece = state => {
+  console.log("CONSOLE LOG");
+  // if (state.listPieces.length < 4) {
+  state.socket.emit(eventSocket.NEXT_PIECE);
+  // }
+
   state.currentPiece.piece = state.listPieces.shift();
   state.currentPiece.x = 5;
   state.currentPiece.y = 0;
   state.grid = placePiece(state.grid, state.currentPiece);
+
   return state;
 };
 

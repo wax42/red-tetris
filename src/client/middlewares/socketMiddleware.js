@@ -8,7 +8,11 @@ import {
   SEND_SPECTRUM,
   JOIN_ROOM
 } from "../actions/actionTypes";
-import { actionPieceDown, actionIsNewAdmin } from "../actions/actions";
+import {
+  actionPieceDown,
+  actionIsNewAdmin,
+  actionNextPiece
+} from "../actions/actions";
 import eventSocket from "../../common/common";
 
 const launchGame = dispatch => {
@@ -21,7 +25,7 @@ const launchGame = dispatch => {
 const socketMiddleware = () => {
   console.error("START SOCKET MIDDLEWARE");
   return store => next => action => {
-    console.log("MIDDLEWARE");
+    console.log("MIDDLEWARE", action);
 
     //TODO Sécurité
     if (typeof action === "function") {
@@ -29,13 +33,20 @@ const socketMiddleware = () => {
       return next(action);
     }
 
+    // Les eventSockets qui communiquents avec le serveur et / ou qui dispatch une action
+
+    let state = store.getState();
+    console.log("Socket middleware", state);
+
+    /*  setInterval(() => {
+      console.error("EMIT SOCKET");
+      state.socket.emit(eventSocket.NEXT_PIECE);
+    }, 10000);
+ */
     if (action.eventSocket === undefined) {
       return next(action);
     }
 
-    // Les eventSockets qui communiquents avec le serveur et / ou qui dispatch une action
-
-    let state = store.getState();
     switch (action.type) {
       case START_GAME:
         launchGame(store.dispatch);
@@ -55,6 +66,13 @@ const socketMiddleware = () => {
             console.log(msg);
           }
         );
+
+        console.log("Emit next Piece");
+        state.socket.on(eventSocket.NEXT_PIECE, newPiece => {
+          console.log("CONSOLE callnback next piece");
+
+          store.dispatch(actionNextPiece(newPiece));
+        });
         break;
       case JOIN_ROOM:
         action.eventSocket = undefined;

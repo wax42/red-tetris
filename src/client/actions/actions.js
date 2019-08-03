@@ -43,6 +43,10 @@ export const actionPieceRotate = () => {
   return { type: PIECE_ROTATE };
 };
 
+export const actionNextPiece = piece => {
+  return { type: NEXT_PIECE, piece: piece };
+};
+
 /* ACTION WITH eventSocket */
 
 export const actionListRoomPlayer = () => {
@@ -69,10 +73,6 @@ export const actionJoinRoom = (room, player) => {
 
 export const actionStartGame = () => {
   return { type: START_GAME, eventSocket: eventSocket.START_GAME };
-};
-
-export const actionNextPiece = () => {
-  return { type: NEXT_PIECE, eventSocket: eventSocket.NEXT_PIECE };
 };
 
 export const actionLineBreak = () => {

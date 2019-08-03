@@ -19,9 +19,10 @@ class Player {
       this.socket.to(this.roomName).emit(eventSocket.START_GAME);
     });
 
-    this.socket.on(eventSocket.NEXT_PIECE, clientCallback => {
+    this.socket.on(eventSocket.NEXT_PIECE, ()=> {
       let piece = new Piece();
-      clientCallback(piece.grid);
+      console.log("Send New Piece", piece.grid);
+      this.socket.emit(eventSocket.NEXT_PIECE, piece.grid);
     });
   }
 }

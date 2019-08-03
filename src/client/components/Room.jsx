@@ -5,12 +5,15 @@ import Spectrum from "./Spectrum";
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
 
+import eventSocket from "../../common/common";
+
 import {
   actionPieceDown,
   actionPieceLeft,
   actionPieceRight,
   actionPieceSpace,
-  actionPieceRotate
+  actionPieceRotate,
+  actionNextPiece
 } from "../actions/actions";
 
 const KEY_SPACE = 32;
@@ -24,39 +27,38 @@ const handleKey = dispatch => event => {
   switch (event.keyCode) {
     case KEY_DOWN:
       event.preventDefault();
-      console.log("handle key down", event.keyCode);
       dispatch(actionPieceDown());
       break;
     case KEY_LEFT:
       event.preventDefault();
-      console.log("handle key left", event.keyCode);
       dispatch(actionPieceLeft());
       break;
     case KEY_RIGHT:
       event.preventDefault();
-      console.log("handle key right", event.keyCode);
       dispatch(actionPieceRight());
       break;
     case KEY_SPACE:
       event.preventDefault();
-      console.log("handle key space", event.keyCode);
       dispatch(actionPieceSpace());
       break;
     case KEY_UP:
       event.preventDefault();
-      console.log("handle key up", event.keyCode);
       dispatch(actionPieceRotate());
       break;
     default:
-      console.log("event.Keycode", event.keyCode);
+      break;
   }
 };
 
 const mapStateToProps = state => {
-  return { socket: state.socket, roomName: state.roomName };
+  return {
+    socket: state.socket,
+    roomName: state.roomName,
+    nextPieceEvent: state.nextPieceEvent
+  };
 };
 
-const Room = ({ socket, roomName }) => {
+const Room = ({ socket, nextPieceEvent, roomName }) => {
   const dispatch = useDispatch();
 
   // Key event Listenner
@@ -72,6 +74,14 @@ const Room = ({ socket, roomName }) => {
 
   // Room listenner
   useEffect(() => {
+    /*  if (nextPieceEvent) {
+      console.log("la chatte du cul");
+      socket.emit(eventSocket.NEXT_PIECE, newPiece => {
+        console.log("la bite du cul");
+        dispatch(actionNextPiece(newPiece));
+      });
+    } */
+
     socket.on("blabla", msg => {
       console.error("Le message en meme temps: ", msg);
     });
