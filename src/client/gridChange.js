@@ -157,7 +157,7 @@ const positionShadow = state => {
 
 const checkIslose = state => {
   for (let i = 0; i < 4; i++) {
-    if (_.difference(state.grid[i], ["."]).length !== 0) {
+    if (_.difference(state.grid[i], ["."]).length !== 0) { 
       return true;
     }
   }

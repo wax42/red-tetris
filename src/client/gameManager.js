@@ -45,5 +45,6 @@ export const lineBreak = state => {
     state.grid.unshift(new Array(10).fill("."));
   }
   console.log(state);
+
   return state;
 };
