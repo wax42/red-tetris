@@ -13,16 +13,6 @@ import {
   NEXT_PIECE
 } from "../actions/actionTypes";
 
-import {
-  downPiece,
-  leftPiece,
-  rightPiece,
-  rotatePiece,
-  downFloorPiece
-} from "./gridChange";
-
-import { startGame } from "./gameManager";
-
 import _ from "lodash";
 
 const initialState = {
@@ -133,40 +123,9 @@ const reducers = (state = initialState, action) => {
       };
     case JOIN_ROOM:
       return { ...state, roomName: action.room, playerName: action.player };
-    case START_GAME:
-      //Modifier le state
-      console.log("CLICK START GAME");
-      newState = startGame(newState);
-      return newState;
-    case PIECE_DOWN:
-      newState = downPiece(newState);
-      console.log("Down");
-      return newState;
-    case PIECE_LEFT:
-      console.log("Left");
-      newState = leftPiece(newState);
-      return newState;
-    case PIECE_RIGHT:
-      console.log("Right");
-      newState = rightPiece(newState);
-      return newState;
-    case PIECE_SPACE:
-      console.log("Space");
-      newState = downFloorPiece(newState);
-      return newState;
-    case PIECE_ROTATE:
-      console.log("Rotate");
-      if ((newState = rotatePiece(newState))) {
-        return newState;
-      }
-      break;
     case IS_NEW_ADMIN:
       return { ...state, admin: true };
 
-    case NEXT_PIECE:
-      let tmp = [...state.listPieces, action.piece];
-      console.error("REDUCER NEXT PIECE", action.piece);
-      return { ...state, listPieces: tmp };
     default:
       return state;
   }

@@ -1,49 +1,49 @@
 import React from "react";
 import { connect } from "react-redux";
 import { actionStartGame } from "../actions/actions";
+import eventSocket from "../../common/common";
+import { launchGame } from "../gameManager";
 
-const handleClick = action => {
-  action();
+const handleClick = (dispatchRoom, socket) => {
+  launchGame(dispatchRoom);
+  socket.emit(eventSocket.START_GAME);
 };
 
 const mapStateToProps = _state => {
-  const state = _state;
-  return { state };
+  const admin = _state.admin;
+  const socket = _state.socket;
+  return { admin, socket };
 };
 
-const Play = ({ admin, actionStartGame }) => {
+const Play = ({ admin, socket, dispatchRoom }) => {
   if (admin === true) {
-    return <button onClick={() => handleClick(actionStartGame)}>Play</button>;
+    return (
+      <button onClick={() => handleClick(dispatchRoom, socket)}>Play</button>
+    );
   }
   return <span />;
 };
 
-const PlayButton = connect(
-  null,
-  { actionStartGame }
-)(Play);
+const PlayButton = connect(mapStateToProps)(Play);
 
-const Info = ({ state }) => {
+const Info = ({ admin, dispatchRoom }) => {
   // console.log(actionClick);
   return (
     <div className="info">
-      {state.name}
-      <PlayButton admin={state.admin} />
+      <PlayButton admin={admin} dispatchRoom={dispatchRoom} />
     </div>
   );
 };
-
-const InfoRedux = connect(mapStateToProps)(Info);
 
 const Title = () => {
   return <div className="title">Red Tetris</div>;
 };
 
-const AppBoardInfo = () => {
+const AppBoardInfo = ({ dispatchRoom }) => {
   return (
     <div className="app-board-left">
       <Title />
-      <InfoRedux />
+      <Info dispatchRoom={dispatchRoom} />
     </div>
   );
 };

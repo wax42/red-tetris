@@ -1,4 +1,5 @@
 import { nextPiece, lineBreak } from "./gameManager";
+import _ from "lodash";
 
 const rotate = matrix => {
   let result = [];
@@ -154,15 +155,18 @@ const positionShadow = state => {
   return state;
 };
 
-export const downFloorPiece = state => {
-  state.grid = cleanOldPiece(state.grid, state.currentPiece);
-  state = positionShadow(state);
-  state.currentPiece.x = state.shadow.x;
-  state.currentPiece.y = state.shadow.y;
-  state.grid = placePiece(state.grid, state.currentPiece);
-  state = lineBreak(state);
-  state = nextPiece(state);
-  return state;
+export const downFloorPiece = (state, socket) => {
+  let newState = _.cloneDeep(state);
+
+  newState.grid = cleanOldPiece(newState.grid, newState.currentPiece);
+  newState = positionShadow(newState);
+  newState.currentPiece.x = newState.shadow.x;
+  newState.currentPiece.y = newState.shadow.y;
+  newState.grid = placePiece(newState.grid, newState.currentPiece);
+  lineBreak(newState);
+  nextPiece(newState, socket);
+  console.log(state);
+  return newState;
 };
 
 export const rotatePiece = state => {
@@ -179,7 +183,7 @@ export const rotatePiece = state => {
 };
 
 // SpacePiece
-export const downPiece = state => {
+export const downPiece = (state, socket) => {
   console.log("grid", JSON.stringify(state.grid));
 
   state.grid = cleanOldPiece(state.grid, state.currentPiece);
@@ -192,7 +196,7 @@ export const downPiece = state => {
     state = lineBreak(state);
     console.log("grid", JSON.stringify(state.grid), state.grid.length);
 
-    state = nextPiece(state);
+    state = nextPiece(state, socket);
 
     return state;
   }

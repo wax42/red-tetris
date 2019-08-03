@@ -1,31 +1,37 @@
 import { placePiece } from "./gridChange";
 import _ from "lodash";
+import { downPiece } from "./gridChange";
 
-import eventSocket from "../../common/common";
+import eventSocket from "../common/common";
+import { actionPieceDown } from "./actions/actionRoom";
 
-export const startGame = state => {
-  // TODO initialise the state with socket connection
-  //   const dispatch = useDispatch();
-  //   dispatch(actionPieceDown());
-
-  return state;
+export const launchGame = dispatchRoom => {
+  setInterval(() => {
+    dispatchRoom(actionPieceDown());
+    // setState(downPiece({ ...state }));
+  }, 1000);
+  dispatchRoom(actionPieceDown());
+  // setState(downPiece({ ...state }));
 };
 
-export const nextPiece = state => {
-  console.log("CONSOLE LOG");
+export const nextPiece = (state, socket) => {
   // if (state.listPieces.length < 4) {
-  // state.socket.emit(eventSocket.NEXT_PIECE);
+  socket.emit(eventSocket.NEXT_PIECE);
   // }
 
   state.currentPiece.piece = state.listPieces.shift();
   state.currentPiece.x = 5;
   state.currentPiece.y = 0;
+  console.log("NEXT PIECE LOG", JSON.stringify(state.grid));
+
   state.grid = placePiece(state.grid, state.currentPiece);
+  console.log("NEXT PIECE LOG", JSON.stringify(state.grid));
 
   return state;
 };
 
 export const lineBreak = state => {
+  console.log("Line break");
   let nbr_line = 0;
   state.grid = state.grid.filter(line => {
     if (_.difference(line, ["0", "."]).length === 10) {
@@ -38,6 +44,6 @@ export const lineBreak = state => {
   if (nbr_line !== 0) {
     state.grid.unshift(new Array(10).fill("."));
   }
-  console.log(nbr_line);
+  console.log(state);
   return state;
 };

@@ -1,11 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import Game from "./Game";
 import AppBoardInfo from "./AppBoardInfo";
 import Spectrum from "./Spectrum";
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
-
-import { lineBreak, nextPiece } from "../reducers/gameManager";
+import {
+  PIECE_DOWN,
+  PIECE_LEFT,
+  PIECE_RIGHT,
+  PIECE_SPACE,
+  PIECE_ROTATE,
+  NEXT_PIECE
+} from "../actions/actionTypes";
+import { launchGame } from "../gameManager";
 
 import {
   rotatePiece,
@@ -13,18 +20,18 @@ import {
   downPiece,
   leftPiece,
   rightPiece
-} from "../reducers/gridChange";
+} from "../gridChange";
 
 import eventSocket from "../../common/common";
 
 import {
+  actionNextPiece,
   actionPieceDown,
   actionPieceLeft,
   actionPieceRight,
-  actionPieceSpace,
   actionPieceRotate,
-  actionNextPiece
-} from "../actions/actions";
+  actionPieceSpace
+} from "../actions/actionRoom";
 
 const KEY_SPACE = 32;
 const KEY_DOWN = 40;
@@ -32,38 +39,34 @@ const KEY_UP = 38;
 const KEY_LEFT = 37;
 const KEY_RIGHT = 39;
 
-const handleKey = (dispatch, state, setState) => event => {
-  console.log(event.keyCode);
-
+const handleKey = (state, dispatchRoom, socket) => event => {
   switch (event.keyCode) {
     case KEY_DOWN:
       event.preventDefault();
-      setState(downPiece({ ...state }));
-      console.log(state);
-      // dispatch(actionPieceDown());
+      dispatchRoom(actionPieceDown(socket));
+      // setState(downPiece(newState, socket));
       break;
     case KEY_LEFT:
       event.preventDefault();
-      setState(leftPiece({ ...state }));
-
-      // dispatch(actionPieceLeft());
+      dispatchRoom(actionPieceLeft());
+      // setState(leftPiece(newState));
       break;
     case KEY_RIGHT:
       event.preventDefault();
-
-      setState(rightPiece({ ...state }));
-
-      // dispatch(actionPieceRight());
+      dispatchRoom(actionPieceRight());
+      // setState(rightPiece(newState));
       break;
     case KEY_SPACE:
       event.preventDefault();
-      setState(downFloorPiece({ ...state }));
-      // dispatch(actionPieceSpace());
+      dispatchRoom(actionPieceSpace(socket));
+      // setState(downFloorPiece(newState, socket));
+      console.log("KEY BHOOOK", JSON.stringify(state.grid));
       break;
     case KEY_UP:
       event.preventDefault();
-      setState(rotatePiece({ ...state }));
-      // dispatch(actionPieceRotate());
+      dispatchRoom(actionPieceRotate());
+
+      // setState(rotatePiece(newState));
       break;
     default:
       break;
@@ -73,16 +76,31 @@ const handleKey = (dispatch, state, setState) => event => {
 const mapStateToProps = state => {
   return {
     socket: state.socket,
-    roomName: state.roomName,
-    nextPieceEvent: state.nextPieceEvent
+    roomName: state.roomName
   };
 };
 
-const Room = ({ socket, nextPieceEvent, roomName }) => {
+const reduceRoom = (state, action) => {
+  switch (action.type) {
+    case PIECE_DOWN:
+      return downPiece({ ...state }, action.socket);
+    case PIECE_LEFT:
+      return leftPiece({ ...state });
+    case PIECE_RIGHT:
+      return rightPiece({ ...state });
+    case PIECE_SPACE:
+      return downFloorPiece({ ...state }, action.socket);
+    case PIECE_ROTATE:
+      return rotatePiece({ ...state });
+    case NEXT_PIECE:
+      return { ...state, listPieces: [...state.listPieces, action.piece] };
+  }
+};
+
+const Room = ({ socket, roomName }) => {
   const dispatch = useDispatch();
 
-  const [state, setState] = useState({
-    socket: null,
+  const initialState = {
     grid: [
       [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
       [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
@@ -150,11 +168,12 @@ const Room = ({ socket, nextPieceEvent, roomName }) => {
       ]
     ],
     admin: false
-  });
+  };
+  const [state, dispatchRoom] = useReducer(reduceRoom, initialState);
 
   // Key event Listenner
   useEffect(() => {
-    const eventListner = handleKey(dispatch, state, setState);
+    const eventListner = handleKey(state, dispatchRoom, socket);
 
     window.addEventListener("keydown", eventListner, false);
 
@@ -163,14 +182,26 @@ const Room = ({ socket, nextPieceEvent, roomName }) => {
     };
   });
 
-  console.log("Room components", state);
+  useEffect(() => {
+    socket.on(eventSocket.START_GAME, () => {
+      console.error("L'autre client a lance la partie");
+      launchGame(dispatchRoom);
+    });
+
+    socket.on(eventSocket.NEXT_PIECE, newPiece => {
+      console.log("On recupere la next piece", newPiece, state.listPieces);
+      dispatchRoom(actionNextPiece(newPiece));
+      //  setState({ ...state, listPieces: [...state.listPieces, newPiece] });
+      console.log("Juste apres la next piece", newPiece, state.listPieces);
+    });
+  }, []);
 
   const isLog = true; //A definir dans les classes + state
   if (isLog) {
     return (
       <div className="app">
         <div className="app-board">
-          <AppBoardInfo />
+          <AppBoardInfo dispatchRoom={dispatchRoom} />
           <Game state={state} />
         </div>
 

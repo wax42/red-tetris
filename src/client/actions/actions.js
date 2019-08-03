@@ -2,17 +2,11 @@ import {
   CREATE_ROOM,
   JOIN_ROOM,
   START_GAME,
-  NEXT_PIECE,
   LINE_BREAK,
   LIST_ROOM_PLAYER,
   ROOM_ADD_PLAYER,
   ROOM_DEL_PLAYER,
   SEND_SPECTRUM,
-  PIECE_DOWN,
-  PIECE_LEFT,
-  PIECE_RIGHT,
-  PIECE_SPACE,
-  PIECE_ROTATE,
   IS_NEW_ADMIN
 } from "./actionTypes";
 import eventSocket from "../../common/common";
@@ -21,30 +15,6 @@ import eventSocket from "../../common/common";
 
 export const actionIsNewAdmin = () => {
   return { type: IS_NEW_ADMIN };
-};
-
-export const actionPieceDown = () => {
-  return { type: PIECE_DOWN };
-};
-
-export const actionPieceLeft = () => {
-  return { type: PIECE_LEFT };
-};
-
-export const actionPieceRight = () => {
-  return { type: PIECE_RIGHT };
-};
-
-export const actionPieceSpace = () => {
-  return { type: PIECE_SPACE };
-};
-
-export const actionPieceRotate = () => {
-  return { type: PIECE_ROTATE };
-};
-
-export const actionNextPiece = piece => {
-  return { type: NEXT_PIECE, piece: piece };
 };
 
 /* ACTION WITH eventSocket */
