@@ -155,18 +155,30 @@ const positionShadow = state => {
   return state;
 };
 
-export const downFloorPiece = (state, socket) => {
-  let newState = _.cloneDeep(state);
+const checkIslose = state => {
+  for (let i = 0; i < 4; i++) {
+    if (_.difference(state.grid[i], ["."]).length !== 0) {
+      return true;
+    }
+  }
+  return false;
+};
 
-  newState.grid = cleanOldPiece(newState.grid, newState.currentPiece);
-  newState = positionShadow(newState);
-  newState.currentPiece.x = newState.shadow.x;
-  newState.currentPiece.y = newState.shadow.y;
-  newState.grid = placePiece(newState.grid, newState.currentPiece);
-  lineBreak(newState);
-  nextPiece(newState, socket);
+export const downFloorPiece = (state, socket) => {
+  state.grid = cleanOldPiece(state.grid, state.currentPiece);
+  state = positionShadow(state);
+  state.currentPiece.x = state.shadow.x;
+  state.currentPiece.y = state.shadow.y;
+  state.grid = placePiece(state.grid, state.currentPiece);
+
+  if (checkIslose(state) === true) {
+    state.lose = true;
+    return state;
+  }
+  lineBreak(state);
+  nextPiece(state, socket);
   console.log(state);
-  return newState;
+  return state;
 };
 
 export const rotatePiece = state => {
@@ -184,7 +196,7 @@ export const rotatePiece = state => {
 
 // SpacePiece
 export const downPiece = (state, socket) => {
-  console.log("grid", JSON.stringify(state.grid));
+  // console.log("grid", JSON.stringify(state.grid));
 
   state.grid = cleanOldPiece(state.grid, state.currentPiece);
 
@@ -193,8 +205,12 @@ export const downPiece = (state, socket) => {
     state.currentPiece.y -= 1;
     state.grid = placePiece(state.grid, state.currentPiece);
 
+    if (checkIslose(state) === true) {
+      state.lose = true;
+      return state;
+    }
     state = lineBreak(state);
-    console.log("grid", JSON.stringify(state.grid), state.grid.length);
+    // console.log("grid", JSON.stringify(state.grid), state.grid.length);
 
     state = nextPiece(state, socket);
 

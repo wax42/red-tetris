@@ -167,7 +167,8 @@ const Room = ({ socket, roomName }) => {
         [".", ".", ".", "."]
       ]
     ],
-    admin: false
+    admin: false,
+    lose: false
   };
   const [state, dispatchRoom] = useReducer(reduceRoom, initialState);
 
@@ -203,6 +204,7 @@ const Room = ({ socket, roomName }) => {
         <div className="app-board">
           <AppBoardInfo dispatchRoom={dispatchRoom} />
           <Game state={state} />
+          <h1>{JSON.stringify(state.lose)}</h1>
         </div>
 
         <Spectrum className="app-spectrum" />
