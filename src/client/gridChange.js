@@ -1,5 +1,6 @@
-import { nextPiece, lineBreak } from "./gameManager";
+import { nextPiece, lineBreak, cleanListennerLose } from "./gameManager";
 import _ from "lodash";
+import eventSocket from "../common/eventSocket";
 
 const rotate = matrix => {
   let result = [];
@@ -89,7 +90,7 @@ const calculateSpaceRight = currentPiece => {
   }
 };
 
-const checkIsPos = (grid, currentPiece) => {
+export const checkIsPos = (grid, currentPiece) => {
   let y_piece = 0;
 
   if (
@@ -134,11 +135,12 @@ const placeShadow = (grid, shadow) => {
 };
 
 const positionShadow = state => {
+  console.log("Position shadow state before clean: ", state);
   state.grid = cleanOldPiece(state.grid, state.shadow);
+  console.log("Position shadow state after clean: ", state);
 
   state.shadow.x = state.currentPiece.x;
   state.shadow.y = state.currentPiece.y;
-
   state.shadow.piece = state.currentPiece.piece.map(line => {
     return line.map(el => {
       if (el !== ".") return "0";
@@ -157,14 +159,14 @@ const positionShadow = state => {
 
 const checkIslose = state => {
   for (let i = 0; i < 4; i++) {
-    if (_.difference(state.grid[i], ["."]).length !== 0) { 
+    if (_.difference(state.grid[i], ["."]).length !== 0) {
       return true;
     }
   }
   return false;
 };
 
-export const downFloorPiece = (state, socket) => {
+export const downFloorPiece = state => {
   state.grid = cleanOldPiece(state.grid, state.currentPiece);
   state = positionShadow(state);
   state.currentPiece.x = state.shadow.x;
@@ -172,33 +174,39 @@ export const downFloorPiece = (state, socket) => {
   state.grid = placePiece(state.grid, state.currentPiece);
 
   if (checkIslose(state) === true) {
+    cleanListennerLose(state.clearInterval, state.eventListner);
     state.lose = true;
+    state.socket.emit(eventSocket.LOSE);
+    nextPiece(state);
     return state;
   }
   lineBreak(state);
-  nextPiece(state, socket);
+  nextPiece(state);
   console.log(state);
   return state;
 };
 
 export const rotatePiece = state => {
+  let tmp = { ...state.currentPiece };
   state.grid = cleanOldPiece(state.grid, state.currentPiece);
 
-  state.currentPiece.piece = rotate(state.currentPiece.piece);
-  if (checkIsPos(state.grid, state.currentPiece) === false) {
+  tmp.piece = rotate(tmp.piece);
+  if (checkIsPos(state.grid, tmp) === false) {
     return null;
   }
+  state.currentPiece = tmp;
   state = positionShadow(state);
-
   state.grid = placePiece(state.grid, state.currentPiece);
   return state;
 };
 
 // SpacePiece
-export const downPiece = (state, socket) => {
-  // console.log("grid", JSON.stringify(state.grid));
+export const downPiece = state => {
+  console.log("START DOWN PIECE ");
+  console.log("START DOWN PIECE ", JSON.stringify(state.grid));
 
   state.grid = cleanOldPiece(state.grid, state.currentPiece);
+  console.log("CLEAN POLD PIECE Ok ", JSON.stringify(state.grid));
 
   state.currentPiece.y += 1;
   if (checkIsPos(state.grid, state.currentPiece) === false) {
@@ -207,18 +215,24 @@ export const downPiece = (state, socket) => {
 
     if (checkIslose(state) === true) {
       state.lose = true;
+      cleanListennerLose(state.clearInterval, state.eventListner);
+      console.log("DOWN PIECE CHEK IS LOSE ", JSON.stringify(state.grid));
+      state.socket.emit(eventSocket.LOSE);
+      nextPiece(state);
       return state;
     }
     state = lineBreak(state);
     // console.log("grid", JSON.stringify(state.grid), state.grid.length);
 
-    state = nextPiece(state, socket);
+    state = nextPiece(state);
 
+    console.log("DOWN PIECE CHEK IS NOT POS ", JSON.stringify(state.grid));
     return state;
   }
   state = positionShadow(state);
 
   state.grid = placePiece(state.grid, state.currentPiece);
+  console.log("END DOWN PIECE ", JSON.stringify(state.grid));
   return state;
 };
 
@@ -249,5 +263,38 @@ export const rightPiece = state => {
   state = positionShadow(state);
 
   state.grid = placePiece(state.grid, state.currentPiece);
+  return state;
+};
+
+export const switchPiece = state => {
+  state.grid = cleanOldPiece(state.grid, state.currentPiece);
+
+  let tmp = { ...state.currentPiece };
+  tmp.piece = state.listPieces[0];
+  console.log(JSON.stringify(state.currentPiece));
+  console.log("Before check is pos", JSON.stringify(state.grid));
+
+  if (checkIsPos(state.grid, tmp) === false) {
+    state.grid = placePiece(state.grid, state.currentPiece);
+    return state;
+  }
+  console.log("After check is pos");
+  state.listPieces[0] = state.currentPiece.piece;
+  state.currentPiece = tmp;
+  state = positionShadow(state);
+  state.grid = placePiece(state.grid, state.currentPiece);
+  return state;
+};
+
+export const addIndestructiblesLines = (state, nbrLine) => {
+  state.grid = cleanOldPiece(state.grid, state.currentPiece);
+  console.log("NBR LINES BREAK = ", nbrLine);
+  while (nbrLine !== 0) {
+    state.grid.push(new Array(10).fill("8"));
+    state.grid.shift();
+    nbrLine--;
+  }
+  state.grid = placePiece(state.grid, state.currentPiece);
+  console.log(state.grid);
   return state;
 };

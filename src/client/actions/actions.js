@@ -1,23 +1,21 @@
 import {
   CREATE_ROOM,
   JOIN_ROOM,
-  START_GAME,
-  LINE_BREAK,
   LIST_ROOM_PLAYER,
-  ROOM_ADD_PLAYER,
-  ROOM_DEL_PLAYER,
-  SEND_SPECTRUM,
-  IS_NEW_ADMIN
+  IS_NEW_ADMIN,
+  IS_SPECTATOR
 } from "./actionTypes";
-import eventSocket from "../../common/common";
+import eventSocket from "../../common/eventSocket";
 
-/* ACTION  WITHOUT SERVER */
+// action for redux state
+
+export const actionIsSpectator = () => {
+  return { type: IS_SPECTATOR };
+};
 
 export const actionIsNewAdmin = () => {
   return { type: IS_NEW_ADMIN };
 };
-
-/* ACTION WITH eventSocket */
 
 export const actionListRoomPlayer = () => {
   return { type: LIST_ROOM_PLAYER, eventSocket: eventSocket.LIST_ROOM_PLAYER };
@@ -39,24 +37,4 @@ export const actionJoinRoom = (room, player) => {
     player: player,
     eventSocket: eventSocket.JOIN_ROOM
   };
-};
-
-export const actionStartGame = () => {
-  return { type: START_GAME, eventSocket: eventSocket.START_GAME };
-};
-
-export const actionLineBreak = () => {
-  return { type: LINE_BREAK, eventSocket: eventSocket.LINE_BREAK };
-};
-
-export const actionRoomAddPlayer = () => {
-  return { type: ROOM_ADD_PLAYER, eventSocket: eventSocket.ROOM_ADD_PLAYER };
-};
-
-export const actionRoomDelPlayer = () => {
-  return { type: ROOM_DEL_PLAYER, eventSocket: eventSocket.ROOM_DEL_PLAYER };
-};
-
-export const actionSpectrums = () => {
-  return { type: SEND_SPECTRUM, eventSocket: eventSocket.SEND_SPECTRUM };
 };

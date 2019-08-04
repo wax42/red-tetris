@@ -1,24 +1,30 @@
 import React from "react";
 import { connect } from "react-redux";
-import { actionStartGame } from "../actions/actions";
-import eventSocket from "../../common/common";
+import eventSocket from "../../common/eventSocket";
 import { launchGame } from "../gameManager";
+import { actionStartGame } from "../actions/actionRoom";
 
-const handleClick = (dispatchRoom, socket) => {
-  launchGame(dispatchRoom);
-  socket.emit(eventSocket.START_GAME);
+const handleClick = (state, dispatchRoom) => {
+  console.log("handle click start");
+  state.socket.emit(eventSocket.START_GAME, (listPlayers, listPieces) => {
+    listPlayers = listPlayers.filter(value => value !== state.playerName);
+
+    dispatchRoom(actionStartGame(listPlayers, listPieces));
+    launchGame(state, dispatchRoom);
+    console.log("handle click callback");
+  });
+  console.log("handle click end");
 };
 
 const mapStateToProps = _state => {
   const admin = _state.admin;
-  const socket = _state.socket;
-  return { admin, socket };
+  return { admin };
 };
 
-const Play = ({ admin, socket, dispatchRoom }) => {
+const Play = ({ state, admin, dispatchRoom }) => {
   if (admin === true) {
     return (
-      <button onClick={() => handleClick(dispatchRoom, socket)}>Play</button>
+      <button onClick={() => handleClick(state, dispatchRoom)}>Play</button>
     );
   }
   return <span />;
@@ -26,11 +32,11 @@ const Play = ({ admin, socket, dispatchRoom }) => {
 
 const PlayButton = connect(mapStateToProps)(Play);
 
-const Info = ({ admin, dispatchRoom }) => {
+const Info = ({ state, admin, dispatchRoom }) => {
   // console.log(actionClick);
   return (
     <div className="info">
-      <PlayButton admin={admin} dispatchRoom={dispatchRoom} />
+      <PlayButton state={state} admin={admin} dispatchRoom={dispatchRoom} />
     </div>
   );
 };
@@ -39,11 +45,11 @@ const Title = () => {
   return <div className="title">Red Tetris</div>;
 };
 
-const AppBoardInfo = ({ dispatchRoom }) => {
+const AppBoardInfo = ({ state, dispatchRoom }) => {
   return (
     <div className="app-board-left">
       <Title />
-      <Info dispatchRoom={dispatchRoom} />
+      <Info state={state} dispatchRoom={dispatchRoom} />
     </div>
   );
 };

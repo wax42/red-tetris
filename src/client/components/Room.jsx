@@ -10,163 +10,114 @@ import {
   PIECE_RIGHT,
   PIECE_SPACE,
   PIECE_ROTATE,
-  NEXT_PIECE
+  NEXT_PIECE,
+  SWITCH_PIECE,
+  ADD_INDESTRUCTIBLES_LINES,
+  SPECTRUMS,
+  START_GAME,
+  SPECTRUMS_SPECTATOR,
+  CLEAR_LOSE
 } from "../actions/actionTypes";
-import { launchGame } from "../gameManager";
+import { launchGame, startGame, handleKey } from "../gameManager";
 
 import {
   rotatePiece,
   downFloorPiece,
   downPiece,
   leftPiece,
-  rightPiece
+  rightPiece,
+  switchPiece,
+  addIndestructiblesLines
 } from "../gridChange";
 
-import eventSocket from "../../common/common";
+import { GRID, EMPTY_PIECE } from "../../common/common";
+import eventSocket from "../../common/eventSocket";
 
 import {
   actionNextPiece,
-  actionPieceDown,
-  actionPieceLeft,
-  actionPieceRight,
-  actionPieceRotate,
-  actionPieceSpace
+  actionIndestructiblesLines,
+  actionSpectrum,
+  actionStartGame,
+  actionSpectrumsSpectator
 } from "../actions/actionRoom";
 
-const KEY_SPACE = 32;
-const KEY_DOWN = 40;
-const KEY_UP = 38;
-const KEY_LEFT = 37;
-const KEY_RIGHT = 39;
-
-const handleKey = (state, dispatchRoom, socket) => event => {
-  switch (event.keyCode) {
-    case KEY_DOWN:
-      event.preventDefault();
-      dispatchRoom(actionPieceDown(socket));
-      // setState(downPiece(newState, socket));
-      break;
-    case KEY_LEFT:
-      event.preventDefault();
-      dispatchRoom(actionPieceLeft());
-      // setState(leftPiece(newState));
-      break;
-    case KEY_RIGHT:
-      event.preventDefault();
-      dispatchRoom(actionPieceRight());
-      // setState(rightPiece(newState));
-      break;
-    case KEY_SPACE:
-      event.preventDefault();
-      dispatchRoom(actionPieceSpace(socket));
-      // setState(downFloorPiece(newState, socket));
-      console.log("KEY BHOOOK", JSON.stringify(state.grid));
-      break;
-    case KEY_UP:
-      event.preventDefault();
-      dispatchRoom(actionPieceRotate());
-
-      // setState(rotatePiece(newState));
-      break;
-    default:
-      break;
-  }
-};
+import _ from "lodash";
 
 const mapStateToProps = state => {
   return {
     socket: state.socket,
-    roomName: state.roomName
+    roomName: state.roomName,
+    playerName: state.playerName,
+    spectator: state.spectator
   };
 };
 
 const reduceRoom = (state, action) => {
+  console.log("reduce rooom", action, state);
   switch (action.type) {
+    case START_GAME:
+      return startGame({ ...state }, action.listPlayers, action.listPieces);
     case PIECE_DOWN:
-      return downPiece({ ...state }, action.socket);
+      return downPiece({ ...state });
     case PIECE_LEFT:
       return leftPiece({ ...state });
     case PIECE_RIGHT:
       return rightPiece({ ...state });
     case PIECE_SPACE:
-      return downFloorPiece({ ...state }, action.socket);
+      return downFloorPiece({ ...state });
     case PIECE_ROTATE:
-      return rotatePiece({ ...state });
+      let nState = rotatePiece({ ...state });
+      if (nState === null) return state;
+      return nState;
     case NEXT_PIECE:
       return { ...state, listPieces: [...state.listPieces, action.piece] };
+    case SWITCH_PIECE:
+      return switchPiece({ ...state });
+    case ADD_INDESTRUCTIBLES_LINES:
+      console.log("REDUCERROOM add_ind", action.nbrLines);
+      return addIndestructiblesLines({ ...state }, action.nbrLines);
+    case SPECTRUMS:
+      let newState = { ...state };
+      newState.listSpectrums[action.spectrum.playerName] = action.spectrum;
+      return newState;
+    case SPECTRUMS_SPECTATOR:
+      console.log("reduce rooom spectrums spectator");
+      return { ...state, listSpectrums: action.listSpectrums };
+
+    case CLEAR_LOSE:
+      return {
+        ...state,
+        clearInterval: action.clearInterval,
+        eventListner: action.eventListner
+      };
+
+    default:
+      return state;
   }
+  return state;
 };
 
-const Room = ({ socket, roomName }) => {
+const Room = ({ socket, roomName, playerName, spectator }) => {
   const dispatch = useDispatch();
 
   const initialState = {
-    grid: [
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-      [".", ".", ".", "2", "2", "2", "2", "2", "2", "2"]
-    ],
+    socket: socket,
+    playerName: playerName,
+    clearInterval: -1,
+    eventListner: null,
+    grid: GRID,
     currentPiece: {
       x: 5,
       y: 0,
-      piece: [
-        [".", "1", ".", "."],
-        [".", "1", "1", "."],
-        [".", ".", "1", "."],
-        [".", ".", ".", "."]
-      ]
+      piece: EMPTY_PIECE
     },
     shadow: {
       x: 5,
       y: 0,
-      piece: [
-        [".", ".", ".", "0"],
-        [".", ".", ".", "0"],
-        [".", ".", ".", "0"],
-        [".", ".", ".", "0"]
-      ]
+      piece: EMPTY_PIECE
     },
-    listPieces: [
-      [
-        [".", "1", ".", "."],
-        [".", "1", ".", "."],
-        [".", "1", ".", "."],
-        [".", "1", ".", "."]
-      ],
-      [
-        [".", ".", ".", "."],
-        [".", ".", ".", "."],
-        [".", "2", "2", "."],
-        [".", "2", "2", "."]
-      ],
-      [
-        [".", ".", "3", "3"],
-        [".", ".", ".", "3"],
-        [".", ".", ".", "3"],
-        [".", ".", ".", "."]
-      ]
-    ],
+    listPieces: [EMPTY_PIECE, EMPTY_PIECE, EMPTY_PIECE],
+    listSpectrums: {},
     admin: false,
     lose: false
   };
@@ -174,19 +125,24 @@ const Room = ({ socket, roomName }) => {
 
   // Key event Listenner
   useEffect(() => {
-    const eventListner = handleKey(state, dispatchRoom, socket);
+    console.log("reMounted");
+    console.log("START GAME updated", JSON.stringify(GRID));
 
-    window.addEventListener("keydown", eventListner, false);
-
-    return () => {
-      window.removeEventListener("keydown", eventListner, false);
-    };
+    if (spectator === true && _.isEmpty(state.listSpectrums)) {
+      socket.emit(eventSocket.SEND_SPECTRUMS_SPECTATOR, listSpectrums => {
+        console.log("SPECTATOR ASK SPECTRUM", listSpectrums);
+        dispatchRoom(actionSpectrumsSpectator(listSpectrums));
+      });
+    }
   });
 
   useEffect(() => {
-    socket.on(eventSocket.START_GAME, () => {
+    socket.on(eventSocket.START_GAME, (listPlayers, listPieces) => {
+      listPlayers = listPlayers.filter(value => value !== playerName);
+      dispatchRoom(actionStartGame(listPlayers, listPieces));
+
       console.error("L'autre client a lance la partie");
-      launchGame(dispatchRoom);
+      launchGame(state, dispatchRoom);
     });
 
     socket.on(eventSocket.NEXT_PIECE, newPiece => {
@@ -195,19 +151,33 @@ const Room = ({ socket, roomName }) => {
       //  setState({ ...state, listPieces: [...state.listPieces, newPiece] });
       console.log("Juste apres la next piece", newPiece, state.listPieces);
     });
+
+    socket.on(eventSocket.LINE_BREAK, nbrLines => {
+      console.log("Another Client on Line Break", nbrLines);
+      dispatchRoom(actionIndestructiblesLines(nbrLines));
+    });
+
+    socket.on(eventSocket.SEND_SPECTRUMS, spectrum => {
+      dispatchRoom(actionSpectrum(spectrum));
+    });
   }, []);
+
+  console.log("Componenets rooom mounted", state);
 
   const isLog = true; //A definir dans les classes + state
   if (isLog) {
     return (
       <div className="app">
         <div className="app-board">
-          <AppBoardInfo dispatchRoom={dispatchRoom} />
+          <AppBoardInfo state={state} dispatchRoom={dispatchRoom} />
           <Game state={state} />
           <h1>{JSON.stringify(state.lose)}</h1>
         </div>
 
-        <Spectrum className="app-spectrum" />
+        <Spectrum
+          listSpectrums={state.listSpectrums}
+          className="app-spectrum"
+        />
         <input type="text" onKeyPress={handleKey} />
       </div>
     );

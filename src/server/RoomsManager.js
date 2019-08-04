@@ -9,7 +9,7 @@ class RoomsManager {
     this.rooms = {};
     // top score
   }
-  createRoom(roomName, playerName, clientSocket) {
+  createRoom(roomName, playerName, clientSocket, clientCallback, io) {
     console.log(
       "Create room RoomManager params: ",
       roomName,
@@ -17,7 +17,7 @@ class RoomsManager {
       clientSocket.id
     );
     if (this.listRoomsName.includes(roomName) === true) {
-      return false;
+      return this.joinRoom(roomName, playerName, client, clientCallback, io);
     }
 
     console.log("SOCKET ID CREATE ROOM ", clientSocket.id);
@@ -31,23 +31,29 @@ class RoomsManager {
     this.listPlayersName.push(playerName);
     clientSocket.roomName = roomName;
     clientSocket.playerName = playerName;
+    this.sendListRoomsPlayers(io);
+    clientCallback("Succes Create new ROOM:  " + roomName);
     return true;
   }
-  joinRoom(roomName, playerName, clientSocket) {
+  joinRoom(roomName, playerName, clientSocket, clientCallback, io) {
     //Check if player doesn't not exist
     if (
       this.listRoomsName.includes(roomName) === false ||
       this.listPlayersName.includes(playerName) === true
     ) {
+      clientCallback("Is not possible to join room:  " + roomName);
       return false;
     }
+
     this.rooms[roomName].addPlayer(playerName, clientSocket);
 
     this.listPlayersName.push(playerName);
     clientSocket.roomName = roomName;
     clientSocket.playerName = playerName;
 
-    console.log("JOIN ROOM function", this.rooms[roomName]);
+    this.sendListRoomsPlayers(io);
+    clientCallback("Succes Join ROOM: " + roomName, this.rooms[roomName].game);
+    console.log("Succes Join Room: ", this.rooms[roomName]);
     return true;
   }
   sendListRoomsPlayers(io) {

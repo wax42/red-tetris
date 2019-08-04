@@ -1,19 +1,11 @@
 import io from "socket.io-client";
 import {
-  START_GAME,
-  PIECE_DOWN,
-  PIECE_LEFT,
-  PIECE_RIGHT,
-  PIECE_SPACE,
-  PIECE_ROTATE,
   CREATE_ROOM,
   JOIN_ROOM,
   LIST_ROOM_PLAYER,
   IS_NEW_ADMIN,
-  NEXT_PIECE
+  IS_SPECTATOR
 } from "../actions/actionTypes";
-
-import _ from "lodash";
 
 const initialState = {
   socket: null,
@@ -84,8 +76,7 @@ const initialState = {
     ]
   ],
   admin: false,
-  nextPieceEvent: false,
-  lineBreakEvent: false,
+  spectator: false,
   listRooms: [],
   listPlayers: [],
   timeId: null,
@@ -106,8 +97,12 @@ const reducers = (state = initialState, action) => {
 
   // let newState = Object.assign({}, state)
 
-  let newState = _.cloneDeep(state);
   switch (action.type) {
+    case IS_SPECTATOR:
+      return {
+        ...state,
+        spectator: !state.spectator
+      };
     case LIST_ROOM_PLAYER:
       return {
         ...state,

@@ -1,4 +1,4 @@
-const eventSocket = require("../common/common");
+const eventSocket = require("../common/eventSocket");
 const RoomsManager = require("./RoomsManager");
 
 const handleClient = client => {
@@ -10,40 +10,25 @@ const handleClient = client => {
 
   client.on(eventSocket.CREATE_ROOM, (roomName, playerName, clientCallback) => {
     // Check si la room existe deja !!!!! apres manger
-    if (roomsManager.createRoom(roomName, playerName, client) === false) {
-      if (roomsManager.joinRoom(roomName, playerName, client) == true) {
-        // Gestion error is not possible to join this room
-        // Room is not create
-        console.log("JOIN ROOM VALIDATE");
-
-        clientCallback("Succes Join ROOM: " + roomName);
-      } else {
-        // si ça rentre la c chelou
-        // si player existe on rentre ici - rien de creer cote serveur mais App rendue client
-        console.log("JOIN ROOM chelou");
-
-        clientCallback("Is not possible to join room:  " + roomName);
-      }
-      // Add new player in this fucking room
-    } else {
-      roomsManager.sendListRoomsPlayers(io);
-      clientCallback("Succes Create new ROOM:  " + roomName);
-
-      //   setInterval(() => {
-      //     client.to(roomName).emit("blabla", "boubou");
-      //     console.log("SET INTERVAL EMIT");
-      //   }, 2000);
+    if (
+      roomsManager.createRoom(
+        roomName,
+        playerName,
+        client,
+        clientCallback,
+        io
+      ) === false
+    ) {
+      console.error("Error does not CREATE or JOIN room: " + roomName);
     }
   });
 
   client.on(eventSocket.JOIN_ROOM, (roomName, playerName, clientCallback) => {
-    if (roomsManager.joinRoom(roomName, playerName, client) == false) {
-      // Gestion error is not possible to join this room
-      // Room is not create
-      clientCallback("Is not possible to join room:  " + roomName);
-    } else {
-      roomsManager.sendListRoomsPlayers(io);
-      clientCallback("Succes Join ROOM: " + roomName);
+    if (
+      roomsManager.joinRoom(roomName, playerName, client, clientCallback, io) ==
+      false
+    ) {
+      console.log("Is not possible to join room: " + roomName);
     }
   });
 

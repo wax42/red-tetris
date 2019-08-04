@@ -1,8 +1,9 @@
 import React from "react";
 import _ from "lodash";
 
-const GameGrid = props => {
+export const GameGrid = props => {
   const grid = props.grid;
+  console.log("Game grid", grid);
   return (
     <div className="game-grid">
       {grid.map((line, index) => {

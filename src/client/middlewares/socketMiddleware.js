@@ -2,11 +2,10 @@ import {
   CREATE_ROOM,
   LINE_BREAK,
   LIST_ROOM_PLAYER,
-  SEND_SPECTRUM,
   JOIN_ROOM
 } from "../actions/actionTypes";
-import { actionIsNewAdmin } from "../actions/actions";
-import eventSocket from "../../common/common";
+import { actionIsNewAdmin, actionIsSpectator } from "../actions/actions";
+import eventSocket from "../../common/eventSocket";
 
 const socketMiddleware = () => {
   console.error("START SOCKET MIDDLEWARE");
@@ -37,7 +36,7 @@ const socketMiddleware = () => {
           msg => {
             // TODO gestion d'erreur
             // dispatch action error
-            console.log(msg);
+            console.log("CREATE ROOOM", msg);
           }
         );
 
@@ -51,11 +50,14 @@ const socketMiddleware = () => {
           eventSocket.JOIN_ROOM,
           action.room,
           action.player,
-          msg => {
+          (msg, game) => {
             // TODO gestion d'erreur
 
             // dispatch action error
-            console.log(msg);
+            if (game === true) {
+              store.dispatch(actionIsSpectator());
+            }
+            console.log("JOIN ROOOM", msg);
           }
         );
 
@@ -67,9 +69,6 @@ const socketMiddleware = () => {
         break;
       case LINE_BREAK:
         state.socket.emit("ROOM line_break", "nbr de line break");
-        break;
-      case SEND_SPECTRUM:
-        state.socket.emit("ROOM SEND_SPECTRUM", "le spectre de la grille");
         break;
 
       // listenner dans le state

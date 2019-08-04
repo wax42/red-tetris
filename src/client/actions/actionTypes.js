@@ -8,9 +8,12 @@ export const START_GAME = "START_GAME";
 export const LINE_BREAK = "LINE_BREAK";
 export const ROOM_ADD_PLAYER = "ROOM_ADD_PLAYER";
 export const ROOM_DEL_PLAYER = "ROOM_DEL_PLAYER";
-export const SEND_SPECTRUM = "SEND_SPECTRUM";
+export const IS_NEW_ADMIN = "IS_NEW_ADMIN";
+export const IS_SPECTATOR = "IS_SPECTATOR";
 
-/* ACTION  WITHOUT SERVER */
+/* ACTION  ROOM */
+
+export const CLEAR_LOSE = "CLEAR_LOSE";
 export const NEXT_PIECE = "NEXT_PIECE";
 
 export const PIECE_DOWN = "PIECE_DOWN";
@@ -18,4 +21,8 @@ export const PIECE_LEFT = "PIECE_LEFT";
 export const PIECE_RIGHT = "PIECE_RIGHT";
 export const PIECE_SPACE = "PIECE_SPACE";
 export const PIECE_ROTATE = "PIECE_ROTATE";
-export const IS_NEW_ADMIN = "IS_NEW_ADMIN";
+export const SWITCH_PIECE = "SWITCH_PIECE";
+export const ADD_INDESTRUCTIBLES_LINES = "ADD_INDESTRUCTIBLES_LINES";
+
+export const SPECTRUMS = "SPECTRUMS";
+export const SPECTRUMS_SPECTATOR = "SPECTRUMS_SPECTATOR";

@@ -1,14 +1,14 @@
 const Game = require("./Game.js");
 const Player = require("./Player.js");
 const _ = require("lodash");
-const eventSocket = require("../common/common");
+const eventSocket = require("../common/eventSocket");
 
 class Room {
   constructor(name, playerName, clientSocket) {
     this.name = name;
     this.admin = clientSocket.id; // hash / id
     // TODO add the admin in the lists of players
-    this.game = null;
+    this.game = false;
     this.players = [];
     this.addPlayer(playerName, clientSocket);
     // top score
@@ -24,7 +24,7 @@ class Room {
       playerName,
       clientSocket.id
     );
-    let newPlayer = new Player(playerName, this.name, clientSocket);
+    let newPlayer = new Player(playerName, this, clientSocket);
     clientSocket.join(this.name);
     this.players.push(newPlayer);
   }

@@ -123,6 +123,10 @@ body,
   background-color: red;
 }
 
+.color-form8 {
+  background-color: rgb(124, 124, 124);
+}
+
 /* Home Component */
 .home {
   user-select: none;
