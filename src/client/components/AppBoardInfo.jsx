@@ -4,15 +4,17 @@ import eventSocket from "../../common/eventSocket";
 import { launchGame } from "../gameManager";
 import { actionStartGame } from "../actions/actionRoom";
 
-const handleClick = (state, dispatchRoom) => {
+const buttonPlay = (state, dispatchRoom) => {
   console.log("handle click start");
-  state.socket.emit(eventSocket.START_GAME, (listPlayers, listPieces) => {
-    listPlayers = listPlayers.filter(value => value !== state.playerName);
+  if (state.clearInterval === -1) {
+    state.socket.emit(eventSocket.START_GAME, (listPlayers, listPieces) => {
+      listPlayers = listPlayers.filter(value => value !== state.playerName);
 
-    dispatchRoom(actionStartGame(listPlayers, listPieces));
-    launchGame(state, dispatchRoom);
-    console.log("handle click callback");
-  });
+      dispatchRoom(actionStartGame(listPlayers, listPieces));
+      launchGame(dispatchRoom);
+      console.log("handle click callback");
+    });
+  }
   console.log("handle click end");
 };
 
@@ -24,7 +26,7 @@ const mapStateToProps = _state => {
 const Play = ({ state, admin, dispatchRoom }) => {
   if (admin === true) {
     return (
-      <button onClick={() => handleClick(state, dispatchRoom)}>Play</button>
+      <button onClick={() => buttonPlay(state, dispatchRoom)}>Play</button>
     );
   }
   return <span />;
@@ -36,6 +38,7 @@ const Info = ({ state, admin, dispatchRoom }) => {
   // console.log(actionClick);
   return (
     <div className="info">
+      {state.winner}
       <PlayButton state={state} admin={admin} dispatchRoom={dispatchRoom} />
     </div>
   );

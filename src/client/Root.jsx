@@ -1,5 +1,5 @@
 // import logo from './logo.svg';
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Provider, connect } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import reducers from "./reducers/reducers";
@@ -7,7 +7,8 @@ import socketMiddleware from "./middlewares/socketMiddleware";
 import Home from "./components/Home";
 import Room from "./components/Room";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { actionJoinRoom } from "./actions/actions";
+import { actionJoinRoom, actionListRoomPlayer } from "./actions/actions";
+import eventSocket from "../common/eventSocket";
 
 const store = createStore(
   reducers,
@@ -18,7 +19,8 @@ const mapStateToProps = _state => {
   const state = {
     playerName: _state.playerName,
     listRooms: _state.listRooms,
-    listPlayers: _state.listPlayers
+    listPlayers: _state.listPlayers,
+    socket: _state.socket
   };
   return { state };
 };
@@ -38,6 +40,7 @@ const routeHashError = (hash, state, actionJoinRoom) => {
   if (/^[A-z0-9]{3,}$/.test(player_name) === false) {
     return "Player Name incorrect";
   }
+  // Home error
   if (state.listRooms.includes(room_name) === false) {
     return "Room don't exist";
   }
@@ -48,14 +51,39 @@ const routeHashError = (hash, state, actionJoinRoom) => {
     return "Player name already exists";
   }
   if (state.playerName !== player_name) {
+    console.log("Action Join room");
     actionJoinRoom(room_name, player_name);
   }
   return "";
 };
 
-const Routing = ({ state, actionJoinRoom }) => {
+const Routing = ({ state, actionJoinRoom, actionListRoomPlayer }) => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    state.socket.emit(
+      eventSocket.LIST_ROOMS_PLAYERS,
+      (listRooms, listPlayers) => {
+        console.log("Est ce que tu rentre icic");
+        setLoading(false);
+        actionListRoomPlayer(listRooms, listPlayers);
+      }
+    );
+    state.socket.on(
+      eventSocket.LIST_ROOMS_PLAYERS,
+      (listRooms, listPlayers) => {
+        console.log("NOUVEAU PLAYER ENCULER");
+        actionListRoomPlayer(listRooms, listPlayers);
+      }
+    );
+  }, [actionListRoomPlayer, state.socket]);
   window.location.path = "/";
   let hash = window.location.hash;
+
+  if (loading === true) {
+    return <Home error="SPinnner loading" />;
+  }
 
   if (hash === "") {
     return <Home />;
@@ -70,7 +98,7 @@ const Routing = ({ state, actionJoinRoom }) => {
 
 const RoutingRedux = connect(
   mapStateToProps,
-  { actionJoinRoom }
+  { actionJoinRoom, actionListRoomPlayer }
 )(Routing);
 
 const Root = () => {

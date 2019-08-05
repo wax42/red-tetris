@@ -17,8 +17,12 @@ export const actionIsNewAdmin = () => {
   return { type: IS_NEW_ADMIN };
 };
 
-export const actionListRoomPlayer = () => {
-  return { type: LIST_ROOM_PLAYER, eventSocket: eventSocket.LIST_ROOM_PLAYER };
+export const actionListRoomPlayer = (listRooms, listPlayers) => {
+  return {
+    type: LIST_ROOM_PLAYER,
+    listRooms: listRooms,
+    listPlayers: listPlayers
+  };
 };
 
 export const actionCreateRoom = (room, player) => {

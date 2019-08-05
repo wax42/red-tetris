@@ -6,16 +6,16 @@ const eventSocket = require("../common/eventSocket");
 class Room {
   constructor(name, playerName, clientSocket) {
     this.name = name;
-    this.admin = clientSocket.id; // hash / id
+    this.admin = clientSocket.id; // hash /  id
     // TODO add the admin in the lists of players
-    this.game = false;
+    this.game = null;
     this.players = [];
     this.addPlayer(playerName, clientSocket);
     // top score
   }
 
   newGame() {
-    this.game = new Game(this.players);
+    this.game = new Game([...this.players]);
   }
   addPlayer(playerName, clientSocket) {
     console.log(
@@ -33,6 +33,13 @@ class Room {
     this.players = _.filter(this.players, player => {
       return player.id !== clientSocket.id;
     });
+
+    if (this.game !== null) {
+      this.game.players = _.filter(this.game.players, player => {
+        return player.id !== clientSocket.id;
+      });
+    }
+
     clientSocket.leave(this.name);
 
     if (this.players.length === 0) {

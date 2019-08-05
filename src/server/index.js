@@ -4,9 +4,14 @@ const RoomsManager = require("./RoomsManager");
 const handleClient = client => {
   console.log(eventSocket.CONNECT, client.id);
 
-  setTimeout(() => {
-    roomsManager.sendListRoomsPlayers(io);
-  }, 1000); // le temps que le components soit creer
+  // setTimeout(() => {
+  //   roomsManager.sendListRoomsPlayers(io);
+  // }, 1000); // le temps que le components soit creer
+
+  client.on(eventSocket.LIST_ROOMS_PLAYERS, callback => {
+    console.log("On LIST ROOOM PLAYER");
+    callback(roomsManager.listRoomsName, roomsManager.listPlayersName);
+  });
 
   client.on(eventSocket.CREATE_ROOM, (roomName, playerName, clientCallback) => {
     // Check si la room existe deja !!!!! apres manger
@@ -32,11 +37,19 @@ const handleClient = client => {
     }
   });
 
-  client.on(eventSocket.DISCONNET, () => {
+  client.on(eventSocket.LEAVE_ROOM, () => {
     if (client.playerName !== undefined) {
       roomsManager.deletePlayer(client);
     }
-    console.log("disconnect", client.id);
+    console.log("LEabe room", client.id, client.playerName);
+    console.log(roomsManager.rooms);
+  });
+
+  client.on(eventSocket.DISCONNECT, () => {
+    if (client.playerName !== undefined) {
+      roomsManager.deletePlayer(client);
+    }
+    console.log("disconnect", client.id, client.playerName);
     console.log(roomsManager.rooms);
   });
 };

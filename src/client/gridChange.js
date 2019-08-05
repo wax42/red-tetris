@@ -1,4 +1,4 @@
-import { nextPiece, lineBreak, cleanListennerLose } from "./gameManager";
+import { nextPiece, lineBreak, cleanListennerEndGame } from "./gameManager";
 import _ from "lodash";
 import eventSocket from "../common/eventSocket";
 
@@ -174,9 +174,12 @@ export const downFloorPiece = state => {
   state.grid = placePiece(state.grid, state.currentPiece);
 
   if (checkIslose(state) === true) {
-    cleanListennerLose(state.clearInterval, state.eventListner);
+    state = cleanListennerEndGame({ ...state });
     state.lose = true;
-    state.socket.emit(eventSocket.LOSE);
+    state.socket.emit(eventSocket.LOSE, winner => {
+      console.log("WINNER IS", winner);
+      state.winner = winner;
+    });
     nextPiece(state);
     return state;
   }
@@ -202,11 +205,7 @@ export const rotatePiece = state => {
 
 // SpacePiece
 export const downPiece = state => {
-  console.log("START DOWN PIECE ");
-  console.log("START DOWN PIECE ", JSON.stringify(state.grid));
-
   state.grid = cleanOldPiece(state.grid, state.currentPiece);
-  console.log("CLEAN POLD PIECE Ok ", JSON.stringify(state.grid));
 
   state.currentPiece.y += 1;
   if (checkIsPos(state.grid, state.currentPiece) === false) {
@@ -214,10 +213,13 @@ export const downPiece = state => {
     state.grid = placePiece(state.grid, state.currentPiece);
 
     if (checkIslose(state) === true) {
+      console.log("CHECK_IS_LOSE = true");
       state.lose = true;
-      cleanListennerLose(state.clearInterval, state.eventListner);
-      console.log("DOWN PIECE CHEK IS LOSE ", JSON.stringify(state.grid));
-      state.socket.emit(eventSocket.LOSE);
+      state = cleanListennerEndGame({ ...state });
+      state.socket.emit(eventSocket.LOSE, winner => {
+        console.log("WINNER IS", winner);
+        state.winner = winner;
+      });
       nextPiece(state);
       return state;
     }
@@ -226,13 +228,11 @@ export const downPiece = state => {
 
     state = nextPiece(state);
 
-    console.log("DOWN PIECE CHEK IS NOT POS ", JSON.stringify(state.grid));
     return state;
   }
   state = positionShadow(state);
 
   state.grid = placePiece(state.grid, state.currentPiece);
-  console.log("END DOWN PIECE ", JSON.stringify(state.grid));
   return state;
 };
 

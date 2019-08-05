@@ -16,9 +16,16 @@ import {
   SPECTRUMS,
   START_GAME,
   SPECTRUMS_SPECTATOR,
-  CLEAR_LOSE
+  SEND_INTERVAL_KEY_EVENT,
+  WINNER_IS,
+  CLEAR_INTERVAL_KEY_EVENT
 } from "../actions/actionTypes";
-import { launchGame, startGame, handleKey } from "../gameManager";
+import {
+  launchGame,
+  startGame,
+  handleKey,
+  cleanListennerEndGame
+} from "../gameManager";
 
 import {
   rotatePiece,
@@ -38,7 +45,9 @@ import {
   actionIndestructiblesLines,
   actionSpectrum,
   actionStartGame,
-  actionSpectrumsSpectator
+  actionSpectrumsSpectator,
+  actionWinnerIs,
+  actionClearIntervalKeyEvent
 } from "../actions/actionRoom";
 
 import _ from "lodash";
@@ -53,7 +62,7 @@ const mapStateToProps = state => {
 };
 
 const reduceRoom = (state, action) => {
-  console.log("reduce rooom", action, state);
+  console.log("REDUCE ROOM", action.type, state.winner, action, state);
   switch (action.type) {
     case START_GAME:
       return startGame({ ...state }, action.listPlayers, action.listPieces);
@@ -74,32 +83,34 @@ const reduceRoom = (state, action) => {
     case SWITCH_PIECE:
       return switchPiece({ ...state });
     case ADD_INDESTRUCTIBLES_LINES:
-      console.log("REDUCERROOM add_ind", action.nbrLines);
       return addIndestructiblesLines({ ...state }, action.nbrLines);
     case SPECTRUMS:
       let newState = { ...state };
       newState.listSpectrums[action.spectrum.playerName] = action.spectrum;
       return newState;
     case SPECTRUMS_SPECTATOR:
-      console.log("reduce rooom spectrums spectator");
       return { ...state, listSpectrums: action.listSpectrums };
 
-    case CLEAR_LOSE:
+    case SEND_INTERVAL_KEY_EVENT:
       return {
         ...state,
         clearInterval: action.clearInterval,
         eventListner: action.eventListner
       };
 
+    case WINNER_IS:
+      return {
+        ...state,
+        winner: action.winner
+      };
+    case CLEAR_INTERVAL_KEY_EVENT:
+      return cleanListennerEndGame({ ...state });
     default:
       return state;
   }
-  return state;
 };
 
 const Room = ({ socket, roomName, playerName, spectator }) => {
-  const dispatch = useDispatch();
-
   const initialState = {
     socket: socket,
     playerName: playerName,
@@ -119,15 +130,13 @@ const Room = ({ socket, roomName, playerName, spectator }) => {
     listPieces: [EMPTY_PIECE, EMPTY_PIECE, EMPTY_PIECE],
     listSpectrums: {},
     admin: false,
-    lose: false
+    lose: false,
+    winner: null
   };
   const [state, dispatchRoom] = useReducer(reduceRoom, initialState);
 
   // Key event Listenner
   useEffect(() => {
-    console.log("reMounted");
-    console.log("START GAME updated", JSON.stringify(GRID));
-
     if (spectator === true && _.isEmpty(state.listSpectrums)) {
       socket.emit(eventSocket.SEND_SPECTRUMS_SPECTATOR, listSpectrums => {
         console.log("SPECTATOR ASK SPECTRUM", listSpectrums);
@@ -142,14 +151,11 @@ const Room = ({ socket, roomName, playerName, spectator }) => {
       dispatchRoom(actionStartGame(listPlayers, listPieces));
 
       console.error("L'autre client a lance la partie");
-      launchGame(state, dispatchRoom);
+      launchGame(dispatchRoom);
     });
 
     socket.on(eventSocket.NEXT_PIECE, newPiece => {
-      console.log("On recupere la next piece", newPiece, state.listPieces);
       dispatchRoom(actionNextPiece(newPiece));
-      //  setState({ ...state, listPieces: [...state.listPieces, newPiece] });
-      console.log("Juste apres la next piece", newPiece, state.listPieces);
     });
 
     socket.on(eventSocket.LINE_BREAK, nbrLines => {
@@ -160,9 +166,23 @@ const Room = ({ socket, roomName, playerName, spectator }) => {
     socket.on(eventSocket.SEND_SPECTRUMS, spectrum => {
       dispatchRoom(actionSpectrum(spectrum));
     });
-  }, []);
 
-  console.log("Componenets rooom mounted", state);
+    socket.on(eventSocket.WINNER_IS, winner => {
+      // console.log("WINNER IS ", winner, state);
+      console.log("WINNER_IS");
+      dispatchRoom(actionWinnerIs(winner));
+      dispatchRoom(actionClearIntervalKeyEvent());
+      // dispatch room
+    });
+    return () => {
+      console.log("ROOOM DEMOUNTED");
+      socket.removeListener(eventSocket.START_GAME);
+      socket.removeListener(eventSocket.NEXT_PIECE);
+      socket.removeListener(eventSocket.LINE_BREAK);
+      socket.removeListener(eventSocket.SEND_SPECTRUMS);
+      socket.removeListener(eventSocket.WINNER_IS);
+    };
+  }, [socket, playerName, spectator]);
 
   const isLog = true; //A definir dans les classes + state
   if (isLog) {

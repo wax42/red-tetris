@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaHome, FaIdBadge } from "react-icons/fa";
-import { connect, useDispatch } from "react-redux";
-import { actionCreateRoom, actionListRoomPlayer } from "../actions/actions";
+import { connect } from "react-redux";
+import { actionCreateRoom } from "../actions/actions";
 
 let roomName = "";
 let playerName = "";
@@ -14,9 +14,16 @@ const getRoomName = event => {
 const getPlayerName = event => {
   playerName = event.target.value;
 };
+
+const mapStateToProps = _state => {
+  const state = {
+    socket: _state.socket
+  };
+  return { state };
+};
 // return <Redirect to='/dashboard' />
 
-const handleClick = (action, setStateError) => {
+const buttonPlay = (action, setStateError) => {
   if (roomName.length < 3) {
     setStateError("Room name should have 3 characters at least");
   } else if (playerName.length < 3) {
@@ -31,14 +38,8 @@ const handleClick = (action, setStateError) => {
   }
 };
 
-const Home = ({ error = "", actionCreateRoom }) => {
+const Home = ({ error, actionCreateRoom }) => {
   const [stateError, setStateError] = useState("");
-
-  const dispatch = useDispatch();
-  useEffect(() => {
-    console.log("Home mounted ! What is the phoque");
-    dispatch(actionListRoomPlayer());
-  }, [dispatch]);
 
   return (
     <div>
@@ -72,7 +73,7 @@ const Home = ({ error = "", actionCreateRoom }) => {
         </div>
         <button
           className="home-btn"
-          onClick={() => handleClick(actionCreateRoom, setStateError)}
+          onClick={() => buttonPlay(actionCreateRoom, setStateError)}
           // to={{ pathname: "/", hash: "test[test]" }}
         />
       </div>
@@ -84,6 +85,6 @@ const Home = ({ error = "", actionCreateRoom }) => {
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   { actionCreateRoom }
 )(Home);

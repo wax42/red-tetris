@@ -10,7 +10,9 @@ import {
   SPECTRUMS,
   START_GAME,
   SPECTRUMS_SPECTATOR,
-  CLEAR_LOSE
+  SEND_INTERVAL_KEY_EVENT,
+  WINNER_IS,
+  CLEAR_INTERVAL_KEY_EVENT
 } from "./actionTypes";
 
 export const actionPieceDown = () => {
@@ -57,10 +59,18 @@ export const actionStartGame = (listPlayers, listPieces) => {
   return { type: START_GAME, listPlayers: listPlayers, listPieces: listPieces };
 };
 
-export const actionSendClearLose = (clearInterval, eventListner) => {
+export const actionSendIntervalKeyEvent = (clearInterval, eventListner) => {
   return {
-    type: CLEAR_LOSE,
+    type: SEND_INTERVAL_KEY_EVENT,
     clearInterval: clearInterval,
     eventListner: eventListner
   };
+};
+
+export const actionClearIntervalKeyEvent = () => {
+  return { type: CLEAR_INTERVAL_KEY_EVENT };
+};
+
+export const actionWinnerIs = winner => {
+  return { type: WINNER_IS, winner: winner };
 };

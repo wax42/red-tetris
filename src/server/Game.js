@@ -6,15 +6,13 @@ class Game {
     };
     this.intervallDownPiece = 10;
   }
-  sendSpectrums() {
-    // for all player socket.emit('spectre)
-  }
-  eventLineBreak() {
-    // Send new line
-  }
-  nextPiece(id) {
-    // Generate new piece and send it
-    // Upload the grid of the player
+
+  checkWhoIsWinner() {
+    let playerInGame = this.players.filter(value => value.lose === false);
+    if (playerInGame.length === 1) {
+      return playerInGame[0].name;
+    }
+    return null;
   }
 }
 

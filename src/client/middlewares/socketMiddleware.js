@@ -13,6 +13,7 @@ const socketMiddleware = () => {
     console.log("MIDDLEWARE", action);
 
     //TODO Sécurité
+
     if (typeof action === "function") {
       console.error("passing function to the socket Middleware");
       return next(action);
@@ -39,12 +40,9 @@ const socketMiddleware = () => {
             console.log("CREATE ROOOM", msg);
           }
         );
-
         break;
       case JOIN_ROOM:
         action.eventSocket = undefined;
-
-        // del eventSocket in action
         console.log("Send JOIN_ROOM", action);
         state.socket.emit(
           eventSocket.JOIN_ROOM,
@@ -52,7 +50,6 @@ const socketMiddleware = () => {
           action.player,
           (msg, game) => {
             // TODO gestion d'erreur
-
             // dispatch action error
             if (game === true) {
               store.dispatch(actionIsSpectator());
@@ -60,30 +57,13 @@ const socketMiddleware = () => {
             console.log("JOIN ROOOM", msg);
           }
         );
-
         state.socket.on(eventSocket.IS_NEW_ADMIN, () => {
           store.dispatch(actionIsNewAdmin());
           console.error("Je suis le nouvel admin");
         });
-
         break;
       case LINE_BREAK:
         state.socket.emit("ROOM line_break", "nbr de line break");
-        break;
-
-      // listenner dans le state
-
-      case LIST_ROOM_PLAYER:
-        console.log(
-          "Socket middleware create Listenner LIST ROOM PLAYER",
-          action
-        );
-        state.socket.on("LIST_ROOMS_PLAYERS", (rooms, players) => {
-          console.log("on a enntendu henri LIST_ROOMS_PLAYERS");
-
-          action.eventSocket = undefined;
-          store.dispatch({ ...action, listRooms: rooms, listPlayers: players });
-        });
         break;
       default:
         break;

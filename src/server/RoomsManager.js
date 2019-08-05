@@ -1,5 +1,5 @@
 const _ = require("lodash");
-
+const eventSocket = require("../common/eventSocket");
 const Room = require("./Room.js");
 
 class RoomsManager {
@@ -17,7 +17,13 @@ class RoomsManager {
       clientSocket.id
     );
     if (this.listRoomsName.includes(roomName) === true) {
-      return this.joinRoom(roomName, playerName, client, clientCallback, io);
+      return this.joinRoom(
+        roomName,
+        playerName,
+        clientSocket,
+        clientCallback,
+        io
+      );
     }
 
     console.log("SOCKET ID CREATE ROOM ", clientSocket.id);
@@ -46,18 +52,25 @@ class RoomsManager {
     }
 
     this.rooms[roomName].addPlayer(playerName, clientSocket);
-
     this.listPlayersName.push(playerName);
     clientSocket.roomName = roomName;
     clientSocket.playerName = playerName;
 
     this.sendListRoomsPlayers(io);
-    clientCallback("Succes Join ROOM: " + roomName, this.rooms[roomName].game);
+    if (this.rooms[roomName].game !== false) {
+      clientCallback("Succes Join ROOM: " + roomName, true);
+    } else {
+      clientCallback("Succes Join ROOM: " + roomName, false);
+    }
     console.log("Succes Join Room: ", this.rooms[roomName]);
     return true;
   }
   sendListRoomsPlayers(io) {
-    io.emit("LIST_ROOMS_PLAYERS", this.listRoomsName, this.listPlayersName);
+    io.emit(
+      eventSocket.LIST_ROOMS_PLAYERS,
+      this.listRoomsName,
+      this.listPlayersName
+    );
   }
   deletePlayer(clientSocket) {
     this.listPlayersName = _.filter(this.listPlayersName, name => {

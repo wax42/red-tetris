@@ -127,6 +127,10 @@ body,
   background-color: rgb(124, 124, 124);
 }
 
+.color-form9 {
+  background-color: rgb(202, 71, 180);
+}
+
 /* Home Component */
 .home {
   user-select: none;

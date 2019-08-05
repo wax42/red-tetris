@@ -12,7 +12,7 @@ import {
   actionPieceRotate,
   actionPieceSpace,
   actionSwitchPiece,
-  actionSendClearLose
+  actionSendIntervalKeyEvent
 } from "./actions/actionRoom";
 
 const KEY_SPACE = 32;
@@ -22,14 +22,7 @@ const KEY_LEFT = 37;
 const KEY_RIGHT = 39;
 const KEY_S = 83;
 
-export const handleKey = (state, dispatchRoom) => event => {
-  console.log(
-    "KEY EVENT",
-    event.keyCode,
-    state.grid,
-    state.shadow,
-    state.currentPiece
-  );
+export const handleKey = dispatchRoom => event => {
   switch (event.keyCode) {
     case KEY_DOWN:
       event.preventDefault();
@@ -50,7 +43,6 @@ export const handleKey = (state, dispatchRoom) => event => {
       event.preventDefault();
       dispatchRoom(actionPieceSpace());
       // setState(downFloorPiece(newState, socket));
-      console.log("KEY BHOOOK", JSON.stringify(state.grid));
       break;
     case KEY_UP:
       event.preventDefault();
@@ -68,29 +60,28 @@ export const handleKey = (state, dispatchRoom) => event => {
   }
 };
 
-export const launchGame = (state, dispatchRoom) => {
-  const eventListner = handleKey(state, dispatchRoom);
+export const launchGame = dispatchRoom => {
+  console.log("LAUNCH GAME set interval value ");
 
+  const eventListner = handleKey(dispatchRoom);
   window.addEventListener("keydown", eventListner, false);
-  console.log("Je launch la game");
   let clearInterval = setInterval(() => {
     dispatchRoom(actionPieceDown());
     console.log("dsipatch Piece down set interval");
-    // setState(downPiece({ ...state }));
   }, 1000);
-  dispatchRoom(actionSendClearLose(clearInterval, eventListner));
-  console.log("Je launch la game end");
-  dispatchRoom(actionPieceDown());
-  // setState(downPiece({ ...state }));
+  dispatchRoom(actionSendIntervalKeyEvent(clearInterval, eventListner));
+  // dispatchRoom(actionPieceDown());
 };
 
-export const cleanListennerLose = (clInterval, eventListner) => {
-  console.log("cleanListennerLose", clInterval, eventListner);
-  window.removeEventListener("keydown", eventListner, false);
-  clearInterval(clInterval);
+export const cleanListennerEndGame = state => {
+  window.removeEventListener("keydown", state.eventListner, false);
+  clearInterval(state.clearInterval);
+  state.clearInterval = -1;
+  return state;
 };
 
 const initializeListSpectrums = (state, listPlayers) => {
+  state.listSpectrums = {};
   for (let player of listPlayers) {
     state.listSpectrums[player] = {
       grid: [
@@ -128,6 +119,8 @@ const initializeListSpectrums = (state, listPlayers) => {
 
 export const startGame = (state, listPlayers, listPieces) => {
   state = initializeListSpectrums(state, listPlayers);
+
+  state.lose = false;
   state.currentPiece.piece = listPieces.shift();
   state.listPieces = listPieces;
   state.grid = _.cloneDeep(GRID);

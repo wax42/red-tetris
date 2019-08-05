@@ -2,7 +2,6 @@ import React from "react";
 import { GameGrid } from "./Game";
 
 const Spectrum = ({ listSpectrums }) => {
-  console.log("SPECTRUN COMPONENT", listSpectrums);
   var listSpectrum = [];
   for (let key in listSpectrums) {
     listSpectrum.push(<GameGrid grid={listSpectrums[key]["grid"]} key={key} />);
