@@ -65,7 +65,6 @@ const Routing = ({ state, actionJoinRoom, actionListRoomPlayer }) => {
     state.socket.emit(
       eventSocket.LIST_ROOMS_PLAYERS,
       (listRooms, listPlayers) => {
-        console.log("Est ce que tu rentre icic");
         setLoading(false);
         actionListRoomPlayer(listRooms, listPlayers);
       }
@@ -73,10 +72,12 @@ const Routing = ({ state, actionJoinRoom, actionListRoomPlayer }) => {
     state.socket.on(
       eventSocket.LIST_ROOMS_PLAYERS,
       (listRooms, listPlayers) => {
-        console.log("NOUVEAU PLAYER ENCULER");
         actionListRoomPlayer(listRooms, listPlayers);
       }
     );
+    return () => {
+      state.socket.removeListener(eventSocket.LIST_ROOMS_PLAYERS);
+    };
   }, [actionListRoomPlayer, state.socket]);
   window.location.path = "/";
   let hash = window.location.hash;

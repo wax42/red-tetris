@@ -4,7 +4,8 @@ import {
   JOIN_ROOM,
   LIST_ROOM_PLAYER,
   IS_NEW_ADMIN,
-  IS_SPECTATOR
+  IS_SPECTATOR,
+  CLEAN_ROOM_NAME
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -54,7 +55,8 @@ const reducers = (state = initialState, action) => {
       return { ...state, roomName: action.room, playerName: action.player };
     case IS_NEW_ADMIN:
       return { ...state, admin: true };
-
+    case CLEAN_ROOM_NAME:
+      return { ...state, roomName: undefined };
     default:
       return state;
   }

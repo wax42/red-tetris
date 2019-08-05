@@ -3,7 +3,8 @@ import {
   JOIN_ROOM,
   LIST_ROOM_PLAYER,
   IS_NEW_ADMIN,
-  IS_SPECTATOR
+  IS_SPECTATOR,
+  CLEAN_ROOM_NAME
 } from "./actionTypes";
 import eventSocket from "../../common/eventSocket";
 
@@ -41,4 +42,8 @@ export const actionJoinRoom = (room, player) => {
     player: player,
     eventSocket: eventSocket.JOIN_ROOM
   };
+};
+
+export const actionCleanRoomName = () => {
+  return { type: CLEAN_ROOM_NAME };
 };

@@ -15,15 +15,9 @@ const getPlayerName = event => {
   playerName = event.target.value;
 };
 
-const mapStateToProps = _state => {
-  const state = {
-    socket: _state.socket
-  };
-  return { state };
-};
 // return <Redirect to='/dashboard' />
 
-const buttonPlay = (action, setStateError) => {
+const buttonCreateRoom = (action, setStateError) => {
   if (roomName.length < 3) {
     setStateError("Room name should have 3 characters at least");
   } else if (playerName.length < 3) {
@@ -34,6 +28,7 @@ const buttonPlay = (action, setStateError) => {
     setStateError("Player name invalid");
   } else {
     window.location.hash = `#${roomName}[${playerName}]`;
+    console.log("buttonCreateRoom", roomName);
     action(roomName, playerName); // to complete
   }
 };
@@ -73,7 +68,7 @@ const Home = ({ error, actionCreateRoom }) => {
         </div>
         <button
           className="home-btn"
-          onClick={() => buttonPlay(actionCreateRoom, setStateError)}
+          onClick={() => buttonCreateRoom(actionCreateRoom, setStateError)}
           // to={{ pathname: "/", hash: "test[test]" }}
         />
       </div>
@@ -85,6 +80,6 @@ const Home = ({ error, actionCreateRoom }) => {
 };
 
 export default connect(
-  mapStateToProps,
+  null,
   { actionCreateRoom }
 )(Home);

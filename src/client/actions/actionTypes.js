@@ -3,6 +3,7 @@
 export const CREATE_ROOM = "CREATE_ROOM";
 export const JOIN_ROOM = "JOIN_ROOM";
 export const LIST_ROOM_PLAYER = "LIST_ROOM_PLAYER";
+export const CLEAN_ROOM_NAME = "CLEAN_ROOM_NAME";
 
 export const START_GAME = "START_GAME";
 export const LINE_BREAK = "LINE_BREAK";

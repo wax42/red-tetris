@@ -50,6 +50,8 @@ import {
   actionClearIntervalKeyEvent
 } from "../actions/actionRoom";
 
+import { actionCleanRoomName } from "../actions/actions";
+
 import _ from "lodash";
 
 const mapStateToProps = state => {
@@ -60,6 +62,12 @@ const mapStateToProps = state => {
     spectator: state.spectator
   };
 };
+
+// const leaveRoom = (state, dispatch) => {
+//   dispatch(actionCleanRoomName());
+//   state.socket.emit(eventSocket.LEAVE_ROOM);
+//   window.location.hash = "";
+// };
 
 const reduceRoom = (state, action) => {
   console.log("REDUCE ROOM", action.type, state.winner, action, state);
@@ -111,6 +119,7 @@ const reduceRoom = (state, action) => {
 };
 
 const Room = ({ socket, roomName, playerName, spectator }) => {
+  const dispatch = useDispatch();
   const initialState = {
     socket: socket,
     playerName: playerName,
@@ -139,7 +148,6 @@ const Room = ({ socket, roomName, playerName, spectator }) => {
   useEffect(() => {
     if (spectator === true && _.isEmpty(state.listSpectrums)) {
       socket.emit(eventSocket.SEND_SPECTRUMS_SPECTATOR, listSpectrums => {
-        console.log("SPECTATOR ASK SPECTRUM", listSpectrums);
         dispatchRoom(actionSpectrumsSpectator(listSpectrums));
       });
     }
@@ -149,8 +157,6 @@ const Room = ({ socket, roomName, playerName, spectator }) => {
     socket.on(eventSocket.START_GAME, (listPlayers, listPieces) => {
       listPlayers = listPlayers.filter(value => value !== playerName);
       dispatchRoom(actionStartGame(listPlayers, listPieces));
-
-      console.error("L'autre client a lance la partie");
       launchGame(dispatchRoom);
     });
 
@@ -159,7 +165,6 @@ const Room = ({ socket, roomName, playerName, spectator }) => {
     });
 
     socket.on(eventSocket.LINE_BREAK, nbrLines => {
-      console.log("Another Client on Line Break", nbrLines);
       dispatchRoom(actionIndestructiblesLines(nbrLines));
     });
 
@@ -168,14 +173,11 @@ const Room = ({ socket, roomName, playerName, spectator }) => {
     });
 
     socket.on(eventSocket.WINNER_IS, winner => {
-      // console.log("WINNER IS ", winner, state);
-      console.log("WINNER_IS");
       dispatchRoom(actionWinnerIs(winner));
       dispatchRoom(actionClearIntervalKeyEvent());
       // dispatch room
     });
     return () => {
-      console.log("ROOOM DEMOUNTED");
       socket.removeListener(eventSocket.START_GAME);
       socket.removeListener(eventSocket.NEXT_PIECE);
       socket.removeListener(eventSocket.LINE_BREAK);
@@ -189,6 +191,7 @@ const Room = ({ socket, roomName, playerName, spectator }) => {
     return (
       <div className="app">
         <div className="app-board">
+          {/* <button onClick={() => leaveRoom(state, dispatch)}>Play</button> */}
           <AppBoardInfo state={state} dispatchRoom={dispatchRoom} />
           <Game state={state} />
           <h1>{JSON.stringify(state.lose)}</h1>
