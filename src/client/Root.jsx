@@ -28,7 +28,7 @@ const mapStateToProps = _state => {
 const routeHashError = (hash, state, actionJoinRoom) => {
   let result = hash.split("[");
 
-  if (result.length !== 2) {
+  if (/^.+\[{1}[^\[\]]+\]{1}$/.test(hash) === false || result.length !== 2) {
     return "Hash invalid";
   }
   let room_name = result[0].slice(1);
