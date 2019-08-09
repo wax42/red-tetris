@@ -8,7 +8,7 @@ import { actionIsNewAdmin, actionIsSpectator } from "../actions/actions";
 import eventSocket from "../../common/eventSocket";
 
 const socketMiddleware = () => {
-  console.error("START SOCKET MIDDLEWARE");
+  // console.error("START SOCKET MIDDLEWARE");
   return store => next => action => {
     console.log("MIDDLEWARE", action);
 

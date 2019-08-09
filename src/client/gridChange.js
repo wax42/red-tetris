@@ -2,7 +2,7 @@ import { nextPiece, lineBreak, cleanListennerEndGame } from "./gameManager";
 import _ from "lodash";
 import eventSocket from "../common/eventSocket";
 
-const rotate = matrix => {
+export const rotate = matrix => {
   let result = [];
   for (let i = 0; i < matrix[0].length; i++) {
     let row = matrix.map(e => e[i]).reverse();
@@ -11,7 +11,7 @@ const rotate = matrix => {
   return result;
 };
 
-const cleanOldPiece = (grid, currentPiece) => {
+export const cleanOldPiece = (grid, currentPiece) => {
   let y_piece = 0;
   for (let y = currentPiece.y; y < currentPiece.y + 4 && y < 24; y++) {
     let x_piece = 0;
@@ -50,7 +50,7 @@ export const placePiece = (grid, currentPiece) => {
   return grid;
 };
 
-const calculateSpaceUp = currentPiece => {
+export const calculateSpaceUp = currentPiece => {
   for (let y = 0; y < 4; y++) {
     for (let x = 0; x < 4; x++) {
       if (currentPiece.piece[y][x] !== ".") {
@@ -60,7 +60,7 @@ const calculateSpaceUp = currentPiece => {
   }
 };
 
-const calculateSpaceDown = currentPiece => {
+export const calculateSpaceDown = currentPiece => {
   for (let y = 3; y >= 0; y--) {
     for (let x = 0; x < 4; x++) {
       if (currentPiece.piece[y][x] !== ".") {
@@ -70,7 +70,7 @@ const calculateSpaceDown = currentPiece => {
   }
 };
 
-const calculateSpaceLeft = currentPiece => {
+export const calculateSpaceLeft = currentPiece => {
   for (let x = 0; x < 4; x++) {
     for (let y = 0; y < 4; y++) {
       if (currentPiece.piece[y][x] !== ".") {
@@ -80,7 +80,7 @@ const calculateSpaceLeft = currentPiece => {
   }
 };
 
-const calculateSpaceRight = currentPiece => {
+export const calculateSpaceRight = currentPiece => {
   for (let x = 3; x >= 0; x--) {
     for (let y = 0; y < 4; y++) {
       if (currentPiece.piece[y][x] !== ".") {
@@ -119,7 +119,7 @@ export const checkIsPos = (grid, currentPiece) => {
   return true;
 };
 
-const placeShadow = (grid, shadow) => {
+export const placeShadow = (grid, shadow) => {
   let y_piece = 0;
   for (let y = shadow.y; y < shadow.y + 4 && y < 24; y++) {
     let x_piece = 0;
@@ -134,10 +134,8 @@ const placeShadow = (grid, shadow) => {
   return grid;
 };
 
-const positionShadow = state => {
-  console.log("Position shadow state before clean: ", state);
+export const positionShadow = state => {
   state.grid = cleanOldPiece(state.grid, state.shadow);
-  console.log("Position shadow state after clean: ", state);
 
   state.shadow.x = state.currentPiece.x;
   state.shadow.y = state.currentPiece.y;
@@ -157,7 +155,7 @@ const positionShadow = state => {
   return state;
 };
 
-const checkIslose = state => {
+export const checkIslose = state => {
   for (let i = 0; i < 4; i++) {
     if (_.difference(state.grid[i], ["."]).length !== 0) {
       return true;

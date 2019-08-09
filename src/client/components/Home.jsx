@@ -33,7 +33,7 @@ const buttonCreateRoom = (action, setStateError) => {
   }
 };
 
-const Home = ({ error, actionCreateRoom }) => {
+export const HomeCpt = ({ error, actionCreateRoom }) => {
   const [stateError, setStateError] = useState("");
 
   return (
@@ -79,7 +79,9 @@ const Home = ({ error, actionCreateRoom }) => {
   );
 };
 
-export default connect(
+const Home = connect(
   null,
   { actionCreateRoom }
-)(Home);
+)(HomeCpt);
+
+export default Home;

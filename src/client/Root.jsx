@@ -25,15 +25,14 @@ const mapStateToProps = _state => {
   return { state };
 };
 
-const routeHashError = (hash, state, actionJoinRoom) => {
+export const routeHashError = (hash, state, actionJoinRoom) => {
   let result = hash.split("[");
 
-  if (/^.+\[{1}[^\[\]]+\]{1}$/.test(hash) === false || result.length !== 2) {
+  if (/^#.+\[{1}[^\[\]]+\]{1}$/.test(hash) === false || result.length !== 2) {
     return "Hash invalid";
   }
   let room_name = result[0].slice(1);
   let player_name = result[1].slice(0, -1);
-
   if (/^[A-z0-9]{3,}$/.test(room_name) === false) {
     return "Room Name incorrect";
   }
@@ -42,7 +41,7 @@ const routeHashError = (hash, state, actionJoinRoom) => {
   }
   // Home error
   if (state.listRooms.includes(room_name) === false) {
-    return "Room don't exist";
+    return "Room doesn't exist";
   }
   if (
     state.listPlayers.includes(player_name) === true &&
@@ -51,13 +50,12 @@ const routeHashError = (hash, state, actionJoinRoom) => {
     return "Player name already exists";
   }
   if (state.playerName !== player_name) {
-    console.log("Action Join room");
     actionJoinRoom(room_name, player_name);
   }
   return "";
 };
 
-const Routing = ({ state, actionJoinRoom, actionListRoomPlayer }) => {
+export const Routing = ({ state, actionJoinRoom, actionListRoomPlayer }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -110,4 +108,8 @@ const Root = () => {
   );
 };
 
+/* if (process.env.NODE_ENV === 'test'){
+  export default Root
+
+} else { */
 export default Root;

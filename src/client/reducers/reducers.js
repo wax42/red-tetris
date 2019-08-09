@@ -22,12 +22,12 @@ const reducers = (state = initialState, action) => {
 
   if (state.socket === null) {
     state.socket = io("http://localhost:3001");
-    console.error("SOCKET INITILIALIZATIOn");
+    // console.error("SOCKET INITILIALIZATIOn");
   }
   if (action.eventSocket !== undefined) {
     return state;
   }
-  console.error("START REDUCER", action);
+  // console.error("START REDUCER", action);
 
   // let newState = Object.assign({}, state)
 
