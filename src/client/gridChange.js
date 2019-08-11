@@ -269,14 +269,14 @@ export const switchPiece = state => {
 
   let tmp = { ...state.currentPiece };
   tmp.piece = state.listPieces[0];
-  console.log(JSON.stringify(state.currentPiece));
-  console.log("Before check is pos", JSON.stringify(state.grid));
+  // console.log(JSON.stringify(state.currentPiece));
+  // console.log("Before check is pos", JSON.stringify(state.grid));
 
   if (checkIsPos(state.grid, tmp) === false) {
     state.grid = placePiece(state.grid, state.currentPiece);
     return state;
   }
-  console.log("After check is pos");
+  // console.log("After check is pos");
   state.listPieces[0] = state.currentPiece.piece;
   state.currentPiece = tmp;
   state = positionShadow(state);
@@ -286,13 +286,13 @@ export const switchPiece = state => {
 
 export const addIndestructiblesLines = (state, nbrLine) => {
   state.grid = cleanOldPiece(state.grid, state.currentPiece);
-  console.log("NBR LINES BREAK = ", nbrLine);
+  // console.log("NBR LINES BREAK = ", nbrLine);
   while (nbrLine !== 0) {
     state.grid.push(new Array(10).fill("8"));
     state.grid.shift();
     nbrLine--;
   }
   state.grid = placePiece(state.grid, state.currentPiece);
-  console.log(state.grid);
+  // console.log(state.grid);
   return state;
 };
