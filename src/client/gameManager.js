@@ -61,13 +61,13 @@ export const handleKey = dispatchRoom => event => {
 };
 
 export const launchGame = dispatchRoom => {
-  console.log("LAUNCH GAME set interval value ");
+  // console.log("LAUNCH GAME set interval value ");
 
   const eventListner = handleKey(dispatchRoom);
   window.addEventListener("keydown", eventListner, false);
   let clearInterval = setInterval(() => {
     dispatchRoom(actionPieceDown());
-    console.log("dsipatch Piece down set interval");
+    // console.log("dsipatch Piece down set interval");
   }, 1000);
   dispatchRoom(actionSendIntervalKeyEvent(clearInterval, eventListner));
   // dispatchRoom(actionPieceDown());
@@ -80,7 +80,7 @@ export const cleanListennerEndGame = state => {
   return state;
 };
 
-const initializeListSpectrums = (state, listPlayers) => {
+export const initializeListSpectrums = (state, listPlayers) => {
   state.listSpectrums = {};
   for (let player of listPlayers) {
     state.listSpectrums[player] = {
@@ -124,7 +124,7 @@ export const startGame = (state, listPlayers, listPieces) => {
   state.currentPiece.piece = listPieces.shift();
   state.listPieces = listPieces;
   state.grid = _.cloneDeep(GRID);
-  console.log("START GAME", JSON.stringify(GRID));
+  // console.log("START GAME", JSON.stringify(GRID));
   return state;
 };
 
@@ -145,7 +145,6 @@ export const nextPiece = state => {
 };
 
 export const lineBreak = state => {
-  console.log("Line break");
   let nbrLine = 0;
   state.grid = state.grid.filter(line => {
     if (_.difference(line, ["0", ".", "8"]).length === 10) {
@@ -162,8 +161,5 @@ export const lineBreak = state => {
       nbrLine--;
     }
   }
-
-  console.log(state);
-
   return state;
 };
