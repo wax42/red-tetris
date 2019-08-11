@@ -1,4 +1,5 @@
-import io from "socket.io-client";
+// import io from "socket.io-client";
+
 import {
   CREATE_ROOM,
   JOIN_ROOM,
@@ -7,6 +8,10 @@ import {
   IS_SPECTATOR,
   CLEAN_ROOM_NAME
 } from "../actions/actionTypes";
+
+const io = require("socket.io-client")("http://localhost:3001", {
+  transports: ["websocket", "polling"]
+});
 
 const initialState = {
   socket: null,
@@ -21,7 +26,9 @@ const reducers = (state = initialState, action) => {
   state.nextPieceEvent = false;
 
   if (state.socket === null) {
-    state.socket = io("http://localhost:3001");
+    state.socket = io;
+    // state.socket = io("http://localhost:3001");
+
     // console.error("SOCKET INITILIALIZATIOn");
   }
   if (action.eventSocket !== undefined) {
