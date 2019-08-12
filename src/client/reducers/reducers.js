@@ -31,6 +31,7 @@ const reducers = (state = initialState, action) => {
 
     // console.error("SOCKET INITILIALIZATIOn");
   }
+  // console.log(action.eventSocket);
   if (action.eventSocket !== undefined) {
     return state;
   }
@@ -45,7 +46,7 @@ const reducers = (state = initialState, action) => {
         spectator: !state.spectator
       };
     case LIST_ROOM_PLAYER:
-      console.log("REDUCER", action.listRooms, action.listPlayers);
+      // console.log("REDUCER", action.listRooms, action.listPlayers);
       return {
         ...state,
         listRooms: action.listRooms,
@@ -67,7 +68,7 @@ const reducers = (state = initialState, action) => {
     default:
       return state;
   }
-  return state;
+  // return state;
 };
 
 export default reducers;
