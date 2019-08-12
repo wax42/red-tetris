@@ -1,5 +1,5 @@
 const eventSocket = require("../common/eventSocket");
-const Piece = require("./Piece");
+const { Piece } = require("./Piece");
 const { GRID } = require("../common/common");
 const _ = require("lodash");
 

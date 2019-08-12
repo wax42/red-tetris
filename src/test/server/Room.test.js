@@ -1,4 +1,4 @@
-import Game from "../../server/Game";
+import Room from "../../server/Room";
 import _ from "lodash";
 
 const gridEmpty = [
@@ -28,44 +28,41 @@ const gridEmpty = [
   [".", ".", ".", ".", ".", ".", ".", ".", ".", "."]
 ];
 
-describe("SERVER/GAME.JS", () => {
-  const players = [
-    {
-      score: 0,
-      name: "player1",
-      room: {},
-      roomName: "room1",
+describe("SERVER/ROOM.JS", () => {
+  it("should create a Room instance", () => {
+    const addPlayer = jest.fn();
+    const name = "room";
+    const playerName = "player1";
+    const clientSocket = {
       id: "123",
-      socket: "345",
-      grid: _.cloneDeep(gridEmpty),
-      lose: false
-    },
-    {
-      score: 0,
-      name: "player2",
-      room: {},
-      roomName: "room1",
-      id: "123",
-      socket: "345",
-      grid: _.cloneDeep(gridEmpty),
-      lose: true
-    }
-  ];
-  it("should create the Game instance", () => {
-    const game = new Game(players);
-    expect(game.players).toEqual(players);
-    // expect(game.optionsGames.invisibility).toEqual(false);
-  });
-
-  it("should return the player name if there is a winner", () => {
-    const game = new Game(players);
-    const winner = "player1";
-    expect(game.checkWhoIsWinner()).toEqual(winner);
-  });
-
-  it("should return null if there is not a winner", () => {
-    const game = new Game(players);
-    game.players[1].lose = false;
-    expect(game.checkWhoIsWinner()).toBeNull();
+      on: jest.fn(),
+      join: jest.fn()
+    };
+    const room = new Room(name, playerName, clientSocket);
+    const res = {
+      name,
+      admin: clientSocket.id,
+      game: null,
+      players: [
+        {
+          score: 0,
+          name: "player1",
+          room: {},
+          roomName: "room",
+          id: "123",
+          socket: {
+            id: "123",
+            on: jest.fn(),
+            join: jest.fn()
+          },
+          grid: _.cloneDeep(gridEmpty),
+          lose: false
+        }
+      ]
+    };
+    expect(room.name).toEqual(res.name);
+    expect(room.playerName).toEqual(res.playerName);
+    expect(room.admin).toEqual(res.admin);
+    // expect(room.players).toEqual(res.players);
   });
 });

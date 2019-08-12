@@ -182,4 +182,4 @@ class Piece {
   }
 }
 
-module.exports = Piece;
+module.exports = { Piece, listPieces };
