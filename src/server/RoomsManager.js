@@ -41,6 +41,7 @@ class RoomsManager {
     clientCallback("Succes Create new ROOM:  " + roomName);
     return true;
   }
+
   joinRoom(roomName, playerName, clientSocket, clientCallback, io) {
     //Check if player doesn't not exist
     if (

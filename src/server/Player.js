@@ -53,9 +53,9 @@ class Player {
             };
           }
         }
-        console.log("Send spectums spectator", listSpectrums);
+        //console.log("Send spectums spectator", listSpectrums);
 
-        console.log(listSpectrums);
+        //console.log(listSpectrums);
         callbackClient(listSpectrums);
 
         // qui faudra virer au la fin de la partie
