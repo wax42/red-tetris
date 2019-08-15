@@ -19,7 +19,7 @@ export const GameGrid = props => {
   );
 };
 
-const GamePieces = props => {
+export const GamePieces = props => {
   const pieces = props.pieces;
   return (
     <div className="game-pieces">

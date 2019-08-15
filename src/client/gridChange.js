@@ -183,7 +183,7 @@ export const downFloorPiece = state => {
   }
   lineBreak(state);
   nextPiece(state);
-  console.log(state);
+  // console.log(state);
   return state;
 };
 

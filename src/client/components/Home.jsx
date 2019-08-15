@@ -7,17 +7,17 @@ let roomName = "";
 let playerName = "";
 
 //TODO validation
-const getRoomName = event => {
+export const getRoomName = event => {
   roomName = event.target.value;
 };
 
-const getPlayerName = event => {
+export const getPlayerName = event => {
   playerName = event.target.value;
 };
 
 // return <Redirect to='/dashboard' />
 
-const buttonCreateRoom = (action, setStateError) => {
+export const buttonCreateRoom = (action, setStateError) => {
   if (roomName.length < 3) {
     setStateError("Room name should have 3 characters at least");
   } else if (playerName.length < 3) {

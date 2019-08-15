@@ -4,7 +4,7 @@ import eventSocket from "../../common/eventSocket";
 import { launchGame } from "../gameManager";
 import { actionStartGame } from "../actions/actionRoom";
 
-const buttonPlay = (state, dispatchRoom) => {
+export const buttonPlay = (state, dispatchRoom) => {
   console.log("handle click start");
   if (state.clearInterval === -1) {
     state.socket.emit(eventSocket.START_GAME, (listPlayers, listPieces) => {
@@ -18,12 +18,12 @@ const buttonPlay = (state, dispatchRoom) => {
   console.log("handle click end");
 };
 
-const mapStateToProps = _state => {
+export const mapStateToProps = _state => {
   const admin = _state.admin;
   return { admin };
 };
 
-const Play = ({ state, admin, dispatchRoom }) => {
+export const Play = ({ state, admin, dispatchRoom }) => {
   if (admin === true) {
     return (
       <button onClick={() => buttonPlay(state, dispatchRoom)}>Play</button>
@@ -34,7 +34,7 @@ const Play = ({ state, admin, dispatchRoom }) => {
 
 const PlayButton = connect(mapStateToProps)(Play);
 
-const Info = ({ state, admin, dispatchRoom }) => {
+export const Info = ({ state, admin, dispatchRoom }) => {
   // console.log(actionClick);
   return (
     <div className="info">
@@ -44,7 +44,7 @@ const Info = ({ state, admin, dispatchRoom }) => {
   );
 };
 
-const Title = () => {
+export const Title = () => {
   return <div className="title">Red Tetris</div>;
 };
 

@@ -54,7 +54,7 @@ import { actionCleanRoomName } from "../actions/actions";
 
 import _ from "lodash";
 
-const mapStateToProps = state => {
+export const mapStateToProps = state => {
   return {
     socket: state.socket,
     roomName: state.roomName,
@@ -69,8 +69,8 @@ const mapStateToProps = state => {
 //   window.location.hash = "";
 // };
 
-const reduceRoom = (state, action) => {
-  console.log("REDUCE ROOM", action.type, state.winner, action, state);
+export const reduceRoom = (state, action) => {
+  // console.log("REDUCE ROOM", action.type, state.winner, action, state);
   switch (action.type) {
     case START_GAME:
       return startGame({ ...state }, action.listPlayers, action.listPieces);
@@ -118,7 +118,7 @@ const reduceRoom = (state, action) => {
   }
 };
 
-const Room = ({ socket, roomName, playerName, spectator }) => {
+export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
   const dispatch = useDispatch();
   const initialState = {
     socket: socket,
@@ -207,4 +207,5 @@ const Room = ({ socket, roomName, playerName, spectator }) => {
   } else return <div />;
 };
 
-export default connect(mapStateToProps)(Room);
+const Room = connect(mapStateToProps)(RoomNoConnect);
+export default Room;
