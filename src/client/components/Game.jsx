@@ -3,9 +3,14 @@ import _ from "lodash";
 
 export const GameGrid = props => {
   const grid = props.grid;
+  console.log(grid);
   return (
     <div className="game-grid">
       {grid.map((line, index) => {
+        console.log("YOOOOOOOOOOO");
+        if (_.difference(line, ["0", ".", "8"]).length === 10) {
+          console.log("LIGNE PLEINE");
+        }
         return (
           <div className="line" key={index}>
             {line.map((value, index) => {

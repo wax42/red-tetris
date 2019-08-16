@@ -4,7 +4,13 @@ import { GameGrid } from "./Game";
 const Spectrum = ({ listSpectrums }) => {
   let listSpectrum = [];
   for (let key in listSpectrums) {
-    listSpectrum.push(<GameGrid grid={listSpectrums[key]["grid"]} key={key} />);
+    listSpectrum.push(
+      <GameGrid
+        className="spectrum-grid"
+        grid={listSpectrums[key]["grid"]}
+        key={key}
+      />
+    );
   }
   return (
     <div className="spectrum">

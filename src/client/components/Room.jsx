@@ -200,14 +200,14 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
           {/* <button onClick={() => leaveRoom(state, dispatch)}>Play</button> */}
           <AppBoardInfo state={state} dispatchRoom={dispatchRoom} />
           <Game state={state} />
-          <h1>{JSON.stringify(state.lose)}</h1>
+          <h1 style={{ color: "pink" }}>{JSON.stringify(state.lose)}</h1>
         </div>
 
         <Spectrum
           listSpectrums={state.listSpectrums}
           className="app-spectrum"
         />
-        <input type="text" onKeyPress={handleKey} />
+        {/* <input type="text" onKeyPress={handleKey} /> */}
       </div>
     );
   } else return <div />;
