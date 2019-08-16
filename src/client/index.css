@@ -6,8 +6,8 @@ body,
 #root {
   height: 100%;
   padding: 0;
-  background-color: #833ab4;
-  background-image: url("./assets/redtetris-background.png");
+  background-color: #000000;
+  /* background-image: url("./assets/redtetris-background.png"); */
   /* background: linear-gradient(to right bottom, #405de6, #fcaf45); */
 }
 
@@ -52,12 +52,23 @@ body,
 }
 
 .spectrum {
-  background-color: rgb(255, 255, 255);
-
-  font-size: 30px;
+  /* background-color: rgb(255, 255, 255); */
+  display: flex;
+  justify-content: center;
+  /* font-size: 30px; */
   width: 100%;
   height: 100%;
   margin-top: 20px;
+}
+.spectrum > .game-grid {
+  box-shadow: none;
+  padding: 20px;
+}
+
+.spectrum > .game-grid > .line > .box {
+  width: 20px;
+  height: 20px;
+  /* background-color: rgb(255, 255, 255); */
 }
 
 .game {
@@ -70,12 +81,20 @@ body,
 .game-grid {
   display: flex;
   flex-direction: column;
-  border: 6px double #fcaf45;
+  box-shadow: 10px 10px 20px rgba(241, 2, 2, 0.904),
+    0 1px 4px rgba(0, 0, 0, 0.89);
+
+  /* border: 6px double #ffffff; */
 }
 
 .game-pieces {
+  margin-left: 10px;
   display: flex;
   flex-direction: column;
+}
+
+.game-pieces > * {
+  margin-bottom: 10px;
 }
 
 .line {
@@ -84,51 +103,52 @@ body,
 }
 
 .box {
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   /* background-color: aquamarine; */
   background-color: #fff;
-  border: 4px double #fcaf45;
+  /* border: 2px solid #fcaf45; */
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.904), 0 1px 4px rgba(0, 0, 0, 0.89);
 }
 
 .color-form0 {
-  background-color: rgba(17, 17, 17, 0.667);
+  background-color: rgb(46, 45, 45);
 }
-
 .color-form1 {
-  background-color: red;
+  /* border: 3px solid #020002; */
+  background-color: rgb(233, 89, 89);
 }
 
 .color-form2 {
-  background-color: red;
+  background-color: rgb(33, 184, 204);
 }
 
 .color-form3 {
-  background-color: red;
+  background-color: rgb(180, 219, 118);
 }
 
 .color-form4 {
-  background-color: red;
+  background-color: rgb(241, 230, 63);
 }
 
 .color-form5 {
-  background-color: red;
+  background-color: rgb(230, 130, 225);
 }
 
 .color-form6 {
-  background-color: red;
+  background-color: rgb(103, 101, 202);
 }
 
 .color-form7 {
-  background-color: red;
+  background-color: rgb(153, 114, 204);
 }
 
 .color-form8 {
-  background-color: rgb(124, 124, 124);
+  background-color: rgb(34, 63, 71);
 }
 
 .color-form9 {
-  background-color: rgb(202, 71, 180);
+  background-color: rgb(241, 143, 143);
 }
 
 /* Home Component */

@@ -70,9 +70,11 @@ export const HomeCpt = ({ error, actionCreateRoom }) => {
           className="home-btn"
           onClick={() => buttonCreateRoom(actionCreateRoom, setStateError)}
           // to={{ pathname: "/", hash: "test[test]" }}
-        />
+        >
+          Créer une partie
+        </button>
       </div>
-      <h1>
+      <h1 style={{ color: "pink" }}>
         {error} {stateError}
       </h1>
     </div>
