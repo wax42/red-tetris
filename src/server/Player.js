@@ -75,6 +75,9 @@ class Player {
       console.log("START GAME", listPieces, listPlayerName, this.name);
 
       this.lose = false;
+      for (let i = 0; i < this.room.players.length; i++) {
+        this.room.players[i].lose = false;
+      }
       callbackClient(listPlayerName, listPieces);
       this.socket
         .to(this.roomName)
