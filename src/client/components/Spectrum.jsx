@@ -1,5 +1,6 @@
 import React from "react";
 import { GameGrid } from "./Game";
+import _ from "lodash";
 
 const Spectrum = ({ listSpectrums }) => {
   let listSpectrum = [];
@@ -7,7 +8,7 @@ const Spectrum = ({ listSpectrums }) => {
     listSpectrum.push(
       <GameGrid
         className="spectrum-grid"
-        grid={listSpectrums[key]["grid"]}
+        grid={_.slice(listSpectrums[key]["grid"], 4)} //T Check with the team
         key={key}
       />
     );
