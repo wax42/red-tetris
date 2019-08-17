@@ -24,9 +24,15 @@ export const mapStateToProps = _state => {
 };
 
 export const Play = ({ state, admin, dispatchRoom }) => {
+  // console.log("STATE PLAYE", state);
   if (admin === true) {
     return (
-      <button onClick={() => buttonPlay(state, dispatchRoom)}>Play</button>
+      <button
+        disabled={state.clearInterval !== -1}
+        onClick={() => buttonPlay(state, dispatchRoom)}
+      >
+        Play
+      </button>
     );
   }
   return <span />;

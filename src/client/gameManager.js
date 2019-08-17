@@ -74,9 +74,11 @@ export const launchGame = dispatchRoom => {
 };
 
 export const cleanListennerEndGame = state => {
+  console.log("JE CLEAN LISTENNER  BECAUSE END OF GAME");
   window.removeEventListener("keydown", state.eventListner, false);
   clearInterval(state.clearInterval);
   state.clearInterval = -1;
+  console.log(state);
   return state;
 };
 
@@ -122,6 +124,8 @@ export const startGame = (state, listPlayers, listPieces) => {
 
   state.lose = false;
   state.currentPiece.piece = listPieces.shift();
+  state.currentPiece.x = 3;
+  state.currentPiece.y = 0;
   state.listPieces = listPieces;
   state.grid = _.cloneDeep(GRID);
   // console.log("START GAME", JSON.stringify(GRID));
@@ -130,13 +134,13 @@ export const startGame = (state, listPlayers, listPieces) => {
 
 export const nextPiece = state => {
   // if (state.listPieces.length < 4) {
-  state.currentPiece.x = 5;
+  // state.currentPiece.x = 4;
 
   state.socket.emit(eventSocket.NEXT_PIECE, state.grid);
   // }
 
   state.currentPiece.piece = state.listPieces.shift();
-  state.currentPiece.x = 5;
+  state.currentPiece.x = 3;
   state.currentPiece.y = 0;
 
   state.grid = placePiece(state.grid, state.currentPiece);

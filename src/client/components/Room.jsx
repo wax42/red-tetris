@@ -127,12 +127,12 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     eventListner: null,
     grid: GRID,
     currentPiece: {
-      x: 5,
+      x: 3,
       y: 0,
       piece: EMPTY_PIECE
     },
     shadow: {
-      x: 5,
+      x: 3,
       y: 0,
       piece: EMPTY_PIECE
     },
@@ -145,6 +145,10 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
   const [state, dispatchRoom] = useReducer(reduceRoom, initialState);
 
   // Key event Listenner
+
+  useEffect(() => {
+    console.log("JE MOUNT");
+  }, []);
   useEffect(() => {
     if (spectator === true && _.isEmpty(state.listSpectrums)) {
       socket.emit(eventSocket.SEND_SPECTRUMS_SPECTATOR, listSpectrums => {
@@ -173,11 +177,13 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     });
 
     socket.on(eventSocket.WINNER_IS, winner => {
+      console.log("WINNER IS");
       dispatchRoom(actionWinnerIs(winner));
       dispatchRoom(actionClearIntervalKeyEvent());
       // dispatch room
     });
     return () => {
+      console.log("UNMOUNT COMPONENT");
       socket.removeListener(eventSocket.START_GAME);
       socket.removeListener(eventSocket.NEXT_PIECE);
       socket.removeListener(eventSocket.LINE_BREAK);
