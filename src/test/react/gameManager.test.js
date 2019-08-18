@@ -249,7 +249,7 @@ describe("GAMEMANAGER.JS - nextPiece", () => {
       state.grid
     );
     expect(newState.currentPiece.piece).toEqual(newCurrentPiece);
-    expect(newState.currentPiece.x).toEqual(5);
+    expect(newState.currentPiece.x).toEqual(3);
     expect(newState.currentPiece.y).toEqual(0);
   });
 });

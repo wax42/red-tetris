@@ -164,7 +164,20 @@ export const checkIslose = state => {
   return false;
 };
 
+/* const waitForPiece = async () => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      console.log("okkkkkk");
+      resolve();
+    }, 2000);
+  });
+}; */
+
 export const downFloorPiece = state => {
+  // console.log(state);
+  /* if (state.currentPiece.piece === undefined) {
+    waitForPiece();
+  } */
   state.grid = cleanOldPiece(state.grid, state.currentPiece);
   state = positionShadow(state);
   state.currentPiece.x = state.shadow.x;

@@ -74,11 +74,9 @@ export const launchGame = dispatchRoom => {
 };
 
 export const cleanListennerEndGame = state => {
-  console.log("JE CLEAN LISTENNER  BECAUSE END OF GAME");
   window.removeEventListener("keydown", state.eventListner, false);
   clearInterval(state.clearInterval);
   state.clearInterval = -1;
-  console.log(state);
   return state;
 };
 
@@ -135,7 +133,7 @@ export const startGame = (state, listPlayers, listPieces) => {
 export const nextPiece = state => {
   // if (state.listPieces.length < 4) {
   // state.currentPiece.x = 4;
-
+  console.log("JE VAIS EMIT POUR NEXT PIECE");
   state.socket.emit(eventSocket.NEXT_PIECE, state.grid);
   // }
 

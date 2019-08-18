@@ -85,7 +85,9 @@ class Player {
     });
 
     this.socket.on(eventSocket.NEXT_PIECE, grid => {
+      console.log("Je recois event");
       let piece = new Piece();
+      console.log("J'emit new piece: ", piece);
       this.socket.emit(eventSocket.NEXT_PIECE, piece.grid);
       this.socket
         .to(this.roomName)

@@ -2,7 +2,7 @@ import React from "react";
 import _ from "lodash";
 
 export const GameGrid = props => {
-  console.log("PROPS GAME GRID ", props);
+  // console.log("PROPS GAME GRID ", props);
   const grid = props.grid;
   return (
     <div className="game-grid">
@@ -35,7 +35,7 @@ export const GamePieces = props => {
 };
 
 const Game = props => {
-  console.log("GAME PROPS: ", props);
+  // console.log("GAME PROPS: ", props);
   const state = props.state;
   const grid = _.slice(state.grid, 4); // 4
   const listPieces = state.listPieces; //3);

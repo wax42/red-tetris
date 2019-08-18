@@ -165,6 +165,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     });
 
     socket.on(eventSocket.NEXT_PIECE, newPiece => {
+      console.log("Je recois next_piece du server : ", newPiece);
       dispatchRoom(actionNextPiece(newPiece));
     });
 
