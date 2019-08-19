@@ -74,3 +74,7 @@ export const actionClearIntervalKeyEvent = () => {
 export const actionWinnerIs = winner => {
   return { type: WINNER_IS, winner: winner };
 };
+
+/* export const actionResetBrokenLines = () => {
+  return { type: RESET_BROKEN_LINES };
+}; */

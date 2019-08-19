@@ -178,6 +178,9 @@ export const downFloorPiece = state => {
   /* if (state.currentPiece.piece === undefined) {
     waitForPiece();
   } */
+  //
+  // state.lineBreak = [];
+  //
   state.grid = cleanOldPiece(state.grid, state.currentPiece);
   state = positionShadow(state);
   state.currentPiece.x = state.shadow.x;
@@ -216,6 +219,7 @@ export const rotatePiece = state => {
 
 // SpacePiece
 export const downPiece = state => {
+  // state.brokenLines = [];
   state.grid = cleanOldPiece(state.grid, state.currentPiece);
 
   state.currentPiece.y += 1;

@@ -148,8 +148,10 @@ export const nextPiece = state => {
 
 export const lineBreak = state => {
   let nbrLine = 0;
-  state.grid = state.grid.filter(line => {
+  state.grid = state.grid.filter((line, index) => {
     if (_.difference(line, ["0", ".", "8"]).length === 10) {
+      console.log("LINEBREAK++");
+      state.brokenLines.push(index);
       nbrLine++;
       return false;
     } else {

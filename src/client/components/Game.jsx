@@ -2,17 +2,17 @@ import React from "react";
 import _ from "lodash";
 
 export const GameGrid = props => {
-
-  // console.log("PROPS GAME GRID ", props);
-
-
   const grid = props.grid;
+  console.log("BROKENLINE GAME GRID", props.brokenLines);
+  if (props.brokenLines !== undefined && props.brokenLines.length !== 0) {
+    console.log("JE DECLENCHE EFFECT BROKE LINE");
+  }
   return (
     <div className="game-grid">
       {grid.map((line, index) => {
-        if (_.difference(line, ["0", ".", "8"]).length === 10) {
+        /* if (_.difference(line, ["0", ".", "8"]).length === 10) {
           console.log("LIGNE PLEINE");
-        }
+        } */
         return (
           <div className="line" key={index}>
             {line.map((value, index) => {
@@ -43,7 +43,7 @@ const Game = props => {
   const listPieces = state.listPieces; //3);
   return (
     <div className="game">
-      <GameGrid grid={grid} />
+      <GameGrid grid={grid} brokenLines={state.brokenLines} />
       <GamePieces pieces={listPieces} />
     </div>
   );

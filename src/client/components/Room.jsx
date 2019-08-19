@@ -71,6 +71,7 @@ export const mapStateToProps = state => {
 
 export const reduceRoom = (state, action) => {
   // console.log("REDUCE ROOM", action.type, state.winner, action, state);
+  state.brokenLines = [];
   switch (action.type) {
     case START_GAME:
       return startGame({ ...state }, action.listPlayers, action.listPieces);
@@ -140,14 +141,13 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     listSpectrums: {},
     admin: false,
     lose: false,
-    winner: null
+    winner: null,
+    brokenLines: [] // List of posiiton of broken lines to apply animation
   };
   const [state, dispatchRoom] = useReducer(reduceRoom, initialState);
-
   // Key event Listenner
-
   useEffect(() => {
-    console.log("JE MOUNT");
+    // console.log("JE MOUNT");
   }, []);
   useEffect(() => {
     if (spectator === true && _.isEmpty(state.listSpectrums)) {
@@ -165,7 +165,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     });
 
     socket.on(eventSocket.NEXT_PIECE, newPiece => {
-      console.log("Je recois next_piece du server : ", newPiece);
+      // console.log("Je recois next_piece du server : ", newPiece);
       dispatchRoom(actionNextPiece(newPiece));
     });
 
@@ -184,7 +184,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
       // dispatch room
     });
     return () => {
-      console.log("UNMOUNT COMPONENT");
+      // console.log("UNMOUNT COMPONENT");
       socket.removeListener(eventSocket.START_GAME);
       socket.removeListener(eventSocket.NEXT_PIECE);
       socket.removeListener(eventSocket.LINE_BREAK);
