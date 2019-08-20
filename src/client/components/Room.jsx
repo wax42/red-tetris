@@ -71,7 +71,7 @@ export const mapStateToProps = state => {
 
 export const reduceRoom = (state, action) => {
   // console.log("REDUCE ROOM", action.type, state.winner, action, state);
-  state.brokenLines = [];
+  // state.brokenLines = [];
   switch (action.type) {
     case START_GAME:
       return startGame({ ...state }, action.listPlayers, action.listPieces);
@@ -142,7 +142,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     admin: false,
     lose: false,
     winner: null,
-    brokenLines: [] // List of posiiton of broken lines to apply animation
+    brokenLines: [] // List of position of broken lines to apply animation
   };
   const [state, dispatchRoom] = useReducer(reduceRoom, initialState);
   // Key event Listenner

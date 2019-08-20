@@ -3,18 +3,29 @@ import _ from "lodash";
 
 export const GameGrid = props => {
   const grid = props.grid;
+  let brokenLines = _.map(props.brokenLines, el => {
+    return el - 4;
+  });
+
   console.log("BROKENLINE GAME GRID", props.brokenLines);
-  if (props.brokenLines !== undefined && props.brokenLines.length !== 0) {
-    console.log("JE DECLENCHE EFFECT BROKE LINE");
-  }
   return (
     <div className="game-grid">
       {grid.map((line, index) => {
         /* if (_.difference(line, ["0", ".", "8"]).length === 10) {
           console.log("LIGNE PLEINE");
         } */
+        let lineGame = "line";
+
+        if (props.brokenLines !== undefined && props.brokenLines.length !== 0) {
+          console.log("EFFECT BEFORE INCLUDES = ", brokenLines);
+          if (_.includes(brokenLines, index)) {
+            console.log("EFFECT BROKE LINE SUR LIGNE: ", index);
+            lineGame += " broken-line";
+          }
+        }
+        // if (_.includes(props.brokenLine))
         return (
-          <div className="line" key={index}>
+          <div className={lineGame} key={index}>
             {line.map((value, index) => {
               let color = "color-form" + value;
               return <div className={`box ${color}`} key={index} />;
