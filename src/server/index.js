@@ -41,16 +41,31 @@ const handleClient = client => {
     if (client.playerName !== undefined) {
       roomsManager.deletePlayer(client);
     }
-    console.log("LEabe room", client.id, client.playerName);
-    console.log(roomsManager.rooms);
+    console.log("Leave room", client.id, client.playerName);
   });
 
   client.on(eventSocket.DISCONNECT, () => {
+    let roomName = client.roomName;
     if (client.playerName !== undefined) {
       roomsManager.deletePlayer(client);
     }
+    if (
+      roomsManager.rooms[roomName] !== undefined &&
+      roomsManager.rooms[roomName].game !== null
+    ) {
+      let winner = roomsManager.rooms[roomName].game.checkWhoIsWinner();
+      if (winner !== null) {
+        client.to(roomName).emit(eventSocket.WINNER_IS, winner);
+      }
+      if (
+        roomsManager.rooms[roomName].game.players.length === 1 ||
+        winner !== null
+      ) {
+        delete roomsManager.rooms[roomName].game;
+        roomsManager.rooms[roomName].game = null;
+      }
+    }
     console.log("disconnect", client.id, client.playerName);
-    console.log(roomsManager.rooms);
   });
 };
 

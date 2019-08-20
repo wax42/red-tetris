@@ -107,6 +107,11 @@ class Player {
         console.log("WINNER IN PLAYER.JS", winner);
         this.socket.to(this.roomName).emit(eventSocket.WINNER_IS, winner);
         cb(winner);
+        console.log("lose solo");
+      }
+      if (this.room.game.players.length === 1 || winner !== null) {
+        delete this.room.game;
+        this.room.game = null;
       }
     });
   }

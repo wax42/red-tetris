@@ -11,6 +11,7 @@ export const ROOM_ADD_PLAYER = "ROOM_ADD_PLAYER";
 export const ROOM_DEL_PLAYER = "ROOM_DEL_PLAYER";
 export const IS_NEW_ADMIN = "IS_NEW_ADMIN";
 export const IS_SPECTATOR = "IS_SPECTATOR";
+export const ERROR = "ERROR";
 
 /* ACTION  ROOM */
 
@@ -29,5 +30,3 @@ export const ADD_INDESTRUCTIBLES_LINES = "ADD_INDESTRUCTIBLES_LINES";
 export const SPECTRUMS = "SPECTRUMS";
 export const SPECTRUMS_SPECTATOR = "SPECTRUMS_SPECTATOR";
 export const WINNER_IS = "WINNER_IS";
-
-// export const RESET_BROKEN_LINES = "RESET_BROKEN_LINES";

@@ -20,7 +20,8 @@ const mapStateToProps = _state => {
     playerName: _state.playerName,
     listRooms: _state.listRooms,
     listPlayers: _state.listPlayers,
-    socket: _state.socket
+    socket: _state.socket,
+    error: _state.error
   };
   return { state };
 };
@@ -79,6 +80,10 @@ export const Routing = ({ state, actionJoinRoom, actionListRoomPlayer }) => {
   }, [actionListRoomPlayer, state.socket]);
   window.location.path = "/";
   let hash = window.location.hash;
+
+  if (state.error !== null) {
+    return <Home error={state.error} />;
+  }
 
   if (loading === true) {
     return <Home error="SPinnner loading" />;

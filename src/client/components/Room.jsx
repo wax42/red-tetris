@@ -50,7 +50,11 @@ import {
   actionClearIntervalKeyEvent
 } from "../actions/actionRoom";
 
-import { actionCleanRoomName } from "../actions/actions";
+import {
+  actionCleanRoomName,
+  actionIsSpectator,
+  actionError
+} from "../actions/actions";
 
 import _ from "lodash";
 
@@ -72,6 +76,7 @@ export const mapStateToProps = state => {
 export const reduceRoom = (state, action) => {
   // console.log("REDUCE ROOM", action.type, state.winner, action, state);
   // state.brokenLines = [];
+
   switch (action.type) {
     case START_GAME:
       return startGame({ ...state }, action.listPlayers, action.listPieces);
@@ -159,6 +164,10 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
 
   useEffect(() => {
     socket.on(eventSocket.START_GAME, (listPlayers, listPieces) => {
+      if (spectator === true) {
+        dispatch(actionIsSpectator());
+        // spectator = false;
+      }
       listPlayers = listPlayers.filter(value => value !== playerName);
       dispatchRoom(actionStartGame(listPlayers, listPieces));
       launchGame(dispatchRoom);
@@ -170,7 +179,10 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     });
 
     socket.on(eventSocket.LINE_BREAK, nbrLines => {
-      dispatchRoom(actionIndestructiblesLines(nbrLines));
+      console.log("ON EVENT BREAK", spectator);
+      if (spectator !== true) {
+        dispatchRoom(actionIndestructiblesLines(nbrLines));
+      }
     });
 
     socket.on(eventSocket.SEND_SPECTRUMS, spectrum => {

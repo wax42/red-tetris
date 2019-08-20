@@ -4,11 +4,16 @@ import {
   LIST_ROOM_PLAYER,
   IS_NEW_ADMIN,
   IS_SPECTATOR,
-  CLEAN_ROOM_NAME
+  CLEAN_ROOM_NAME,
+  ERROR
 } from "./actionTypes";
 import eventSocket from "../../common/eventSocket";
 
 // action for redux state
+
+export const actionError = error => {
+  return { type: ERROR, error: error };
+};
 
 export const actionIsSpectator = () => {
   return { type: IS_SPECTATOR };

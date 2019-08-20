@@ -31,7 +31,7 @@ class RoomsManager {
 
     this.rooms[roomName] = room;
 
-    console.log("rooms OBJSS", this.rooms);
+    // console.log("rooms OBJSS", this.rooms);
 
     this.listRoomsName.push(roomName);
     this.listPlayersName.push(playerName);
@@ -58,12 +58,12 @@ class RoomsManager {
     clientSocket.playerName = playerName;
 
     this.sendListRoomsPlayers(io);
-    if (this.rooms[roomName].game !== false) {
+    if (this.rooms[roomName].game !== null) {
       clientCallback("Succes Join ROOM: " + roomName, true);
     } else {
       clientCallback("Succes Join ROOM: " + roomName, false);
     }
-    console.log("Succes Join Room: ", this.rooms[roomName]);
+    // console.log("Succes Join Room: ", this.rooms[roomName]);
     return true;
   }
   sendListRoomsPlayers(io) {

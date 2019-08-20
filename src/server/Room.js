@@ -6,7 +6,7 @@ const eventSocket = require("../common/eventSocket");
 class Room {
   constructor(name, playerName, clientSocket) {
     this.name = name;
-    this.admin = clientSocket.id; // hash /  id
+    this.admin = clientSocket.id;
     // TODO add the admin in the lists of players
     this.game = null;
     this.players = [];

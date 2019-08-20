@@ -6,7 +6,8 @@ import {
   LIST_ROOM_PLAYER,
   IS_NEW_ADMIN,
   IS_SPECTATOR,
-  CLEAN_ROOM_NAME
+  CLEAN_ROOM_NAME,
+  ERROR
 } from "../actions/actionTypes";
 
 const io = require("socket.io-client")("http://localhost:3001", {
@@ -19,7 +20,8 @@ const initialState = {
   spectator: false,
   listRooms: [],
   listPlayers: [],
-  timeId: null
+  timeId: null,
+  error: null
 };
 
 const reducers = (state = initialState, action) => {
@@ -40,6 +42,11 @@ const reducers = (state = initialState, action) => {
   // let newState = Object.assign({}, state)
 
   switch (action.type) {
+    case ERROR:
+      return {
+        ...state,
+        error: action.error
+      };
     case IS_SPECTATOR:
       return {
         ...state,
