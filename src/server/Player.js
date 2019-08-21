@@ -61,7 +61,7 @@ class Player {
       });
     }
 
-    this.socket.on(eventSocket.START_GAME, () => {
+    this.socket.on(eventSocket.START_GAME, (gameInterval) => {
       this.socket.spectator = false;
       this.room.game = true;
       this.room.newGame();
@@ -76,7 +76,7 @@ class Player {
           let piece = new Piece();
           listPieces.push(piece.grid);
         }
-        this.room.players[i].socket.emit(eventSocket.START_GAME, listPlayerName, listPieces);
+        this.room.players[i].socket.emit(eventSocket.START_GAME, listPlayerName, listPieces, gameInterval);
       }
 
     });

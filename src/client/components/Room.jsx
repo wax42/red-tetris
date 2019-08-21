@@ -20,7 +20,7 @@ import {
   WINNER_IS,
   CLEAR_INTERVAL_KEY_EVENT
 } from "../actions/actionTypes";
-import { launchGame, startGame, handleKey, cleanListennerEndGame } from "../gameManager";
+import { launchGame, startGame, cleanListennerEndGame } from "../gameManager";
 
 import {
   rotatePiece,
@@ -70,6 +70,7 @@ export const reduceRoom = (state, action) => {
 
   switch (action.type) {
     case START_GAME:
+      console.log("START GAME", action);
       return startGame({ ...state }, action.listPlayers, action.listPieces);
     case PIECE_DOWN:
       return downPiece({ ...state });
@@ -155,14 +156,14 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
   });
 
   useEffect(() => {
-    socket.on(eventSocket.START_GAME, (listPlayers, listPieces) => {
+    socket.on(eventSocket.START_GAME, (listPlayers, listPieces, gameInterval) => {
       if (spectator === true) {
         dispatch(actionIsSpectator());
         // spectator = false;
       }
       listPlayers = listPlayers.filter(value => value !== playerName);
       dispatchRoom(actionStartGame(listPlayers, listPieces));
-      launchGame(dispatchRoom, state.gameInterval);
+      launchGame(dispatchRoom, gameInterval);
     });
 
     socket.on(eventSocket.NEXT_PIECE, newPiece => {
@@ -196,7 +197,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
       socket.removeListener(eventSocket.SEND_SPECTRUMS);
       socket.removeListener(eventSocket.WINNER_IS);
     };
-  }, [socket, playerName, spectator, dispatch, state.eventListner, state.clearInterval, state.gameInterval]);
+  }, [socket, playerName, spectator, dispatch, state.eventListner, state.clearInterval]);
 
   const isLog = true; //A definir dans les classes + state
   if (isLog) {
@@ -204,7 +205,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
       <div className="app">
         <div className="app-board">
           <button onClick={() => leaveRoom(state, dispatch)}>Leave Room</button>
-          <AppBoardInfo state={state} dispatchRoom={dispatchRoom} />
+          <AppBoardInfo state={state} />
           <Game state={state} />
           <h1 style={{ color: "pink" }}>{JSON.stringify(state.lose)}</h1>
         </div>

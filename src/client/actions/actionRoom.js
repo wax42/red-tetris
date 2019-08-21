@@ -16,47 +16,75 @@ import {
 } from "./actionTypes";
 
 export const actionPieceDown = () => {
-  return { type: PIECE_DOWN };
+  return {
+    type: PIECE_DOWN
+  };
 };
 
 export const actionPieceLeft = () => {
-  return { type: PIECE_LEFT };
+  return {
+    type: PIECE_LEFT
+  };
 };
 
 export const actionPieceRight = () => {
-  return { type: PIECE_RIGHT };
+  return {
+    type: PIECE_RIGHT
+  };
 };
 
 export const actionPieceSpace = () => {
-  return { type: PIECE_SPACE };
+  return {
+    type: PIECE_SPACE
+  };
 };
 
 export const actionPieceRotate = () => {
-  return { type: PIECE_ROTATE };
+  return {
+    type: PIECE_ROTATE
+  };
 };
 
 export const actionNextPiece = piece => {
-  return { type: NEXT_PIECE, piece: piece };
+  return {
+    type: NEXT_PIECE,
+    piece: piece
+  };
 };
 
 export const actionSwitchPiece = () => {
-  return { type: SWITCH_PIECE };
+  return {
+    type: SWITCH_PIECE
+  };
 };
 
 export const actionIndestructiblesLines = nbrLines => {
-  return { type: ADD_INDESTRUCTIBLES_LINES, nbrLines: nbrLines };
+  return {
+    type: ADD_INDESTRUCTIBLES_LINES,
+    nbrLines: nbrLines
+  };
 };
 
 export const actionSpectrum = spectrum => {
-  return { type: SPECTRUMS, spectrum: spectrum };
+  return {
+    type: SPECTRUMS,
+    spectrum: spectrum
+  };
 };
 
 export const actionSpectrumsSpectator = listSpectrums => {
-  return { type: SPECTRUMS_SPECTATOR, listSpectrums: listSpectrums };
+  return {
+    type: SPECTRUMS_SPECTATOR,
+    listSpectrums: listSpectrums
+  };
 };
 
 export const actionStartGame = (listPlayers, listPieces) => {
-  return { type: START_GAME, listPlayers: listPlayers, listPieces: listPieces };
+  return {
+    type: START_GAME,
+    listPlayers: listPlayers,
+    listPieces: listPieces
+  };
 };
 
 export const actionSendIntervalKeyEvent = (clearInterval, eventListner) => {
@@ -68,13 +96,14 @@ export const actionSendIntervalKeyEvent = (clearInterval, eventListner) => {
 };
 
 export const actionClearIntervalKeyEvent = () => {
-  return { type: CLEAR_INTERVAL_KEY_EVENT };
+  return {
+    type: CLEAR_INTERVAL_KEY_EVENT
+  };
 };
 
 export const actionWinnerIs = winner => {
-  return { type: WINNER_IS, winner: winner };
+  return {
+    type: WINNER_IS,
+    winner: winner
+  };
 };
-
-/* export const actionResetBrokenLines = () => {
-  return { type: RESET_BROKEN_LINES };
-}; */

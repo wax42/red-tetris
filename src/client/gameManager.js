@@ -66,6 +66,7 @@ export const handleKey = dispatchRoom => event => {
 
 export const launchGame = (dispatchRoom, gameInterval) => {
 
+  console.log("Launch Game ", gameInterval)
   const eventListner = handleKey(dispatchRoom);
   window.addEventListener("keydown", eventListner, false);
   let clearInterval = setInterval(() => {
@@ -127,7 +128,6 @@ export const startGame = (state, listPlayers, listPieces) => {
   state.currentPiece.y = 0;
   state.listPieces = listPieces;
   state.grid = _.cloneDeep(GRID);
-  // console.log("START GAME", JSON.stringify(GRID));
   return state;
 };
 
