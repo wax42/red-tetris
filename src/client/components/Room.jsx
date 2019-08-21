@@ -124,6 +124,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     playerName: playerName,
     clearInterval: -1,
     eventListner: null,
+    gameInterval: 1000,
     grid: GRID,
     currentPiece: {
       x: 3,
@@ -161,7 +162,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
       }
       listPlayers = listPlayers.filter(value => value !== playerName);
       dispatchRoom(actionStartGame(listPlayers, listPieces));
-      launchGame(dispatchRoom);
+      launchGame(dispatchRoom, state.gameInterval);
     });
 
     socket.on(eventSocket.NEXT_PIECE, newPiece => {
@@ -195,7 +196,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
       socket.removeListener(eventSocket.SEND_SPECTRUMS);
       socket.removeListener(eventSocket.WINNER_IS);
     };
-  }, [socket, playerName, spectator, dispatch, state.eventListner, state.clearInterval]);
+  }, [socket, playerName, spectator, dispatch, state.eventListner, state.clearInterval, state.gameInterval]);
 
   const isLog = true; //A definir dans les classes + state
   if (isLog) {

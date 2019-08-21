@@ -5,6 +5,7 @@ const RoomsManager = require("./RoomsManager");
 
 const handleClient = client => {
   console.log(eventSocket.CONNECT, client.id);
+  client.spectator = false;
 
   // setTimeout(() => {
   //   roomsManager.sendListRoomsPlayers(io);
@@ -41,12 +42,11 @@ const handleClient = client => {
   client.on(eventSocket.LEAVE_ROOM, () => {
     let roomName = client.roomName;
     if (client.playerName !== undefined) {
-      roomsManager.listPlayersName = roomsManager.listPlayersName.filter(value => value !== client.playerName);
+      roomsManager.deletePlayer(client, io);
       console.log("Leave rooom", roomsManager.listPlayersName, client.playerName);
       client.playerName = undefined;
-      roomsManager.deletePlayer(client);
       if (
-        roomsManager.rooms[roomName] !== undefined &&
+        client.spectator === false && roomsManager.rooms[roomName] !== undefined &&
         roomsManager.rooms[roomName].game !== null
       ) {
         let winner = roomsManager.rooms[roomName].game.checkWhoIsWinner();
@@ -67,7 +67,7 @@ const handleClient = client => {
   client.on(eventSocket.DISCONNECT, () => {
     let roomName = client.roomName;
     if (client.playerName !== undefined) {
-      roomsManager.deletePlayer(client);
+      roomsManager.deletePlayer(client, io);
       if (
         roomsManager.rooms[roomName] !== undefined &&
         roomsManager.rooms[roomName].game !== null

@@ -1,6 +1,10 @@
 const eventSocket = require("../common/eventSocket");
-const { Piece } = require("./Piece");
-const { GRID } = require("../common/common");
+const {
+  Piece
+} = require("./Piece");
+const {
+  GRID
+} = require("../common/common");
 const _ = require("lodash");
 
 class Player {
@@ -39,8 +43,8 @@ class Player {
 
   createListener() {
     if (this.room.game !== null) {
+      this.socket.spectator = true;
       this.socket.on(eventSocket.SEND_SPECTRUMS_SPECTATOR, callbackClient => {
-        // filter
         let listSpectrums = {};
         for (let i = 0; i < this.room.game.players.length; i++) {
           let player = this.room.game.players[i];
@@ -53,35 +57,28 @@ class Player {
             };
           }
         }
-        //console.log("Send spectums spectator", listSpectrums);
-
-        //console.log(listSpectrums);
         callbackClient(listSpectrums);
-
-        // qui faudra virer au la fin de la partie
       });
     }
 
-    this.socket.on(eventSocket.START_GAME, callbackClient => {
+    this.socket.on(eventSocket.START_GAME, () => {
+      this.socket.spectator = false;
       this.room.game = true;
       this.room.newGame();
-      let listPieces = [];
-      for (let i = 0; i < 4; i++) {
-        let piece = new Piece();
-        listPieces.push(piece.grid);
-      }
 
       let listPlayerName = this.room.game.players.map(value => value.name);
-      console.log("START GAME", listPieces, listPlayerName, this.name);
 
       this.lose = false;
       for (let i = 0; i < this.room.players.length; i++) {
         this.room.players[i].lose = false;
+        let listPieces = [];
+        for (let i = 0; i < 4; i++) {
+          let piece = new Piece();
+          listPieces.push(piece.grid);
+        }
+        this.room.players[i].socket.emit(eventSocket.START_GAME, listPlayerName, listPieces);
       }
-      callbackClient(listPlayerName, listPieces);
-      this.socket
-        .to(this.roomName)
-        .emit(eventSocket.START_GAME, listPlayerName, listPieces);
+
     });
 
     this.socket.on(eventSocket.NEXT_PIECE, grid => {

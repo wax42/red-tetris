@@ -64,15 +64,14 @@ export const handleKey = dispatchRoom => event => {
   }
 };
 
-export const launchGame = dispatchRoom => {
-  // console.log("LAUNCH GAME set interval value ");
+export const launchGame = (dispatchRoom, gameInterval) => {
 
   const eventListner = handleKey(dispatchRoom);
   window.addEventListener("keydown", eventListner, false);
   let clearInterval = setInterval(() => {
     dispatchRoom(actionPieceDown());
     // console.log("dsipatch Piece down set interval");
-  }, 1000);
+  }, gameInterval);
   dispatchRoom(actionSendIntervalKeyEvent(clearInterval, eventListner));
   // dispatchRoom(actionPieceDown());
 };
@@ -80,7 +79,6 @@ export const launchGame = dispatchRoom => {
 export const cleanListennerEndGame = (eventListner, cleanInterval) => {
   window.removeEventListener("keydown", eventListner, false);
   clearInterval(cleanInterval);
-  cleanInterval = -1;
 };
 
 export const initializeListSpectrums = (state, listPlayers) => {

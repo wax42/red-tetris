@@ -7,13 +7,7 @@ import { actionStartGame } from "../actions/actionRoom";
 export const buttonPlay = (state, dispatchRoom) => {
   console.log("handle click start");
   if (state.clearInterval === -1) {
-    state.socket.emit(eventSocket.START_GAME, (listPlayers, listPieces) => {
-      listPlayers = listPlayers.filter(value => value !== state.playerName);
-
-      dispatchRoom(actionStartGame(listPlayers, listPieces));
-      launchGame(dispatchRoom);
-      console.log("handle click callback");
-    });
+    state.socket.emit(eventSocket.START_GAME);
   }
   console.log("handle click end");
 };
@@ -27,10 +21,7 @@ export const Play = ({ state, admin, dispatchRoom }) => {
   // console.log("STATE PLAYE", state);
   if (admin === true) {
     return (
-      <button
-        disabled={state.clearInterval !== -1}
-        onClick={() => buttonPlay(state, dispatchRoom)}
-      >
+      <button disabled={state.clearInterval !== -1} onClick={() => buttonPlay(state, dispatchRoom)}>
         Play
       </button>
     );
