@@ -230,10 +230,9 @@ input:focus {
 
 /* Break line */
 
-.broken-line {
+/* .broken-line {
   width: 10px;
   height: 10px;
-  /* background-color: red;0 */
   border: 0.5px solid pink;
   position: absolute;
   right: 0;
@@ -241,48 +240,87 @@ input:focus {
   animation-direction: alternate;
   z-index: 10;
   border-radius: 50%;
+} */
+
+$boxes: 59;
+
+/* #wrap{
+  width: 300px;
+  height: 30px;
+  position: relative;
+  margin: auto;
+  background-color: white;
+  margin-top:  150px;
+} */
+
+.broken-line {
+  width: 300px;
+  height: 30px;
+  position: absolute;
+  top: 0;
 }
 
-@keyframes expand-circle {
+.broken-line-box {
+  display: none;
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+$boxes: 100;
+
+@for $i from 1 through $boxes {
+  @keyframes anim-#{$i} {
+    $a: random(300) + px;
+    $b: random(400) + px;
+    //
+    0% {
+      top: 0;
+      left: 50%;
+    }
+    50% {
+      top: $a;
+      left: $b;
+    }
+    100% {
+      top: $a;
+      left: $b;
+      opacity: 0;
+    }
+  }
+
+  .broken-line-box {
+    /*     width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    display: block; */
+    &:nth-child(#{$i}) {
+      display: block;
+      left: $i * 5px;
+      animation-duration: 2s;
+      animation-name: anim-#{$i};
+      z-index: 10;
+      // animation-iteration-count: ease;
+      animation-direction: normal;
+      //animation-timing-function: ease-in;
+      background: hsla(10 * $i, 100%, 50%, 1);
+      animation-fill-mode: forwards;
+    }
+  }
+}
+
+/* @keyframes expand-circle {
   0% {
     transform: scale(1);
   }
   100% {
     transform: scale(8);
   }
-}
-
-/* Safari 4.0 - 8.0 */
-@-webkit-keyframes mymove {
-  0% {
-    top: 0px;
-    left: 0px;
-    background: red;
-  }
-  25% {
-    top: 0px;
-    left: 100px;
-    background: blue;
-  }
-  50% {
-    top: 100px;
-    left: 100px;
-    background: yellow;
-  }
-  75% {
-    top: 100px;
-    left: 0px;
-    background: green;
-  }
-  100% {
-    top: 0px;
-    left: 0px;
-    background: red;
-  }
-}
+} */
 
 /* Standard syntax */
-@keyframes mymove {
+/* @keyframes mymove {
   0% {
     top: 0px;
     left: 0px;
@@ -308,4 +346,4 @@ input:focus {
     left: 0px;
     background: red;
   }
-}
+} */
