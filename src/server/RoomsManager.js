@@ -25,30 +25,31 @@ class RoomsManager {
         io
       );
     }
-
-    console.log("SOCKET ID CREATE ROOM ", clientSocket.id);
     let room = new Room(roomName, playerName, clientSocket);
-
     this.rooms[roomName] = room;
-
-    // console.log("rooms OBJSS", this.rooms);
-
     this.listRoomsName.push(roomName);
     this.listPlayersName.push(playerName);
     clientSocket.roomName = roomName;
     clientSocket.playerName = playerName;
     this.sendListRoomsPlayers(io);
-    clientCallback("Succes Create new ROOM:  " + roomName);
+    clientCallback("Succes Create new ROOM:  " + roomName, {
+      spectator: false,
+      admin: true,
+      error: false
+    });
     return true;
   }
 
   joinRoom(roomName, playerName, clientSocket, clientCallback, io) {
-    //Check if player doesn't not exist
     if (
       this.listRoomsName.includes(roomName) === false ||
       this.listPlayersName.includes(playerName) === true
     ) {
-      clientCallback("Is not possible to join room:  " + roomName);
+      clientCallback("Player with the same name in the room:  " + roomName, {
+        spectator: false,
+        admin: false,
+        error: true
+      });
       return false;
     }
 
@@ -59,11 +60,19 @@ class RoomsManager {
 
     this.sendListRoomsPlayers(io);
     if (this.rooms[roomName].game !== null) {
-      clientCallback("Succes Join ROOM: " + roomName, true);
+      clientCallback("Succes Join ROOM in spectator: " + roomName, {
+        spectator: true,
+        admin: false,
+        error: false
+
+      });
     } else {
-      clientCallback("Succes Join ROOM: " + roomName, false);
+      clientCallback("Succes Join ROOM: " + roomName, {
+        spectator: false,
+        admin: false,
+        error: false
+      });
     }
-    // console.log("Succes Join Room: ", this.rooms[roomName]);
     return true;
   }
   sendListRoomsPlayers(io) {

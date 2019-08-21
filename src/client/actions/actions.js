@@ -12,15 +12,23 @@ import eventSocket from "../../common/eventSocket";
 // action for redux state
 
 export const actionError = error => {
-  return { type: ERROR, error: error };
+  return {
+    type: ERROR,
+    error: error
+  };
 };
 
 export const actionIsSpectator = () => {
-  return { type: IS_SPECTATOR };
+  return {
+    type: IS_SPECTATOR
+  };
 };
 
-export const actionIsNewAdmin = () => {
-  return { type: IS_NEW_ADMIN };
+export const actionIsNewAdmin = (admin) => {
+  return {
+    type: IS_NEW_ADMIN,
+    admin: admin
+  };
 };
 
 export const actionListRoomPlayer = (listRooms, listPlayers) => {
@@ -50,5 +58,7 @@ export const actionJoinRoom = (room, player) => {
 };
 
 export const actionCleanRoomName = () => {
-  return { type: CLEAN_ROOM_NAME };
+  return {
+    type: CLEAN_ROOM_NAME
+  };
 };

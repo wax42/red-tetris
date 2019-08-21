@@ -20,12 +20,7 @@ import {
   WINNER_IS,
   CLEAR_INTERVAL_KEY_EVENT
 } from "../actions/actionTypes";
-import {
-  launchGame,
-  startGame,
-  handleKey,
-  cleanListennerEndGame
-} from "../gameManager";
+import { launchGame, startGame, handleKey, cleanListennerEndGame } from "../gameManager";
 
 import {
   rotatePiece,
@@ -50,11 +45,7 @@ import {
   actionClearIntervalKeyEvent
 } from "../actions/actionRoom";
 
-import {
-  actionCleanRoomName,
-  actionIsSpectator,
-  actionError
-} from "../actions/actions";
+import { actionCleanRoomName, actionIsSpectator, actionError } from "../actions/actions";
 
 import _ from "lodash";
 
@@ -67,11 +58,11 @@ export const mapStateToProps = state => {
   };
 };
 
-// const leaveRoom = (state, dispatch) => {
-//   dispatch(actionCleanRoomName());
-//   state.socket.emit(eventSocket.LEAVE_ROOM);
-//   window.location.hash = "";
-// };
+const leaveRoom = (state, dispatch) => {
+  dispatch(actionCleanRoomName());
+  state.socket.emit(eventSocket.LEAVE_ROOM);
+  window.location.hash = "";
+};
 
 export const reduceRoom = (state, action) => {
   // console.log("REDUCE ROOM", action.type, state.winner, action, state);
@@ -118,7 +109,9 @@ export const reduceRoom = (state, action) => {
         winner: action.winner
       };
     case CLEAR_INTERVAL_KEY_EVENT:
-      return cleanListennerEndGame({ ...state });
+      cleanListennerEndGame(state.eventListner, state.clearInterval);
+      return { ...state, clearInterval: -1 };
+
     default:
       return state;
   }
@@ -151,9 +144,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
   };
   const [state, dispatchRoom] = useReducer(reduceRoom, initialState);
   // Key event Listenner
-  useEffect(() => {
-    // console.log("JE MOUNT");
-  }, []);
+
   useEffect(() => {
     if (spectator === true && _.isEmpty(state.listSpectrums)) {
       socket.emit(eventSocket.SEND_SPECTRUMS_SPECTATOR, listSpectrums => {
@@ -197,29 +188,27 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     });
     return () => {
       // console.log("UNMOUNT COMPONENT");
+      cleanListennerEndGame(state.eventListner, state.clearInterval);
       socket.removeListener(eventSocket.START_GAME);
       socket.removeListener(eventSocket.NEXT_PIECE);
       socket.removeListener(eventSocket.LINE_BREAK);
       socket.removeListener(eventSocket.SEND_SPECTRUMS);
       socket.removeListener(eventSocket.WINNER_IS);
     };
-  }, [socket, playerName, spectator]);
+  }, [socket, playerName, spectator, dispatch, state.eventListner, state.clearInterval]);
 
   const isLog = true; //A definir dans les classes + state
   if (isLog) {
     return (
       <div className="app">
         <div className="app-board">
-          {/* <button onClick={() => leaveRoom(state, dispatch)}>Play</button> */}
+          <button onClick={() => leaveRoom(state, dispatch)}>Leave Room</button>
           <AppBoardInfo state={state} dispatchRoom={dispatchRoom} />
           <Game state={state} />
           <h1 style={{ color: "pink" }}>{JSON.stringify(state.lose)}</h1>
         </div>
 
-        <Spectrum
-          listSpectrums={state.listSpectrums}
-          className="app-spectrum"
-        />
+        <Spectrum listSpectrums={state.listSpectrums} className="app-spectrum" />
         {/* <input type="text" onKeyPress={handleKey} /> */}
       </div>
     );

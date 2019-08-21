@@ -1,7 +1,11 @@
-import { placePiece } from "./gridChange";
+import {
+  placePiece
+} from "./gridChange";
 import _ from "lodash";
 
-import { GRID } from "../common/common";
+import {
+  GRID
+} from "../common/common";
 
 import eventSocket from "../common/eventSocket";
 
@@ -73,11 +77,10 @@ export const launchGame = dispatchRoom => {
   // dispatchRoom(actionPieceDown());
 };
 
-export const cleanListennerEndGame = state => {
-  window.removeEventListener("keydown", state.eventListner, false);
-  clearInterval(state.clearInterval);
-  state.clearInterval = -1;
-  return state;
+export const cleanListennerEndGame = (eventListner, cleanInterval) => {
+  window.removeEventListener("keydown", eventListner, false);
+  clearInterval(cleanInterval);
+  cleanInterval = -1;
 };
 
 export const initializeListSpectrums = (state, listPlayers) => {

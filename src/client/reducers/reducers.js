@@ -57,21 +57,27 @@ const reducers = (state = initialState, action) => {
       return {
         ...state,
         listRooms: action.listRooms,
-        listPlayers: action.listPlayers
+          listPlayers: action.listPlayers
       };
     case CREATE_ROOM:
       return {
         ...state,
         roomName: action.room,
-        playerName: action.player,
-        admin: true
+          playerName: action.player,
+          admin: true
       };
     case JOIN_ROOM:
-      return { ...state, roomName: action.room, playerName: action.player };
+      return {
+        ...state, roomName: action.room, playerName: action.player
+      };
     case IS_NEW_ADMIN:
-      return { ...state, admin: true };
+      return {
+        ...state, admin: action.admin
+      };
     case CLEAN_ROOM_NAME:
-      return { ...state, roomName: undefined };
+      return {
+        ...state, roomName: undefined, admin: false
+      };
     default:
       return state;
   }

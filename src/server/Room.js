@@ -18,18 +18,21 @@ class Room {
     this.game = new Game([...this.players]);
   }
   addPlayer(playerName, clientSocket) {
-    console.log(
-      "New player add in room: ",
-      this.name,
-      playerName,
-      clientSocket.id
-    );
     let newPlayer = new Player(playerName, this, clientSocket);
     clientSocket.join(this.name);
     this.players.push(newPlayer);
+    console.log("new player add in room", this.name, playerName);
+    for (let player in this.players) {
+      console.log(this.players[player].name);
+    }
   }
 
   deletePlayer(clientSocket) {
+    console.log("delete player in room", this.name, clientSocket.playerName);
+    for (let player in this.players) {
+      console.log(this.players[player].name);
+    }
+
     this.players = _.filter(this.players, player => {
       return player.id !== clientSocket.id;
     });

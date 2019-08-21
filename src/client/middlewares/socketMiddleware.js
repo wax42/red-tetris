@@ -4,7 +4,11 @@ import {
   LIST_ROOM_PLAYER,
   JOIN_ROOM
 } from "../actions/actionTypes";
-import { actionIsNewAdmin, actionIsSpectator } from "../actions/actions";
+import {
+  actionIsNewAdmin,
+  actionIsSpectator,
+  actionError
+} from "../actions/actions";
 import eventSocket from "../../common/eventSocket";
 
 const socketMiddleware = () => {
@@ -34,10 +38,17 @@ const socketMiddleware = () => {
           eventSocket.CREATE_ROOM,
           action.room,
           action.player,
-          msg => {
-            // TODO gestion d'erreur
-            // dispatch action error
-            console.log("CREATE ROOOM", msg);
+          (msg, data) => {
+            if (data.error === true) {
+              store.dispatch(actionError(msg));
+            }
+            if (data.admin === false) {
+              store.dispatch(actionIsNewAdmin(false));
+            }
+            if (data.spectator === true) {
+              store.dispatch(actionIsSpectator());
+            }
+            console.log("CREATE ROOOM", msg, data);
           }
         );
         break;
@@ -48,17 +59,18 @@ const socketMiddleware = () => {
           eventSocket.JOIN_ROOM,
           action.room,
           action.player,
-          (msg, game) => {
-            // TODO gestion d'erreur
-            // dispatch action error
-            if (game === true) {
+          (msg, data) => {
+            if (data.error === true) {
+              store.dispatch(actionError(msg));
+            }
+            if (data.spectator === true) {
               store.dispatch(actionIsSpectator());
             }
             console.log("JOIN ROOOM", msg);
           }
         );
         state.socket.on(eventSocket.IS_NEW_ADMIN, () => {
-          store.dispatch(actionIsNewAdmin());
+          store.dispatch(actionIsNewAdmin(true));
           console.error("Je suis le nouvel admin");
         });
         break;

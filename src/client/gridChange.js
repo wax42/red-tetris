@@ -1,4 +1,8 @@
-import { nextPiece, lineBreak, cleanListennerEndGame } from "./gameManager";
+import {
+  nextPiece,
+  lineBreak,
+  cleanListennerEndGame
+} from "./gameManager";
 import _ from "lodash";
 import eventSocket from "../common/eventSocket";
 
@@ -188,7 +192,8 @@ export const downFloorPiece = state => {
   state.grid = placePiece(state.grid, state.currentPiece);
 
   if (checkIslose(state) === true) {
-    state = cleanListennerEndGame({ ...state });
+    cleanListennerEndGame(state.eventListner, state.clearInterval);
+    state.clearInterval = -1;
     state.lose = true;
     state.socket.emit(eventSocket.LOSE, winner => {
       console.log("WINNER IS", winner);
@@ -204,7 +209,9 @@ export const downFloorPiece = state => {
 };
 
 export const rotatePiece = state => {
-  let tmp = { ...state.currentPiece };
+  let tmp = {
+    ...state.currentPiece
+  };
   state.grid = cleanOldPiece(state.grid, state.currentPiece);
 
   tmp.piece = rotate(tmp.piece);
@@ -230,7 +237,8 @@ export const downPiece = state => {
     if (checkIslose(state) === true) {
       console.log("CHECK_IS_LOSE = true");
       state.lose = true;
-      state = cleanListennerEndGame({ ...state });
+      cleanListennerEndGame(state.eventListner, state.clearInterval);
+      state.clearInterval = -1;
       state.socket.emit(eventSocket.LOSE, winner => {
         console.log("WINNER IS", winner);
         state.winner = winner;
@@ -284,7 +292,9 @@ export const rightPiece = state => {
 export const switchPiece = state => {
   state.grid = cleanOldPiece(state.grid, state.currentPiece);
 
-  let tmp = { ...state.currentPiece };
+  let tmp = {
+    ...state.currentPiece
+  };
   tmp.piece = state.listPieces[0];
   // console.log(JSON.stringify(state.currentPiece));
   // console.log("Before check is pos", JSON.stringify(state.grid));

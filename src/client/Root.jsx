@@ -10,10 +10,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import { actionJoinRoom, actionListRoomPlayer } from "./actions/actions";
 import eventSocket from "../common/eventSocket";
 
-const store = createStore(
-  reducers,
-  composeWithDevTools(applyMiddleware(socketMiddleware()))
-);
+const store = createStore(reducers, composeWithDevTools(applyMiddleware(socketMiddleware())));
 
 const mapStateToProps = _state => {
   const state = {
@@ -44,10 +41,7 @@ export const routeHashError = (hash, state, actionJoinRoom) => {
   if (state.listRooms.includes(room_name) === false) {
     return "Room doesn't exist";
   }
-  if (
-    state.listPlayers.includes(player_name) === true &&
-    player_name !== state.playerName
-  ) {
+  if (state.listPlayers.includes(player_name) === true && player_name !== state.playerName) {
     return "Player name already exists";
   }
   if (state.playerName !== player_name) {
@@ -61,19 +55,13 @@ export const Routing = ({ state, actionJoinRoom, actionListRoomPlayer }) => {
 
   useEffect(() => {
     setLoading(true);
-    state.socket.emit(
-      eventSocket.LIST_ROOMS_PLAYERS,
-      (listRooms, listPlayers) => {
-        setLoading(false);
-        actionListRoomPlayer(listRooms, listPlayers);
-      }
-    );
-    state.socket.on(
-      eventSocket.LIST_ROOMS_PLAYERS,
-      (listRooms, listPlayers) => {
-        actionListRoomPlayer(listRooms, listPlayers);
-      }
-    );
+    state.socket.emit(eventSocket.LIST_ROOMS_PLAYERS, (listRooms, listPlayers) => {
+      setLoading(false);
+      actionListRoomPlayer(listRooms, listPlayers);
+    });
+    state.socket.on(eventSocket.LIST_ROOMS_PLAYERS, (listRooms, listPlayers) => {
+      actionListRoomPlayer(listRooms, listPlayers);
+    });
     return () => {
       state.socket.removeListener(eventSocket.LIST_ROOMS_PLAYERS);
     };

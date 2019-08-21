@@ -1,6 +1,8 @@
 const eventSocket = require("../common/eventSocket");
 const RoomsManager = require("./RoomsManager");
 
+
+
 const handleClient = client => {
   console.log(eventSocket.CONNECT, client.id);
 
@@ -14,7 +16,6 @@ const handleClient = client => {
   });
 
   client.on(eventSocket.CREATE_ROOM, (roomName, playerName, clientCallback) => {
-    // Check si la room existe deja !!!!! apres manger
     if (
       roomsManager.createRoom(
         roomName,
@@ -24,45 +25,64 @@ const handleClient = client => {
         io
       ) === false
     ) {
-      console.error("Error does not CREATE or JOIN room: " + roomName);
+      console.error("Error Player with the same name in the room: " + roomName);
     }
   });
 
   client.on(eventSocket.JOIN_ROOM, (roomName, playerName, clientCallback) => {
     if (
-      roomsManager.joinRoom(roomName, playerName, client, clientCallback, io) ==
+      roomsManager.joinRoom(roomName, playerName, client, clientCallback, io) ===
       false
     ) {
-      console.log("Is not possible to join room: " + roomName);
+      console.error("Error Player with the same name in the room: " + roomName);
     }
   });
 
   client.on(eventSocket.LEAVE_ROOM, () => {
+    let roomName = client.roomName;
     if (client.playerName !== undefined) {
+      roomsManager.listPlayersName = roomsManager.listPlayersName.filter(value => value !== client.playerName);
+      console.log("Leave rooom", roomsManager.listPlayersName, client.playerName);
+      client.playerName = undefined;
       roomsManager.deletePlayer(client);
+      if (
+        roomsManager.rooms[roomName] !== undefined &&
+        roomsManager.rooms[roomName].game !== null
+      ) {
+        let winner = roomsManager.rooms[roomName].game.checkWhoIsWinner();
+        if (winner !== null) {
+          client.to(roomName).emit(eventSocket.WINNER_IS, winner);
+        }
+        if (
+          roomsManager.rooms[roomName].game.players.length === 1 ||
+          winner !== null
+        ) {
+          delete roomsManager.rooms[roomName].game;
+          roomsManager.rooms[roomName].game = null;
+        }
+      }
     }
-    console.log("Leave room", client.id, client.playerName);
   });
 
   client.on(eventSocket.DISCONNECT, () => {
     let roomName = client.roomName;
     if (client.playerName !== undefined) {
       roomsManager.deletePlayer(client);
-    }
-    if (
-      roomsManager.rooms[roomName] !== undefined &&
-      roomsManager.rooms[roomName].game !== null
-    ) {
-      let winner = roomsManager.rooms[roomName].game.checkWhoIsWinner();
-      if (winner !== null) {
-        client.to(roomName).emit(eventSocket.WINNER_IS, winner);
-      }
       if (
-        roomsManager.rooms[roomName].game.players.length === 1 ||
-        winner !== null
+        roomsManager.rooms[roomName] !== undefined &&
+        roomsManager.rooms[roomName].game !== null
       ) {
-        delete roomsManager.rooms[roomName].game;
-        roomsManager.rooms[roomName].game = null;
+        let winner = roomsManager.rooms[roomName].game.checkWhoIsWinner();
+        if (winner !== null) {
+          client.to(roomName).emit(eventSocket.WINNER_IS, winner);
+        }
+        if (
+          roomsManager.rooms[roomName].game.players.length === 1 ||
+          winner !== null
+        ) {
+          delete roomsManager.rooms[roomName].game;
+          roomsManager.rooms[roomName].game = null;
+        }
       }
     }
     console.log("disconnect", client.id, client.playerName);
