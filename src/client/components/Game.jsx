@@ -15,7 +15,7 @@ export const GameGrid = props => {
           console.log("LIGNE PLEINE");
         } */
         let lineGame = "line";
-
+        
         if (props.brokenLines !== undefined && props.brokenLines.length !== 0) {
           console.log("EFFECT BEFORE INCLUDES = ", brokenLines);
           if (_.includes(brokenLines, index)) {
@@ -25,11 +25,12 @@ export const GameGrid = props => {
         }
         // if (_.includes(props.brokenLine))
         return (
-          <div className={lineGame} key={index}>
+          <div className="line" key={index}>
             {line.map((value, index) => {
               let color = "color-form" + value;
               return <div className={`box ${color}`} key={index} />;
             })}
+            <div className={lineGame} />
           </div>
         );
       })}
