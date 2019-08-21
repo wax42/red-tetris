@@ -15,13 +15,29 @@ export const GameGrid = props => {
         /* if (_.difference(line, ["0", ".", "8"]).length === 10) {
           console.log("LIGNE PLEINE");
         } */
-        let brokenLineBox = "";
+        /* let brokenLineBox = "";
+
 
         if (props.brokenLines !== undefined && props.brokenLines.length !== 0) {
           console.log("EFFECT BEFORE INCLUDES = ", brokenLines);
           if (_.includes(brokenLines, index)) {
             console.log("EFFECT BROKE LINE SUR LIGNE: ", index);
             brokenLineBox += "broken-line-box";
+          }
+        } */
+        let brokenContainer = null;
+
+        if (props.brokenLines !== undefined && props.brokenLines.length !== 0) {
+          // console.log("EFFECT BEFORE INCLUDES = ", brokenLines);
+          if (_.includes(brokenLines, index)) {
+            // console.log("EFFECT BROKE LINE SUR LIGNE: ", index);
+            brokenContainer = (
+              <div className="broken-line">
+                {_.times(59, i => (
+                  <FaStar className="broken-line-box" key={i} />
+                ))}
+              </div>
+            );
           }
         }
         return (
@@ -30,15 +46,7 @@ export const GameGrid = props => {
               let color = "color-form" + value;
               return <div className={`box ${color}`} key={index} />;
             })}
-            {
-              <div className="broken-line">
-                <div className={brokenLineBox} />
-                <div className={brokenLineBox} />
-                <div className={brokenLineBox} />
-                <div className={brokenLineBox} />
-                <div className={brokenLineBox} />
-              </div>
-            }
+            {brokenContainer}
           </div>
         );
       })}
