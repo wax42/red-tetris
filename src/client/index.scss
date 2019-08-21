@@ -273,8 +273,8 @@ $boxes: 59;
 .broken-line-box {
   display: none;
   position: absolute;
-  width: 7px;
-  height: 7px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
 }
 
@@ -286,7 +286,7 @@ $boxes: 100;
     $b: random(400) + px;
     //
     0% {
-      top: 0;
+      top: -50%;
       left: 50%;
     }
     50% {
@@ -316,6 +316,7 @@ $boxes: 100;
       //animation-timing-function: ease-in;
       background: hsla(10 * $i, 100%, 50%, 1);
       animation-fill-mode: forwards;
+      color: #fff;
     }
   }
 }
