@@ -8,7 +8,7 @@ export const GameGrid = props => {
     return el - 4;
   });
   const bubbles = new Array(59).fill(" ");
-  console.log("BROKENLINE GAME GRID", props.brokenLines);
+  // console.log("BROKENLINE GAME GRID", props.brokenLines);
   return (
     <div className="game-grid">
       {grid.map((line, index) => {
