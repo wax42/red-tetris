@@ -1,12 +1,13 @@
 import React from "react";
 import _ from "lodash";
+import { FaStar } from "react-icons/fa";
 
 export const GameGrid = props => {
   const grid = props.grid;
   let brokenLines = _.map(props.brokenLines, el => {
     return el - 4;
   });
-
+  const bubbles = new Array(59).fill(" ");
   console.log("BROKENLINE GAME GRID", props.brokenLines);
   return (
     <div className="game-grid">
@@ -14,23 +15,30 @@ export const GameGrid = props => {
         /* if (_.difference(line, ["0", ".", "8"]).length === 10) {
           console.log("LIGNE PLEINE");
         } */
-        let lineGame = "line";
-        
+        let brokenLineBox = "";
+
         if (props.brokenLines !== undefined && props.brokenLines.length !== 0) {
           console.log("EFFECT BEFORE INCLUDES = ", brokenLines);
           if (_.includes(brokenLines, index)) {
             console.log("EFFECT BROKE LINE SUR LIGNE: ", index);
-            lineGame += " broken-line";
+            brokenLineBox += "broken-line-box";
           }
         }
-        // if (_.includes(props.brokenLine))
         return (
           <div className="line" key={index}>
             {line.map((value, index) => {
               let color = "color-form" + value;
               return <div className={`box ${color}`} key={index} />;
             })}
-            <div className={lineGame} />
+            {
+              <div className="broken-line">
+                <div className={brokenLineBox} />
+                <div className={brokenLineBox} />
+                <div className={brokenLineBox} />
+                <div className={brokenLineBox} />
+                <div className={brokenLineBox} />
+              </div>
+            }
           </div>
         );
       })}
