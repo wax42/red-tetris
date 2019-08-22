@@ -45,7 +45,11 @@ import {
   actionClearIntervalKeyEvent
 } from "../actions/actionRoom";
 
-import { actionCleanRoomName, actionIsSpectator, actionError } from "../actions/actions";
+import {
+  actionCleanRoomName,
+  actionIsSpectator,
+  actionError
+} from "../actions/actions";
 
 import _ from "lodash";
 
@@ -75,7 +79,7 @@ export const reduceRoom = (state, action) => {
   switch (action.type) {
     case START_GAME:
       console.log("START GAME", action);
-      return startGame({ ...state }, action.listPlayers, action.listPieces, action.optionGames);
+      return startGame({ ...state, game: true }, action.listPlayers, action.listPieces, action.optionGames);
     case PIECE_DOWN:
       return downPiece({ ...state });
     case PIECE_LEFT:
@@ -105,17 +109,19 @@ export const reduceRoom = (state, action) => {
       return {
         ...state,
         clearInterval: action.clearInterval,
-        eventListner: action.eventListner
+        eventListner: action.eventListner,
+        counterAnimation: false
       };
 
     case WINNER_IS:
       return {
         ...state,
-        winner: action.winner
+        winner: action.winner,
+        game: false
       };
     case CLEAR_INTERVAL_KEY_EVENT:
       cleanListennerEndGame(state.eventListner, state.clearInterval);
-      return { ...state, clearInterval: -1 };
+      return { ...state, clearInterval: -1, game: false };
 
     default:
       return state;
@@ -146,12 +152,15 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     admin: false,
     lose: false,
     winner: null,
-    brokenLines: [] // List of position of broken lines to apply animation
+    brokenLines: [], // List of position of broken lines to apply animation
+    counterAnimation: false,
+    game: false
   };
   const [state, dispatchRoom] = useReducer(reduceRoom, initialState);
   // Key event Listenner
 
   useEffect(() => {
+    console.log("STATE COUNTER ANIMATION", state.counterAnimation);
     if (spectator === true && _.isEmpty(state.listSpectrums)) {
       socket.emit(eventSocket.SEND_SPECTRUMS_SPECTATOR, listSpectrums => {
         dispatchRoom(actionSpectrumsSpectator(listSpectrums));
@@ -207,6 +216,23 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
   }, [socket, playerName, spectator, dispatch, state.eventListner, state.clearInterval]);
 
   const isLog = true; //A definir dans les classes + state
+  const counter =
+    state.counterAnimation === false ? null : (
+      <div className={"countdown"}>
+        <div className={"number"}>
+          <h2>03</h2>
+        </div>
+        <div className={"number"}>
+          <h2>02</h2>
+        </div>
+        <div className={"number"}>
+          <h2>01</h2>
+        </div>
+        <div className={"number"}>
+          <h2>GO!</h2>
+        </div>
+      </div>
+    );
   if (isLog) {
     return (
       <div className="app">
@@ -217,7 +243,11 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
           <h1 style={{ color: "pink" }}>{JSON.stringify(state.lose)}</h1>
         </div>
 
-        <Spectrum listSpectrums={state.listSpectrums} className="app-spectrum" />
+        {counter}
+        <Spectrum
+          listSpectrums={state.listSpectrums}
+          className="app-spectrum"
+        />
         {/* <input type="text" onKeyPress={handleKey} /> */}
       </div>
     );

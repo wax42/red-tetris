@@ -20,7 +20,10 @@ export const mapStateToProps = _state => {
 export const Play = ({ state, admin, optionGames }) => {
   if (admin === true) {
     return (
-      <button disabled={state.clearInterval !== -1} onClick={() => buttonPlay(state, optionGames)}>
+      <button
+        disabled={state.game}
+        onClick={() => buttonPlay(state, optionGames)}
+      >
         Play
       </button>
     );
@@ -69,7 +72,12 @@ export const Info = ({ state, admin }) => {
 
         <label>
           Shake mode :
-          <input name="shakeMode" type="checkbox" checked={shakeMode} onChange={() => setShakeMode(!shakeMode)} />
+          <input
+            name="shakeMode"
+            type="checkbox"
+            checked={shakeMode}
+            onChange={() => setShakeMode(!shakeMode)}
+          />
         </label>
         <br />
 

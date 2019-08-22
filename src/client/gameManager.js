@@ -1,11 +1,7 @@
-import {
-  placePiece
-} from "./gridChange";
+import { placePiece } from "./gridChange";
 import _ from "lodash";
 
-import {
-  GRID
-} from "../common/common";
+import { GRID } from "../common/common";
 
 import eventSocket from "../common/eventSocket";
 
@@ -65,16 +61,17 @@ export const handleKey = dispatchRoom => event => {
 };
 
 export const launchGame = (dispatchRoom, gameInterval) => {
-
-  console.log("Launch Game ", gameInterval)
-  const eventListner = handleKey(dispatchRoom);
-  window.addEventListener("keydown", eventListner, false);
-  let clearInterval = setInterval(() => {
-    dispatchRoom(actionPieceDown());
-    // console.log("dsipatch Piece down set interval");
-  }, gameInterval);
-  dispatchRoom(actionSendIntervalKeyEvent(clearInterval, eventListner));
-  // dispatchRoom(actionPieceDown());
+  setTimeout(() => {
+    const eventListner = handleKey(dispatchRoom);
+    window.addEventListener("keydown", eventListner, false);
+    let clearInterval = setInterval(() => {
+      dispatchRoom(actionPieceDown());
+      // console.log("dsipatch Piece down set interval");
+    }, gameInterval);
+    dispatchRoom(actionSendIntervalKeyEvent(clearInterval, eventListner));
+    // dispatchRoom(actionPieceDown());
+    console.log("counter END");
+  }, 4000);
 };
 
 export const cleanListennerEndGame = (eventListner, cleanInterval) => {
@@ -132,6 +129,8 @@ export const startGame = (state, listPlayers, listPieces, optionGames) => {
   state.currentPiece.y = 0;
   state.listPieces = listPieces;
   state.grid = _.cloneDeep(GRID);
+  // console.log("START GAME", JSON.stringify(GRID));
+  state.counterAnimation = true;
   return state;
 };
 
