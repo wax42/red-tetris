@@ -56,7 +56,11 @@ export const actionSpectrumsSpectator = listSpectrums => {
 };
 
 export const actionStartGame = (listPlayers, listPieces) => {
-  return { type: START_GAME, listPlayers: listPlayers, listPieces: listPieces };
+  return {
+    type: START_GAME,
+    listPlayers: listPlayers,
+    listPieces: listPieces
+  };
 };
 
 export const actionSendIntervalKeyEvent = (clearInterval, eventListner) => {

@@ -21,7 +21,10 @@ export const Play = ({ state, admin, dispatchRoom }) => {
   // console.log("STATE PLAYE", state);
   if (admin === true) {
     return (
-      <button disabled={state.clearInterval !== -1} onClick={() => buttonPlay(state, dispatchRoom)}>
+      <button
+        disabled={state.game}
+        onClick={() => buttonPlay(state, dispatchRoom)}
+      >
         Play
       </button>
     );
