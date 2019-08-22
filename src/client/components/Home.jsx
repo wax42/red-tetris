@@ -15,8 +15,6 @@ export const getPlayerName = event => {
   playerName = event.target.value;
 };
 
-// return <Redirect to='/dashboard' />
-
 export const buttonCreateRoom = (action, setStateError) => {
   if (roomName.length < 3) {
     setStateError("Room name should have 3 characters at least");
@@ -46,12 +44,7 @@ export const HomeCpt = ({ error, actionCreateRoom }) => {
             <div>Room name</div>
           </div>
 
-          <input
-            className="home-input"
-            type="text"
-            name="room-name"
-            onChange={e => getRoomName(e)}
-          />
+          <input className="home-input" type="text" name="room-name" onChange={e => getRoomName(e)} />
         </div>
         <div className="home-field">
           <div className="home-field-title">
@@ -59,12 +52,7 @@ export const HomeCpt = ({ error, actionCreateRoom }) => {
             <div>Player name</div>
           </div>
 
-          <input
-            className="home-input"
-            type="text"
-            name="player-name"
-            onChange={e => getPlayerName(e)}
-          />
+          <input className="home-input" type="text" name="player-name" onChange={e => getPlayerName(e)} />
         </div>
         <button
           className="home-btn"

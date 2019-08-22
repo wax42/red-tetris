@@ -10,20 +10,9 @@ class RoomsManager {
     // top score
   }
   createRoom(roomName, playerName, clientSocket, clientCallback, io) {
-    console.log(
-      "Create room RoomManager params: ",
-      roomName,
-      playerName,
-      clientSocket.id
-    );
+    console.log("Create room RoomManager params: ", roomName, playerName, clientSocket.id);
     if (this.listRoomsName.includes(roomName) === true) {
-      return this.joinRoom(
-        roomName,
-        playerName,
-        clientSocket,
-        clientCallback,
-        io
-      );
+      return this.joinRoom(roomName, playerName, clientSocket, clientCallback, io);
     }
     let room = new Room(roomName, playerName, clientSocket);
     this.rooms[roomName] = room;
@@ -41,10 +30,7 @@ class RoomsManager {
   }
 
   joinRoom(roomName, playerName, clientSocket, clientCallback, io) {
-    if (
-      this.listRoomsName.includes(roomName) === false ||
-      this.listPlayersName.includes(playerName) === true
-    ) {
+    if (this.listRoomsName.includes(roomName) === false || this.listPlayersName.includes(playerName) === true) {
       clientCallback("Player with the same name in the room:  " + roomName, {
         spectator: false,
         admin: false,
@@ -64,7 +50,6 @@ class RoomsManager {
         spectator: true,
         admin: false,
         error: false
-
       });
     } else {
       clientCallback("Succes Join ROOM: " + roomName, {
@@ -76,18 +61,12 @@ class RoomsManager {
     return true;
   }
   sendListRoomsPlayers(io) {
-    io.emit(
-      eventSocket.LIST_ROOMS_PLAYERS,
-      this.listRoomsName,
-      this.listPlayersName
-    );
+    io.emit(eventSocket.LIST_ROOMS_PLAYERS, this.listRoomsName, this.listPlayersName);
   }
   deletePlayer(clientSocket, io) {
     this.listPlayersName = _.filter(this.listPlayersName, value => value !== clientSocket.playerName);
     this.sendListRoomsPlayers(io);
-    if (
-      this.rooms[clientSocket.roomName].deletePlayer(clientSocket) === false
-    ) {
+    if (this.rooms[clientSocket.roomName].deletePlayer(clientSocket) === false) {
       this.deleteRoom(clientSocket.roomName);
     }
   }

@@ -68,10 +68,14 @@ export const reduceRoom = (state, action) => {
   // console.log("REDUCE ROOM", action.type, state.winner, action, state);
   // state.brokenLines = [];
 
+  if (state.socket.disconnected === true) {
+    console.error("Warning connection lost");
+  }
+
   switch (action.type) {
     case START_GAME:
       console.log("START GAME", action);
-      return startGame({ ...state }, action.listPlayers, action.listPieces);
+      return startGame({ ...state }, action.listPlayers, action.listPieces, action.optionGames);
     case PIECE_DOWN:
       return downPiece({ ...state });
     case PIECE_LEFT:
@@ -156,14 +160,14 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
   });
 
   useEffect(() => {
-    socket.on(eventSocket.START_GAME, (listPlayers, listPieces, gameInterval) => {
+    socket.on(eventSocket.START_GAME, (listPlayers, listPieces, optionGames) => {
       if (spectator === true) {
         dispatch(actionIsSpectator());
         // spectator = false;
       }
       listPlayers = listPlayers.filter(value => value !== playerName);
-      dispatchRoom(actionStartGame(listPlayers, listPieces));
-      launchGame(dispatchRoom, gameInterval);
+      dispatchRoom(actionStartGame(listPlayers, listPieces, optionGames));
+      launchGame(dispatchRoom, optionGames.gameInterval);
     });
 
     socket.on(eventSocket.NEXT_PIECE, newPiece => {
@@ -187,6 +191,9 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
       dispatchRoom(actionWinnerIs(winner));
       dispatchRoom(actionClearIntervalKeyEvent());
       // dispatch room
+    });
+    socket.on(eventSocket.DISCONNECT, () => {
+      dispatch(actionError("Server down on on"));
     });
     return () => {
       // console.log("UNMOUNT COMPONENT");

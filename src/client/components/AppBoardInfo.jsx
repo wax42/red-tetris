@@ -6,12 +6,8 @@ export const buttonPlay = (state, optionGames) => {
   console.log("handle click start");
   console.log(optionGames);
 
-  let gameInterval = 1000; // moonMode
-  if (optionGames.hardMode) {
-    gameInterval = 500;
-  }
   if (state.clearInterval === -1) {
-    state.socket.emit(eventSocket.START_GAME, gameInterval);
+    state.socket.emit(eventSocket.START_GAME, optionGames);
   }
   console.log("handle click end");
 };
@@ -22,7 +18,6 @@ export const mapStateToProps = _state => {
 };
 
 export const Play = ({ state, admin, optionGames }) => {
-  // console.log("STATE PLAYE", state);
   if (admin === true) {
     return (
       <button disabled={state.clearInterval !== -1} onClick={() => buttonPlay(state, optionGames)}>
@@ -36,39 +31,31 @@ export const Play = ({ state, admin, optionGames }) => {
 const PlayButton = connect(mapStateToProps)(Play);
 
 export const Info = ({ state, admin }) => {
-  const [hardMode, setHardMode] = useState(false);
-  const [moonMode, setMoonMode] = useState(true);
+  const [gameInterval, setgameInterval] = useState(7);
   const [invinvisibilityMode, setInvisibilityMode] = useState(false);
   const [shakeMode, setShakeMode] = useState(false);
   const [spectrumMode, setSpectrumMode] = useState(false);
 
-  // console.log(actionClick);
   return (
     <div className="info">
       {state.winner}
       <form>
         <label>
-          Hard mode :
+          hardMode
           <input
-            name="hardMode"
-            type="checkbox"
-            checked={hardMode}
-            onChange={() => {
-              setHardMode(!hardMode);
-              setMoonMode(!moonMode);
+            id="typeinp"
+            type="range"
+            min="100"
+            max="1500"
+            value={gameInterval}
+            onChange={event => {
+              setgameInterval(event.target.value);
             }}
+            step="1"
           />
-          Moon mode :
-          <input
-            name="moonMode"
-            type="checkbox"
-            checked={moonMode}
-            onChange={() => {
-              setMoonMode(!moonMode);
-              setHardMode(!hardMode);
-            }}
-          />
+          MoonMode
         </label>
+        <br />
         <label>
           Invisibility mode :
           <input
@@ -78,10 +65,14 @@ export const Info = ({ state, admin }) => {
             onChange={() => setInvisibilityMode(!invinvisibilityMode)}
           />
         </label>
+        <br />
+
         <label>
           Shake mode :
           <input name="shakeMode" type="checkbox" checked={shakeMode} onChange={() => setShakeMode(!shakeMode)} />
         </label>
+        <br />
+
         <label>
           With Spectrum mode:
           <input
@@ -96,8 +87,7 @@ export const Info = ({ state, admin }) => {
         state={state}
         admin={admin}
         optionGames={{
-          hardMode: hardMode,
-          moonMode: moonMode,
+          gameInterval: gameInterval,
           invinvisibilityMode: invinvisibilityMode,
           shakeMode: shakeMode,
           spectrumMode: spectrumMode

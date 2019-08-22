@@ -119,8 +119,12 @@ export const initializeListSpectrums = (state, listPlayers) => {
   return state;
 };
 
-export const startGame = (state, listPlayers, listPieces) => {
+export const startGame = (state, listPlayers, listPieces, optionGames) => {
   state = initializeListSpectrums(state, listPlayers);
+
+  state.shakeMode = optionGames.shakeMode;
+  state.invisibiltyMode = optionGames.invisibiltyMode;
+  state.spectrumMode = optionGames.spectrumMode;
 
   state.lose = false;
   state.currentPiece.piece = listPieces.shift();

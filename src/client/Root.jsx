@@ -55,13 +55,15 @@ export const Routing = ({ state, actionJoinRoom, actionListRoomPlayer }) => {
 
   useEffect(() => {
     setLoading(true);
-    state.socket.emit(eventSocket.LIST_ROOMS_PLAYERS, (listRooms, listPlayers) => {
-      setLoading(false);
-      actionListRoomPlayer(listRooms, listPlayers);
-    });
-    state.socket.on(eventSocket.LIST_ROOMS_PLAYERS, (listRooms, listPlayers) => {
-      actionListRoomPlayer(listRooms, listPlayers);
-    });
+    if (state.socket) {
+      state.socket.emit(eventSocket.LIST_ROOMS_PLAYERS, (listRooms, listPlayers) => {
+        setLoading(false);
+        actionListRoomPlayer(listRooms, listPlayers);
+      });
+      state.socket.on(eventSocket.LIST_ROOMS_PLAYERS, (listRooms, listPlayers) => {
+        actionListRoomPlayer(listRooms, listPlayers);
+      });
+    }
     return () => {
       state.socket.removeListener(eventSocket.LIST_ROOMS_PLAYERS);
     };

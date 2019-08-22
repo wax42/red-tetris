@@ -319,7 +319,21 @@ export const addIndestructiblesLines = (state, nbrLine) => {
     state.grid.shift();
     nbrLine--;
   }
-  state.grid = placePiece(state.grid, state.currentPiece);
+  if (checkIsPos(state.grid, state.currentPiece) === false) {
+    while (checkIsPos(state.grid, state.currentPiece) === false) {
+      state.currentPiece.y -= 1;
+    }
+  } else {
+    state.currentPiece.y -= 1;
+  }
+
+  state = downPiece({
+    ...state
+  })
+
+
+
+  // state.grid = placePiece(state.grid, state.currentPiece);
   // console.log(state.grid);
   return state;
 };

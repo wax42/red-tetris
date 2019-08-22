@@ -16,7 +16,6 @@ const socketMiddleware = () => {
   return store => next => action => {
     console.log("MIDDLEWARE", action);
 
-    //TODO Sécurité
 
     if (typeof action === "function") {
       console.error("passing function to the socket Middleware");
@@ -24,9 +23,16 @@ const socketMiddleware = () => {
     }
 
     let state = store.getState();
+
+
     console.log("Socket middleware", state);
 
     if (action.eventSocket === undefined) {
+      return next(action);
+    }
+
+    if (state.socket.disconnected === true) {
+      store.dispatch(actionError("Server disconnected"))
       return next(action);
     }
 
@@ -80,20 +86,6 @@ const socketMiddleware = () => {
       default:
         break;
     }
-
-    // SI l'action ne doit pas passer par le serveur
-
-    // let event = "test_server";
-    // //  Type --> actionType
-    // let handle = "handle";
-    // let handleEvent = handle;
-    // if (typeof handleEvent === "string") {
-    //   handleEvent = result => {
-    //     console.log("Listenner", result);
-    //     store.dispatch({ type: handle, result, test: "test" });
-    //   };
-    // }
-    // return socket.on(event, handleEvent);
     return next(action);
   };
 };
