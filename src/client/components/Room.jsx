@@ -79,7 +79,12 @@ export const reduceRoom = (state, action) => {
   switch (action.type) {
     case START_GAME:
       console.log("START GAME", action);
-      return startGame({ ...state, game: true }, action.listPlayers, action.listPieces, action.optionGames);
+      return startGame(
+        { ...state, game: true },
+        action.listPlayers,
+        action.listPieces,
+        action.optionGames
+      );
     case PIECE_DOWN:
       return downPiece({ ...state });
     case PIECE_LEFT:
@@ -116,10 +121,10 @@ export const reduceRoom = (state, action) => {
     case WINNER_IS:
       return {
         ...state,
-        winner: action.winner,
-        game: false
+        winner: action.winner
       };
     case CLEAR_INTERVAL_KEY_EVENT:
+      console.error("clear interval reducer room");
       cleanListennerEndGame(state.eventListner, state.clearInterval);
       return { ...state, clearInterval: -1, game: false };
 
@@ -169,15 +174,18 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
   });
 
   useEffect(() => {
-    socket.on(eventSocket.START_GAME, (listPlayers, listPieces, optionGames) => {
-      if (spectator === true) {
-        dispatch(actionIsSpectator());
-        // spectator = false;
+    socket.on(
+      eventSocket.START_GAME,
+      (listPlayers, listPieces, optionGames) => {
+        if (spectator === true) {
+          dispatch(actionIsSpectator());
+          // spectator = false;
+        }
+        listPlayers = listPlayers.filter(value => value !== playerName);
+        dispatchRoom(actionStartGame(listPlayers, listPieces, optionGames));
+        launchGame(dispatchRoom, optionGames.gameInterval);
       }
-      listPlayers = listPlayers.filter(value => value !== playerName);
-      dispatchRoom(actionStartGame(listPlayers, listPieces, optionGames));
-      launchGame(dispatchRoom, optionGames.gameInterval);
-    });
+    );
 
     socket.on(eventSocket.NEXT_PIECE, newPiece => {
       // console.log("Je recois next_piece du server : ", newPiece);
@@ -213,7 +221,14 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
       socket.removeListener(eventSocket.SEND_SPECTRUMS);
       socket.removeListener(eventSocket.WINNER_IS);
     };
-  }, [socket, playerName, spectator, dispatch, state.eventListner, state.clearInterval]);
+  }, [
+    socket,
+    playerName,
+    spectator,
+    dispatch,
+    state.eventListner,
+    state.clearInterval
+  ]);
 
   const isLog = true; //A definir dans les classes + state
   const counter =

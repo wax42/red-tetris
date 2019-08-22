@@ -1,8 +1,4 @@
-import {
-  nextPiece,
-  lineBreak,
-  cleanListennerEndGame
-} from "./gameManager";
+import { nextPiece, lineBreak, cleanListennerEndGame } from "./gameManager";
 import _ from "lodash";
 import eventSocket from "../common/eventSocket";
 
@@ -193,6 +189,7 @@ export const downFloorPiece = state => {
 
   if (checkIslose(state) === true) {
     cleanListennerEndGame(state.eventListner, state.clearInterval);
+    state.game = false;
     state.clearInterval = -1;
     state.lose = true;
     state.socket.emit(eventSocket.LOSE, winner => {
@@ -238,6 +235,7 @@ export const downPiece = state => {
       console.log("CHECK_IS_LOSE = true");
       state.lose = true;
       cleanListennerEndGame(state.eventListner, state.clearInterval);
+      state.game = false;
       state.clearInterval = -1;
       state.socket.emit(eventSocket.LOSE, winner => {
         console.log("WINNER IS", winner);
@@ -329,9 +327,7 @@ export const addIndestructiblesLines = (state, nbrLine) => {
 
   state = downPiece({
     ...state
-  })
-
-
+  });
 
   // state.grid = placePiece(state.grid, state.currentPiece);
   // console.log(state.grid);

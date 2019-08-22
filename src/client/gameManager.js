@@ -61,6 +61,7 @@ export const handleKey = dispatchRoom => event => {
 };
 
 export const launchGame = (dispatchRoom, gameInterval) => {
+  console.error("Launch game", gameInterval);
   setTimeout(() => {
     const eventListner = handleKey(dispatchRoom);
     window.addEventListener("keydown", eventListner, false);

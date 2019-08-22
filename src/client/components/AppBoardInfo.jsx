@@ -34,7 +34,7 @@ export const Play = ({ state, admin, optionGames }) => {
 const PlayButton = connect(mapStateToProps)(Play);
 
 export const Info = ({ state, admin }) => {
-  const [gameInterval, setgameInterval] = useState(7);
+  const [gameInterval, setgameInterval] = useState(700);
   const [invinvisibilityMode, setInvisibilityMode] = useState(false);
   const [shakeMode, setShakeMode] = useState(false);
   const [spectrumMode, setSpectrumMode] = useState(false);
