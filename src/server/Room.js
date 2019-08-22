@@ -14,8 +14,8 @@ class Room {
     // top score
   }
 
-  newGame() {
-    this.game = new Game([...this.players]);
+  newGame(optionGames) {
+    this.game = new Game([...this.players], optionGames);
   }
   addPlayer(playerName, clientSocket) {
     let newPlayer = new Player(playerName, this, clientSocket);
@@ -33,9 +33,6 @@ class Room {
       console.log(this.players[player].name);
     }
 
-    this.players = _.filter(this.players, player => {
-      return player.id !== clientSocket.id;
-    });
 
     if (this.game !== null) {
       this.game.players = _.filter(this.game.players, player => {
@@ -43,9 +40,21 @@ class Room {
       });
     }
 
+    this.players = _.filter(this.players, player => {
+      return player.id !== clientSocket.id;
+    });
+
+    clientSocket.removeAllListeners(eventSocket.NEXT_PIECE);
+    clientSocket.removeAllListeners(eventSocket.LINE_BREAK);
+    clientSocket.removeAllListeners(eventSocket.LOSE);
+    clientSocket.removeAllListeners(eventSocket.START_GAME);
+
+    // delete this.players[i]
+
     clientSocket.leave(this.name);
 
     if (this.players.length === 0) {
+      console.log("tout est normal")
       return false;
     }
 

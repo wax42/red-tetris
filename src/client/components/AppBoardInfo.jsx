@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import eventSocket from "../../common/eventSocket";
+import { Button, Slider, Checkbox } from "@material-ui/core";
 
 export const buttonPlay = (state, optionGames) => {
   console.log("handle click start");
@@ -20,12 +21,9 @@ export const mapStateToProps = _state => {
 export const Play = ({ state, admin, optionGames }) => {
   if (admin === true) {
     return (
-      <button
-        disabled={state.game}
-        onClick={() => buttonPlay(state, optionGames)}
-      >
+      <Button disabled={state.game} onClick={() => buttonPlay(state, optionGames)}>
         Play
-      </button>
+      </Button>
     );
   }
   return <span />;
@@ -35,68 +33,41 @@ const PlayButton = connect(mapStateToProps)(Play);
 
 export const Info = ({ state, admin }) => {
   const [gameInterval, setgameInterval] = useState(700);
-  const [invinvisibilityMode, setInvisibilityMode] = useState(false);
+  const [invisibilityMode, setInvisibilityMode] = useState(false);
   const [shakeMode, setShakeMode] = useState(false);
   const [spectrumMode, setSpectrumMode] = useState(false);
 
   return (
     <div className="info">
       {state.winner}
-      <form>
-        <label>
-          hardMode
-          <input
-            id="typeinp"
-            type="range"
-            min="100"
-            max="1500"
-            value={gameInterval}
-            onChange={event => {
-              setgameInterval(event.target.value);
-            }}
-            step="1"
-          />
-          MoonMode
-        </label>
-        <br />
-        <label>
-          Invisibility mode :
-          <input
-            name="invisibilityMode"
-            type="checkbox"
-            checked={invinvisibilityMode}
-            onChange={() => setInvisibilityMode(!invinvisibilityMode)}
-          />
-        </label>
-        <br />
-
-        <label>
-          Shake mode :
-          <input
-            name="shakeMode"
-            type="checkbox"
-            checked={shakeMode}
-            onChange={() => setShakeMode(!shakeMode)}
-          />
-        </label>
-        <br />
-
-        <label>
-          With Spectrum mode:
-          <input
-            name="spectrumMode"
-            type="checkbox"
-            checked={spectrumMode}
-            onChange={() => setSpectrumMode(!spectrumMode)}
-          />
-        </label>
-      </form>
+      hardMode
+      <Slider
+        value={gameInterval}
+        onChange={(event, value) => {
+          setgameInterval(value);
+        }}
+        min={100}
+        max={1500}
+        step={10}
+        aria-labelledby="continuous-slider"
+        valueLabelDisplay="auto"
+      />
+      MoonMode Invisibility mode :
+      <Checkbox
+        checked={invisibilityMode}
+        onChange={() => setInvisibilityMode(!invisibilityMode)}
+        value={invisibilityMode}
+      />
+      Shake mode :
+      <Checkbox checked={shakeMode} onChange={() => setShakeMode(!shakeMode)} value={shakeMode} />
+      With Spectrum mode:
+      <Checkbox checked={spectrumMode} onChange={() => setSpectrumMode(!spectrumMode)} value={spectrumMode} />
       <PlayButton
         state={state}
         admin={admin}
         optionGames={{
           gameInterval: gameInterval,
-          invinvisibilityMode: invinvisibilityMode,
+          invisibilityMode: invisibilityMode,
           shakeMode: shakeMode,
           spectrumMode: spectrumMode
         }}

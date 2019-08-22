@@ -20,16 +20,19 @@ class Player {
     this.createListener();
   }
   generateSpectrum(grid) {
-    let bool = false;
-    for (let x = 0; x < 10; x++) {
-      for (let y = 0; y < 24; y++) {
-        if (grid[y][x] !== "." || bool === true) {
-          grid[y][x] = "9";
-          bool = true;
+    if (this.room.game !== null && this.room.game.optionsGames.spectrum === true) {
+      let bool = false;
+      for (let x = 0; x < 10; x++) {
+        for (let y = 0; y < 24; y++) {
+          if (grid[y][x] !== "." || bool === true) {
+            grid[y][x] = "9";
+            bool = true;
+          }
         }
+        bool = false;
       }
-      bool = false;
     }
+
     let spectrum = {
       playerName: this.name,
       score: this.score,
@@ -61,10 +64,11 @@ class Player {
       });
     }
 
-    this.socket.on(eventSocket.START_GAME, (gameInterval) => {
+    this.socket.on(eventSocket.START_GAME, (optionGames) => {
+      console.log("c sa c mes options mon freere", optionGames)
       this.socket.spectator = false;
-      this.room.game = true;
-      this.room.newGame();
+      // this.room.game = true; TODO DELETE IF IT"S WORK
+      this.room.newGame(optionGames);
 
       let listPlayerName = this.room.game.players.map(value => value.name);
 
@@ -73,17 +77,18 @@ class Player {
         this.room.players[i].lose = false;
         let listPieces = [];
         for (let i = 0; i < 4; i++) {
-          let piece = new Piece();
+          let piece = new Piece(this.room.game.optionsGames.invisibility);
           listPieces.push(piece.grid);
         }
-        this.room.players[i].socket.emit(eventSocket.START_GAME, listPlayerName, listPieces, gameInterval);
+        console.log("Piece generer ", listPieces, this.room.game.optionsGames.invisibility)
+        this.room.players[i].socket.emit(eventSocket.START_GAME, listPlayerName, listPieces, optionGames);
       }
 
     });
 
     this.socket.on(eventSocket.NEXT_PIECE, grid => {
       console.log("Je recois event");
-      let piece = new Piece();
+      let piece = this.room.game !== null ? new Piece(this.room.game.optionsGames.invisibility) : new Piece(true);
       console.log("J'emit new piece: ", piece);
       this.socket.emit(eventSocket.NEXT_PIECE, piece.grid);
       this.socket

@@ -41,7 +41,8 @@ const reducers = (state = initialState, action) => {
       return {
         ...state,
         error: action.error,
-          roomName: undefined,
+          roomName: null,
+          playerName: null,
           admin: false,
           spectator: false,
           listPlayers: [],
@@ -78,7 +79,7 @@ const reducers = (state = initialState, action) => {
       };
     case CLEAN_ROOM_NAME:
       return {
-        ...state, roomName: undefined, admin: false, error: null
+        ...state, roomName: null, playerName: null, admin: false, error: null
       };
     default:
       return state;

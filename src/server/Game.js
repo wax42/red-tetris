@@ -1,9 +1,11 @@
 class Game {
-  constructor(players) {
+  constructor(players, optionsGames) {
     this.players = players;
     this.optionsGames = {
-      invisibility: false
+      invisibility: optionsGames.invisibilityMode,
+      spectrum: optionsGames.spectrumMode
     };
+    console.log("Construcor game ", this.optionsGames)
     this.intervallDownPiece = 10;
   }
 

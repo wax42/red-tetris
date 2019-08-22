@@ -45,12 +45,8 @@ import {
   actionClearIntervalKeyEvent
 } from "../actions/actionRoom";
 
-import {
-  actionCleanRoomName,
-  actionIsSpectator,
-  actionError
-} from "../actions/actions";
-
+import { actionCleanRoomName, actionIsSpectator, actionError } from "../actions/actions";
+import Button from "@material-ui/core/Button";
 import _ from "lodash";
 
 export const mapStateToProps = state => {
@@ -160,13 +156,14 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     brokenLines: [], // List of position of broken lines to apply animation
     counterAnimation: false,
     game: false,
-    endOfGame: false
+    endOfGame: false,
+    shakeMode: false
   };
+
   const [state, dispatchRoom] = useReducer(reduceRoom, initialState);
   // Key event Listenner
 
   useEffect(() => {
-    // console.log("STATE COUNTER ANIMATION", state.counterAnimation);
     if (spectator === true && _.isEmpty(state.listSpectrums)) {
       socket.emit(eventSocket.SEND_SPECTRUMS_SPECTATOR, listSpectrums => {
         dispatchRoom(actionSpectrumsSpectator(listSpectrums));
@@ -175,21 +172,19 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
   });
 
   useEffect(() => {
-    socket.on(
-      eventSocket.START_GAME,
-      (listPlayers, listPieces, optionGames) => {
-        if (spectator === true) {
-          dispatch(actionIsSpectator());
-          // spectator = false;
-        }
-        listPlayers = listPlayers.filter(value => value !== playerName);
-        dispatchRoom(actionStartGame(listPlayers, listPieces, optionGames));
-        launchGame(dispatchRoom, optionGames.gameInterval);
+    socket.on(eventSocket.START_GAME, (listPlayers, listPieces, optionGames) => {
+      if (spectator === true) {
+        dispatch(actionIsSpectator());
+        // spectator = false;
       }
-    );
+      console.error("START GAME ON", optionGames);
+      listPlayers = listPlayers.filter(value => value !== playerName);
+      dispatchRoom(actionStartGame(listPlayers, listPieces, optionGames));
+      launchGame(dispatchRoom, optionGames.gameInterval);
+    });
 
     socket.on(eventSocket.NEXT_PIECE, newPiece => {
-      // console.log("Je recois next_piece du server : ", newPiece);
+      console.log("Je recois next_piece du server : ", newPiece);
       dispatchRoom(actionNextPiece(newPiece));
     });
 
@@ -214,7 +209,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
       dispatch(actionError("Server down on on"));
     });
     return () => {
-      // console.log("UNMOUNT COMPONENT");
+      console.error("UNMOUNT COMPONENT");
       cleanListennerEndGame(state.eventListner, state.clearInterval);
       socket.removeListener(eventSocket.START_GAME);
       socket.removeListener(eventSocket.NEXT_PIECE);
@@ -222,14 +217,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
       socket.removeListener(eventSocket.SEND_SPECTRUMS);
       socket.removeListener(eventSocket.WINNER_IS);
     };
-  }, [
-    socket,
-    playerName,
-    spectator,
-    dispatch,
-    state.eventListner,
-    state.clearInterval
-  ]);
+  }, [socket, playerName, spectator, dispatch, state.eventListner, state.clearInterval]);
 
   const isLog = true; //A definir dans les classes + state
   const counter =
@@ -275,7 +263,9 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
         <div className="app-board">
           {counter}
           {winner}
-          <button onClick={() => leaveRoom(state, dispatch)}>Leave Room</button>
+          <Button color="primary" onClick={() => leaveRoom(state, dispatch)}>
+            Leave Room
+          </Button>
           <AppBoardInfo state={state} />
           <Game state={state} />
           <h1 style={{ color: "pink" }}>{JSON.stringify(state.lose)}</h1>

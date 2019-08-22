@@ -65,10 +65,11 @@ class RoomsManager {
   }
   deletePlayer(clientSocket, io) {
     this.listPlayersName = _.filter(this.listPlayersName, value => value !== clientSocket.playerName);
-    this.sendListRoomsPlayers(io);
     if (this.rooms[clientSocket.roomName].deletePlayer(clientSocket) === false) {
       this.deleteRoom(clientSocket.roomName);
     }
+    this.sendListRoomsPlayers(io);
+
   }
 
   deleteRoom(roomName) {
