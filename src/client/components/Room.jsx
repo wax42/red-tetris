@@ -80,7 +80,7 @@ export const reduceRoom = (state, action) => {
     case START_GAME:
       console.log("START GAME", action);
       return startGame(
-        { ...state, game: true },
+        { ...state, game: true, endOfGame: false },
         action.listPlayers,
         action.listPieces,
         action.optionGames
@@ -126,7 +126,7 @@ export const reduceRoom = (state, action) => {
     case CLEAR_INTERVAL_KEY_EVENT:
       console.error("clear interval reducer room");
       cleanListennerEndGame(state.eventListner, state.clearInterval);
-      return { ...state, clearInterval: -1, game: false };
+      return { ...state, clearInterval: -1, game: false, endOfGame: true };
 
     default:
       return state;
@@ -159,13 +159,14 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     winner: null,
     brokenLines: [], // List of position of broken lines to apply animation
     counterAnimation: false,
-    game: false
+    game: false,
+    endOfGame: false
   };
   const [state, dispatchRoom] = useReducer(reduceRoom, initialState);
   // Key event Listenner
 
   useEffect(() => {
-    console.log("STATE COUNTER ANIMATION", state.counterAnimation);
+    // console.log("STATE COUNTER ANIMATION", state.counterAnimation);
     if (spectator === true && _.isEmpty(state.listSpectrums)) {
       socket.emit(eventSocket.SEND_SPECTRUMS_SPECTATOR, listSpectrums => {
         dispatchRoom(actionSpectrumsSpectator(listSpectrums));
@@ -248,17 +249,28 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
         </div>
       </div>
     );
+
+  let winner = null;
+  console.log("STATE END OF GAME", state.endOfGame);
+  console.log("STATE LOSE", state.lose);
+  if (!spectator && state.endOfGame && !state.lose) {
+    winner = <div className="winner">YOU WIN</div>;
+  } else if (state.endOfGame && state.lose) {
+    winner = <div className="loser">YOU LOSE</div>;
+  }
+
   if (isLog) {
     return (
       <div className="app">
         <div className="app-board">
+          {counter}
+          {winner}
           <button onClick={() => leaveRoom(state, dispatch)}>Leave Room</button>
-          <AppBoardInfo state={state} />
+          <AppBoardInfo state={state}/>
           <Game state={state} />
           <h1 style={{ color: "pink" }}>{JSON.stringify(state.lose)}</h1>
         </div>
 
-        {counter}
         <Spectrum
           listSpectrums={state.listSpectrums}
           className="app-spectrum"

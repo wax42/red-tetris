@@ -71,7 +71,6 @@ export const launchGame = (dispatchRoom, gameInterval) => {
     }, gameInterval);
     dispatchRoom(actionSendIntervalKeyEvent(clearInterval, eventListner));
     // dispatchRoom(actionPieceDown());
-    console.log("counter END");
   }, 4000);
 };
 

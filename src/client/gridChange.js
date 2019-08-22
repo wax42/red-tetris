@@ -190,6 +190,7 @@ export const downFloorPiece = state => {
   if (checkIslose(state) === true) {
     cleanListennerEndGame(state.eventListner, state.clearInterval);
     state.game = false;
+    state.endOfGame = true;
     state.clearInterval = -1;
     state.lose = true;
     state.socket.emit(eventSocket.LOSE, winner => {
@@ -236,6 +237,7 @@ export const downPiece = state => {
       state.lose = true;
       cleanListennerEndGame(state.eventListner, state.clearInterval);
       state.game = false;
+      state.endOfGame = true;
       state.clearInterval = -1;
       state.socket.emit(eventSocket.LOSE, winner => {
         console.log("WINNER IS", winner);
