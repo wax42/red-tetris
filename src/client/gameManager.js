@@ -1,7 +1,11 @@
-import { placePiece } from "./gridChange";
+import {
+  placePiece
+} from "./gridChange";
 import _ from "lodash";
 
-import { GRID } from "../common/common";
+import {
+  GRID
+} from "../common/common";
 
 import eventSocket from "../common/eventSocket";
 
@@ -27,28 +31,22 @@ export const handleKey = dispatchRoom => event => {
     case KEY_DOWN:
       event.preventDefault();
       dispatchRoom(actionPieceDown());
-      // setState(downPiece(newState, socket));
       break;
     case KEY_LEFT:
       event.preventDefault();
       dispatchRoom(actionPieceLeft());
-      // setState(leftPiece(newState));
       break;
     case KEY_RIGHT:
       event.preventDefault();
       dispatchRoom(actionPieceRight());
-      // setState(rightPiece(newState));
       break;
     case KEY_SPACE:
       event.preventDefault();
       dispatchRoom(actionPieceSpace());
-      // setState(downFloorPiece(newState, socket));
       break;
     case KEY_UP:
       event.preventDefault();
       dispatchRoom(actionPieceRotate());
-
-      // setState(rotatePiece(newState));
       break;
     case KEY_S:
       console.log("ici");
@@ -67,10 +65,8 @@ export const launchGame = (dispatchRoom, gameInterval) => {
     window.addEventListener("keydown", eventListner, false);
     let clearInterval = setInterval(() => {
       dispatchRoom(actionPieceDown());
-      // console.log("dsipatch Piece down set interval");
     }, gameInterval);
     dispatchRoom(actionSendIntervalKeyEvent(clearInterval, eventListner));
-    // dispatchRoom(actionPieceDown());
     console.log("counter END");
   }, 4000);
 };
@@ -121,8 +117,6 @@ export const startGame = (state, listPlayers, listPieces, optionGames) => {
   state = initializeListSpectrums(state, listPlayers);
 
   state.shakeMode = optionGames.shakeMode;
-  state.invisibiltyMode = optionGames.invisibiltyMode;
-  state.spectrumMode = optionGames.spectrumMode;
 
   state.lose = false;
   state.currentPiece.piece = listPieces.shift();
@@ -130,17 +124,13 @@ export const startGame = (state, listPlayers, listPieces, optionGames) => {
   state.currentPiece.y = 0;
   state.listPieces = listPieces;
   state.grid = _.cloneDeep(GRID);
-  // console.log("START GAME", JSON.stringify(GRID));
   state.counterAnimation = true;
   return state;
 };
 
 export const nextPiece = state => {
-  // if (state.listPieces.length < 4) {
-  // state.currentPiece.x = 4;
   console.log("JE VAIS EMIT POUR NEXT PIECE");
   state.socket.emit(eventSocket.NEXT_PIECE, state.grid);
-  // }
 
   state.currentPiece.piece = state.listPieces.shift();
   state.currentPiece.x = 3;
