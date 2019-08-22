@@ -363,16 +363,64 @@ $boxes: 100;
 /* Winner / Loser  Animation*/
 
 %winner-looser {
-  font-size: 5em;
   position: absolute;
+  text-align: center;
   top: 40%;
   left: 50%;
   z-index: 100;
-  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  width: 100%;
+  transform: translate(-50%, -50%);
+  span {
+    font-family: sans-serif;
+    text-transform: uppercase;
+    display: block;
+  }
+  .text1 {
+    font-size: 60px;
+    font-weight: 700;
+    letter-spacing: 8px;
+    //position: relative;
+    margin-bottom: 40px;
+    animation: winner-looser-text1 3s 1;
+  }
+  .text2 {
+    font-size: 30px;
+    font-weight: 700;
+    animation: winner-looser-text2 3s 1;
+  }
+}
+
+@keyframes winner-looser-text1 {
+  0% {
+    margin-bottom: -5px;
+  }
+  30% {
+    letter-spacing: 30px;
+    margin-bottom: -5px;
+  }
+  85% {
+    letter-spacing: 8px;
+    margin-bottom: -5px;
+  }
+}
+
+@keyframes winner-looser-text2 {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.3;
+  }
+  85% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .winner {
-  color: #5af733;
+  color: #7cf35e;
   @extend %winner-looser;
 }
 

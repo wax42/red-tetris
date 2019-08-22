@@ -254,9 +254,19 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
   console.log("STATE END OF GAME", state.endOfGame);
   console.log("STATE LOSE", state.lose);
   if (!spectator && state.endOfGame && !state.lose) {
-    winner = <div className="winner">YOU WIN</div>;
+    winner = (
+      <div className="winner">
+        <span className="text1">You win</span>
+        <span className="text2">You're the red tetris Master</span>
+      </div>
+    );
   } else if (state.endOfGame && state.lose) {
-    winner = <div className="loser">YOU LOSE</div>;
+    winner = (
+      <div className="loser">
+        <span className="text1">You lose</span>
+        <span className="text2">The battle but not the war</span>
+      </div>
+    );
   }
 
   if (isLog) {
@@ -266,7 +276,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
           {counter}
           {winner}
           <button onClick={() => leaveRoom(state, dispatch)}>Leave Room</button>
-          <AppBoardInfo state={state}/>
+          <AppBoardInfo state={state} />
           <Game state={state} />
           <h1 style={{ color: "pink" }}>{JSON.stringify(state.lose)}</h1>
         </div>
