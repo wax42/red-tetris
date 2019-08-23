@@ -46,9 +46,17 @@ export const Play = ({ state, admin, optionGames }) => {
           value={invisibilityMode}
         />
         Shake mode :
-        <Checkbox checked={shakeMode} onChange={() => setShakeMode(!shakeMode)} value={shakeMode} />
+        <Checkbox
+          checked={shakeMode}
+          onChange={() => setShakeMode(!shakeMode)}
+          value={shakeMode}
+        />
         With Spectrum mode:
-        <Checkbox checked={spectrumMode} onChange={() => setSpectrumMode(!spectrumMode)} value={spectrumMode} />
+        <Checkbox
+          checked={spectrumMode}
+          onChange={() => setSpectrumMode(!spectrumMode)}
+          value={spectrumMode}
+        />
         <Button
           disabled={state.game}
           onClick={() =>
