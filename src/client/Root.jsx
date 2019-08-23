@@ -10,6 +10,9 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import { actionJoinRoom, actionListRoomPlayer } from "./actions/actions";
 import eventSocket from "../common/eventSocket";
 
+import { createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/styles";
+
 const store = createStore(reducers, composeWithDevTools(applyMiddleware(socketMiddleware())));
 
 const mapStateToProps = _state => {
@@ -95,10 +98,29 @@ const RoutingRedux = connect(
   { actionJoinRoom, actionListRoomPlayer }
 )(Routing);
 
+export const theme = createMuiTheme({
+  palette: {
+    primary: {
+      light: "#ffffff",
+      main: "#f9f9f9",
+      dark: "#c6c6c6",
+      contrastText: "#fff"
+    },
+    secondary: {
+      light: "#ff9f88",
+      main: "#ff6d5b",
+      dark: "#c63b31",
+      contrastText: "#fff"
+    }
+  }
+});
+
 const Root = () => {
   return (
     <Provider store={store}>
-      <RoutingRedux />
+      <ThemeProvider theme={theme}>
+        <RoutingRedux />
+      </ThemeProvider>
     </Provider>
   );
 };
