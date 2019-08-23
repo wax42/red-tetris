@@ -153,6 +153,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     admin: false,
     lose: false,
     winner: null,
+    score: 0,
     brokenLines: [], // List of position of broken lines to apply animation
     counterAnimation: false,
     game: false,
@@ -268,6 +269,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
           </Button>
           <AppBoardInfo state={state} />
           <Game state={state} />
+          {state.score}
           <h1 style={{ color: "pink" }}>{JSON.stringify(state.lose)}</h1>
         </div>
 

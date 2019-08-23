@@ -39,7 +39,7 @@ export const HomeCpt = ({ error, actionCreateRoom }) => {
             <TextField
               color="primary"
               label="roomName"
-              // value={homeForm.roomName}
+              // value={roomName}
               onChange={e => setRoomName(e.target.value)}
               margin="normal"
               variant="outlined"
@@ -53,7 +53,7 @@ export const HomeCpt = ({ error, actionCreateRoom }) => {
             <TextField
               color="primary"
               label="playerName"
-              // value={homeForm.playerName}
+              // value={playerName}
               onChange={e => setPlayerName(e.target.value)}
               margin="normal"
               variant="outlined"

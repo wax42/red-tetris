@@ -154,6 +154,7 @@ export const lineBreak = state => {
       return true;
     }
   });
+  state.score += nbrLine * 10;
   if (nbrLine !== 0) {
     state.socket.emit(eventSocket.LINE_BREAK, nbrLine);
     while (nbrLine !== 0) {

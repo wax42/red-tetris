@@ -54,7 +54,6 @@ class Room {
     clientSocket.leave(this.name);
 
     if (this.players.length === 0) {
-      console.log("tout est normal")
       return false;
     }
 
