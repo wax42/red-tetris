@@ -6,12 +6,11 @@ const Spectrum = ({ listSpectrums }) => {
   let listSpectrum = [];
   for (let key in listSpectrums) {
     listSpectrum.push(
-      <div key={key}>
+      <div key={key} className="spectrum-grid">
         <h1>
           {key} {listSpectrums[key]["score"]}
         </h1>
         <GameGrid
-          className="spectrum-grid"
           grid={_.slice(listSpectrums[key]["grid"], 4)} //T Check with the team
         />
       </div>

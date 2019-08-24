@@ -9,28 +9,16 @@ export const GameGrid = props => {
   });
   const bubbles = new Array(59).fill(" ");
   // console.log("BROKENLINE GAME GRID", props.brokenLines);
+  let gameGridClass = "game-grid";
+  if (!props.endOfGame && props.shakeMode) {
+    gameGridClass += " shake-mode";
+  }
   return (
-    <div className="game-grid">
+    <div className={gameGridClass}>
       {grid.map((line, index) => {
-        /* if (_.difference(line, ["0", ".", "8"]).length === 10) {
-          console.log("LIGNE PLEINE");
-        } */
-        /* let brokenLineBox = "";
-
-
-        if (props.brokenLines !== undefined && props.brokenLines.length !== 0) {
-          console.log("EFFECT BEFORE INCLUDES = ", brokenLines);
-          if (_.includes(brokenLines, index)) {
-            console.log("EFFECT BROKE LINE SUR LIGNE: ", index);
-            brokenLineBox += "broken-line-box";
-          }
-        } */
         let brokenContainer = null;
-
         if (props.brokenLines !== undefined && props.brokenLines.length !== 0) {
-          // console.log("EFFECT BEFORE INCLUDES = ", brokenLines);
           if (_.includes(brokenLines, index)) {
-            // console.log("EFFECT BROKE LINE SUR LIGNE: ", index);
             brokenContainer = (
               <div className="broken-line">
                 {_.times(59, i => (
@@ -71,7 +59,12 @@ const Game = props => {
   const listPieces = state.listPieces; //3);
   return (
     <div className="game">
-      <GameGrid grid={grid} brokenLines={state.brokenLines} />
+      <GameGrid
+        grid={grid}
+        brokenLines={state.brokenLines}
+        shakeMode={state.shakeMode}
+        endOfGame={state.endOfGame}
+      />
       <GamePieces pieces={listPieces} />
     </div>
   );

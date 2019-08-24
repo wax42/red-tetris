@@ -103,7 +103,7 @@ export const HomeCpt = ({ theme, error, actionCreateRoom }) => {
           <div className="bird-pupil" />
           <div className="bird-wing" />
           <div className="bird-hair" />
-          RED TETRIS by ppichier vguerand
+          RED TETRIS by ppichier & vguerand
         </div>
       </div>
     </div>

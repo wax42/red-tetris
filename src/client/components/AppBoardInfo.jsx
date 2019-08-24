@@ -24,6 +24,7 @@ export const Play = ({ state, admin, optionGames }) => {
   const [shakeMode, setShakeMode] = useState(false);
   const [spectrumMode, setSpectrumMode] = useState(false);
 
+  // console.log("SHAKEMODE INIT", spectrumMode);
   if (admin === true) {
     return (
       <div>
@@ -48,7 +49,10 @@ export const Play = ({ state, admin, optionGames }) => {
         Shake mode :
         <Checkbox
           checked={shakeMode}
-          onChange={() => setShakeMode(!shakeMode)}
+          onChange={() => {
+            setShakeMode(!shakeMode);
+            // setTimeout(() => console.log(shakeMode), 2000);
+          }}
           value={shakeMode}
         />
         With Spectrum mode:
