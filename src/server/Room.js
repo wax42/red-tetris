@@ -7,11 +7,9 @@ class Room {
   constructor(name, playerName, clientSocket) {
     this.name = name;
     this.admin = clientSocket.id;
-    // TODO add the admin in the lists of players
     this.game = null;
     this.players = [];
     this.addPlayer(playerName, clientSocket);
-    // top score
   }
 
   newGame(optionGames) {
@@ -21,18 +19,17 @@ class Room {
     let newPlayer = new Player(playerName, this, clientSocket);
     clientSocket.join(this.name);
     this.players.push(newPlayer);
-    console.log("new player add in room", this.name, playerName);
+    console.log("New player " + playerName + " add in room ", this.name);
     for (let player in this.players) {
       console.log(this.players[player].name);
     }
   }
 
   deletePlayer(clientSocket) {
-    console.log("delete player in room", this.name, clientSocket.playerName);
+    console.log("Delete player " + clientSocket.playerName + " in room " + this.name);
     for (let player in this.players) {
       console.log(this.players[player].name);
     }
-
 
     if (this.game !== null) {
       this.game.players = _.filter(this.game.players, player => {
@@ -48,9 +45,6 @@ class Room {
     clientSocket.removeAllListeners(eventSocket.LINE_BREAK);
     clientSocket.removeAllListeners(eventSocket.LOSE);
     clientSocket.removeAllListeners(eventSocket.START_GAME);
-
-    // delete this.players[i]
-
     clientSocket.leave(this.name);
 
     if (this.players.length === 0) {

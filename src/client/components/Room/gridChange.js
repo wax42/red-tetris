@@ -1,6 +1,10 @@
-import { nextPiece, lineBreak, cleanListennerEndGame } from "./gameManager";
+import {
+  nextPiece,
+  lineBreak,
+  cleanListennerEndGame
+} from "./gameManager";
 import _ from "lodash";
-import eventSocket from "../common/eventSocket";
+import eventSocket from "../../../common/eventSocket";
 
 export const rotate = matrix => {
   let result = [];
@@ -31,12 +35,10 @@ export const cleanOldPiece = (grid, currentPiece) => {
 };
 
 export const placePiece = (grid, currentPiece) => {
-  // TODO test
   let y_piece = 0;
   for (let y = currentPiece.y; y < currentPiece.y + 4 && y < 24; y++) {
     let x_piece = 0;
     for (let x = currentPiece.x; x < currentPiece.x + 4 && x < 10; x++) {
-      // Gerer l'ombre)
       if (
         currentPiece.piece[y_piece][x_piece] !== "." &&
         (grid[y][x] === "." || grid[y][x] === "0")
@@ -164,23 +166,8 @@ export const checkIslose = state => {
   return false;
 };
 
-/* const waitForPiece = async () => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      console.log("okkkkkk");
-      resolve();
-    }, 2000);
-  });
-}; */
 
 export const downFloorPiece = state => {
-  // console.log(state);
-  /* if (state.currentPiece.piece === undefined) {
-    waitForPiece();
-  } */
-  //
-  // state.lineBreak = [];
-  //
   state.grid = cleanOldPiece(state.grid, state.currentPiece);
   state = positionShadow(state);
   state.currentPiece.x = state.shadow.x;
@@ -194,7 +181,6 @@ export const downFloorPiece = state => {
     state.clearInterval = -1;
     state.lose = true;
     state.socket.emit(eventSocket.LOSE, winner => {
-      console.log("WINNER IS", winner);
       state.winner = winner;
     });
     nextPiece(state);
@@ -202,7 +188,6 @@ export const downFloorPiece = state => {
   }
   lineBreak(state);
   nextPiece(state);
-  // console.log(state);
   return state;
 };
 
@@ -222,9 +207,7 @@ export const rotatePiece = state => {
   return state;
 };
 
-// SpacePiece
 export const downPiece = state => {
-  // state.brokenLines = [];
   state.grid = cleanOldPiece(state.grid, state.currentPiece);
 
   state.currentPiece.y += 1;
@@ -233,28 +216,22 @@ export const downPiece = state => {
     state.grid = placePiece(state.grid, state.currentPiece);
 
     if (checkIslose(state) === true) {
-      console.log("CHECK_IS_LOSE = true");
       state.lose = true;
       cleanListennerEndGame(state.eventListner, state.clearInterval);
       state.game = false;
       state.endOfGame = true;
       state.clearInterval = -1;
       state.socket.emit(eventSocket.LOSE, winner => {
-        console.log("WINNER IS", winner);
         state.winner = winner;
       });
       nextPiece(state);
       return state;
     }
     state = lineBreak(state);
-    // console.log("grid", JSON.stringify(state.grid), state.grid.length);
-
     state = nextPiece(state);
-
     return state;
   }
   state = positionShadow(state);
-
   state.grid = placePiece(state.grid, state.currentPiece);
   return state;
 };
@@ -265,11 +242,9 @@ export const leftPiece = state => {
   if (checkIsPos(state.grid, state.currentPiece) === false) {
     state.currentPiece.x += 1;
     state.grid = placePiece(state.grid, state.currentPiece);
-
     return state;
   }
   state = positionShadow(state);
-
   state.grid = placePiece(state.grid, state.currentPiece);
   return state;
 };
@@ -280,30 +255,23 @@ export const rightPiece = state => {
   if (checkIsPos(state.grid, state.currentPiece) === false) {
     state.currentPiece.x -= 1;
     state.grid = placePiece(state.grid, state.currentPiece);
-
     return state;
   }
   state = positionShadow(state);
-
   state.grid = placePiece(state.grid, state.currentPiece);
   return state;
 };
 
 export const switchPiece = state => {
   state.grid = cleanOldPiece(state.grid, state.currentPiece);
-
   let tmp = {
     ...state.currentPiece
   };
   tmp.piece = state.listPieces[0];
-  // console.log(JSON.stringify(state.currentPiece));
-  // console.log("Before check is pos", JSON.stringify(state.grid));
-
   if (checkIsPos(state.grid, tmp) === false) {
     state.grid = placePiece(state.grid, state.currentPiece);
     return state;
   }
-  // console.log("After check is pos");
   state.listPieces[0] = state.currentPiece.piece;
   state.currentPiece = tmp;
   state = positionShadow(state);
@@ -313,7 +281,6 @@ export const switchPiece = state => {
 
 export const addIndestructiblesLines = (state, nbrLine) => {
   state.grid = cleanOldPiece(state.grid, state.currentPiece);
-  // console.log("NBR LINES BREAK = ", nbrLine);
   while (nbrLine !== 0) {
     state.grid.push(new Array(10).fill("8"));
     state.grid.shift();
@@ -326,12 +293,8 @@ export const addIndestructiblesLines = (state, nbrLine) => {
   } else {
     state.currentPiece.y -= 1;
   }
-
   state = downPiece({
     ...state
   });
-
-  // state.grid = placePiece(state.grid, state.currentPiece);
-  // console.log(state.grid);
   return state;
 };

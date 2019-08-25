@@ -1,29 +1,23 @@
 import React, { useEffect, useState, createRef } from "react";
 import { FaHome, FaIdBadge } from "react-icons/fa";
 import { connect } from "react-redux";
-import { actionCreateRoom } from "../actions/actions";
+import { actionCreateRoom } from "../../actions/actionsRedux";
 import { Button, TextField } from "@material-ui/core";
 import { AutoComplete } from "./AutoComplete";
+import ERROR from "../../../common/error";
 
-export const buttonCreateRoom = (
-  action,
-  setStateError,
-  roomName,
-  playerName
-) => {
-  console.log("create room", playerName, roomName);
+export const buttonCreateRoom = (action, setStateError, roomName, playerName) => {
   if (roomName.length < 3) {
-    setStateError("Room name should have 3 characters at least");
+    setStateError(ERROR.ROOMNAME_INVALID_LENGTH);
   } else if (playerName.length < 3) {
-    setStateError("Player name should have 3 characters at least");
+    setStateError(ERROR.PLAYERNAME_INVALID_LENGTH);
   } else if (/^[A-z0-9]+$/.test(roomName) === false) {
-    setStateError("Room name invalid");
+    setStateError(ERROR.ROOMNAME_INVALID);
   } else if (/^[A-z0-9]+$/.test(playerName) === false) {
-    setStateError("Player name invalid");
+    setStateError(ERROR.PLAYERNAME_INVALID);
   } else {
     window.location.hash = `#${roomName}[${playerName}]`;
-    console.log("buttonCreateRoom", roomName);
-    action(roomName, playerName); // to complete
+    action(roomName, playerName);
   }
 };
 
@@ -33,13 +27,7 @@ const mapStateToProps = _state => {
   return { listPlayers, listRooms };
 };
 
-export const HomeCpt = ({
-  listPlayers,
-  listRooms,
-  theme,
-  error,
-  actionCreateRoom
-}) => {
+export const HomeCpt = ({ listPlayers, listRooms, theme, error, actionCreateRoom }) => {
   const [stateError, setStateError] = useState("");
   const [playerName, setPlayerName] = useState("");
   const [roomName, setRoomName] = useState("");
@@ -53,25 +41,7 @@ export const HomeCpt = ({
               <FaIdBadge className="home-icon" />
               <div>Room name</div>
             </div>
-            {/* <TextField
-              color="red"
-              label="Room"
-              // value={roomName}
-              onChange={e => setRoomName(e.target.value)}
-              margin="normal"
-              variant="outlined"
-              className={"homeTextField"}
-              inputProps={{
-                style: {
-                  fontFamily: "nunito"
-                  /* color: "#f9f6e2",
-                  borderColor: "#f9f6e2" */}
-
-            <AutoComplete
-              listRooms={listRooms}
-              roomName={roomName}
-              setRoomName={setRoomName}
-            />
+            <AutoComplete listRooms={listRooms} roomName={roomName} setRoomName={setRoomName} />
           </div>
           <div className="home-field">
             <div className="home-field-title">
@@ -93,14 +63,7 @@ export const HomeCpt = ({
             color="secondary"
             size="large"
             variant="outlined"
-            onClick={() =>
-              buttonCreateRoom(
-                actionCreateRoom,
-                setStateError,
-                roomName,
-                playerName
-              )
-            }
+            onClick={() => buttonCreateRoom(actionCreateRoom, setStateError, roomName, playerName)}
           >
             Start
           </Button>

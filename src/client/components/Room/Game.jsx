@@ -4,11 +4,7 @@ import { FaStar } from "react-icons/fa";
 
 export const GameGrid = props => {
   const grid = props.grid;
-  console.log("BROKENLINE", props.brokenLines);
-  let brokenLines = _.map(props.brokenLines, el => {
-    return el - 4;
-  });
-  const bubbles = new Array(59).fill(" ");
+  let brokenLines = _.map(props.brokenLines, el => el - 4);
 
   let gameGridClass = "game-grid";
   if (!props.endOfGame && props.shakeMode) {
@@ -19,11 +15,9 @@ export const GameGrid = props => {
       {grid.map((line, index) => {
         let brokenContainer = null;
         if (props.brokenLines !== undefined && props.brokenLines.length !== 0) {
-          // console.log("JE VAIS TRIGGER BREAK ANIMATION");
           if (_.includes(brokenLines, index)) {
-            // console.log("JE VAIS TRIGGER BREAK ANIMATION 2222");
             brokenContainer = (
-              <div className="broken-line" key={props.key + index}>
+              <div className="broken-line" key={props.keyBrokenLines + index}>
                 {_.times(59, i => (
                   <FaStar className="broken-line-box" key={i} />
                 ))}
@@ -50,9 +44,7 @@ export const GamePieces = props => {
   return (
     <div className="game-pieces">
       {pieces.map((piece, index) => {
-        return (
-          <GameGrid key={index} grid={piece} brokenLines={props.brokenLines} />
-        );
+        return <GameGrid key={index} grid={piece} brokenLines={props.brokenLines} />;
       })}
     </div>
   );
@@ -60,8 +52,8 @@ export const GamePieces = props => {
 
 const Game = props => {
   const state = props.state;
-  const grid = _.slice(state.grid, 4); // 4
-  const listPieces = state.listPieces; //3);
+  const grid = _.slice(state.grid, 4);
+  const listPieces = state.listPieces;
   return (
     <div className="game">
       <GameGrid
@@ -69,7 +61,7 @@ const Game = props => {
         brokenLines={state.brokenLines}
         shakeMode={state.shakeMode}
         endOfGame={state.endOfGame}
-        key={state.key}
+        keyBrokenLines={state.key}
       />
       <GamePieces pieces={listPieces} brokenLines={[]} />
     </div>

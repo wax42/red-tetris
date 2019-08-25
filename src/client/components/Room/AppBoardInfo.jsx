@@ -1,16 +1,12 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import eventSocket from "../../common/eventSocket";
+import eventSocket from "../../../common/eventSocket";
 import { Button, Slider, Checkbox } from "@material-ui/core";
 
 export const buttonPlay = (state, optionGames) => {
-  console.log("handle click start");
-  console.log(optionGames);
-
   if (state.clearInterval === -1) {
     state.socket.emit(eventSocket.START_GAME, optionGames);
   }
-  console.log("handle click end");
 };
 
 export const mapStateToProps = _state => {
@@ -18,13 +14,12 @@ export const mapStateToProps = _state => {
   return { admin };
 };
 
-export const Play = ({ state, admin, optionGames }) => {
+export const Play = ({ state, admin }) => {
   const [gameInterval, setgameInterval] = useState(700);
   const [invisibilityMode, setInvisibilityMode] = useState(false);
   const [shakeMode, setShakeMode] = useState(false);
   const [spectrumMode, setSpectrumMode] = useState(false);
 
-  // console.log("SHAKEMODE INIT", spectrumMode);
   if (admin === true) {
     return (
       <div>
@@ -51,28 +46,20 @@ export const Play = ({ state, admin, optionGames }) => {
           checked={shakeMode}
           onChange={() => {
             setShakeMode(!shakeMode);
-            // setTimeout(() => console.log(shakeMode), 2000);
           }}
           value={shakeMode}
         />
         With Spectrum mode:
-        <Checkbox
-          checked={spectrumMode}
-          onChange={() => setSpectrumMode(!spectrumMode)}
-          value={spectrumMode}
-        />
+        <Checkbox checked={spectrumMode} onChange={() => setSpectrumMode(!spectrumMode)} value={spectrumMode} />
         <Button
           disabled={state.game}
           onClick={() =>
-            buttonPlay(
-              state,
-              (optionGames = {
-                gameInterval: gameInterval,
-                invisibilityMode: invisibilityMode,
-                shakeMode: shakeMode,
-                spectrumMode: spectrumMode
-              })
-            )
+            buttonPlay(state, {
+              gameInterval: gameInterval,
+              invisibilityMode: invisibilityMode,
+              shakeMode: shakeMode,
+              spectrumMode: spectrumMode
+            })
           }
         >
           Play

@@ -1,11 +1,8 @@
 const eventSocket = require("../common/eventSocket");
-const {
-  Piece
-} = require("./Piece");
+const Piece = require("./Piece");
 const {
   GRID
 } = require("../common/common");
-const _ = require("lodash");
 
 class Player {
   constructor(name, room, clientSocket) {
@@ -41,7 +38,6 @@ class Player {
     };
     this.grid = grid;
     return spectrum;
-    // Take the grid and return a spectrum
   }
 
   createListener() {
@@ -65,9 +61,7 @@ class Player {
     }
 
     this.socket.on(eventSocket.START_GAME, (optionGames) => {
-      console.log("c sa c mes options mon freere", optionGames)
       this.socket.spectator = false;
-      // this.room.game = true; TODO DELETE IF IT"S WORK
       this.room.newGame(optionGames);
 
       let listPlayerName = this.room.game.players.map(value => value.name);
@@ -80,16 +74,13 @@ class Player {
           let piece = new Piece(this.room.game.optionsGames.invisibility);
           listPieces.push(piece.grid);
         }
-        console.log("Piece generer ", listPieces, this.room.game.optionsGames.invisibility)
         this.room.players[i].socket.emit(eventSocket.START_GAME, listPlayerName, listPieces, optionGames);
       }
 
     });
 
     this.socket.on(eventSocket.NEXT_PIECE, grid => {
-      console.log("Je recois event");
       let piece = this.room.game !== null ? new Piece(this.room.game.optionsGames.invisibility) : new Piece(true);
-      console.log("J'emit new piece: ", piece);
       this.socket.emit(eventSocket.NEXT_PIECE, piece.grid);
       this.socket
         .to(this.roomName)
@@ -104,12 +95,10 @@ class Player {
     this.socket.on(eventSocket.LOSE, cb => {
       this.lose = true;
       let winner = this.room.game.checkWhoIsWinner();
-      console.log("LOSE", winner);
       if (winner !== null) {
-        console.log("WINNER IN PLAYER.JS", winner);
+        console.log("Winner is ", winner);
         this.socket.to(this.roomName).emit(eventSocket.WINNER_IS, winner);
         cb(winner);
-        console.log("lose solo");
       }
       if (this.room.game.players.length === 1 || winner !== null) {
         delete this.room.game;

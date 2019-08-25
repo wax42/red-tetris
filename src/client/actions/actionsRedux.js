@@ -6,7 +6,7 @@ import {
   IS_SPECTATOR,
   CLEAN_ROOM_NAME,
   ERROR
-} from "./actionTypes";
+} from "./actionsTypes";
 import eventSocket from "../../common/eventSocket";
 
 // action for redux state

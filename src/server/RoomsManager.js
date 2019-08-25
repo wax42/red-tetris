@@ -1,16 +1,15 @@
 const _ = require("lodash");
 const eventSocket = require("../common/eventSocket");
 const Room = require("./Room.js");
+const ERROR = require("../common/error");
 
 class RoomsManager {
   constructor() {
     this.listRoomsName = [];
     this.listPlayersName = [];
     this.rooms = {};
-    // top score
   }
   createRoom(roomName, playerName, clientSocket, clientCallback, io) {
-    console.log("Create room RoomManager params: ", roomName, playerName, clientSocket.id);
     if (this.listRoomsName.includes(roomName) === true) {
       return this.joinRoom(roomName, playerName, clientSocket, clientCallback, io);
     }
@@ -21,17 +20,18 @@ class RoomsManager {
     clientSocket.roomName = roomName;
     clientSocket.playerName = playerName;
     this.sendListRoomsPlayers(io);
-    clientCallback("Succes Create new ROOM:  " + roomName, {
+    clientCallback("Success create new room:  " + roomName, {
       spectator: false,
       admin: true,
       error: false
     });
+    console.log("Success create new room:  " + roomName)
     return true;
   }
 
   joinRoom(roomName, playerName, clientSocket, clientCallback, io) {
     if (this.listRoomsName.includes(roomName) === false || this.listPlayersName.includes(playerName) === true) {
-      clientCallback("Player with the same name in the room:  " + roomName, {
+      clientCallback(ERROR.DUPLICATE_PLAYER_IN_ROOM + roomName, {
         spectator: false,
         admin: false,
         error: true
@@ -46,17 +46,19 @@ class RoomsManager {
 
     this.sendListRoomsPlayers(io);
     if (this.rooms[roomName].game !== null) {
-      clientCallback("Succes Join ROOM in spectator: " + roomName, {
+      clientCallback("Success join room in spectator mode: " + roomName, {
         spectator: true,
         admin: false,
         error: false
       });
+      console.log("Success join room in spectator mode:  " + roomName)
     } else {
-      clientCallback("Succes Join ROOM: " + roomName, {
+      clientCallback("Success join room: " + roomName, {
         spectator: false,
         admin: false,
         error: false
       });
+      console.log("Success join room:  " + roomName)
     }
     return true;
   }
@@ -69,10 +71,10 @@ class RoomsManager {
       this.deleteRoom(clientSocket.roomName);
     }
     this.sendListRoomsPlayers(io);
-
   }
 
   deleteRoom(roomName) {
+    console.log("Delete room ", roomName);
     this.listRoomsName = _.filter(this.listRoomsName, name => {
       return roomName !== name;
     });

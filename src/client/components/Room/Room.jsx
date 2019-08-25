@@ -19,8 +19,8 @@ import {
   SEND_INTERVAL_KEY_EVENT,
   WINNER_IS,
   CLEAR_INTERVAL_KEY_EVENT
-} from "../actions/actionTypes";
-import { launchGame, startGame, cleanListennerEndGame } from "../gameManager";
+} from "../../actions/actionsTypes";
+import { launchGame, startGame, cleanListennerEndGame } from "./gameManager";
 
 import {
   rotatePiece,
@@ -30,10 +30,10 @@ import {
   rightPiece,
   switchPiece,
   addIndestructiblesLines
-} from "../gridChange";
+} from "./gridChange";
 
-import { GRID, EMPTY_PIECE } from "../../common/common";
-import eventSocket from "../../common/eventSocket";
+import { GRID, EMPTY_PIECE } from "../../../common/common";
+import eventSocket from "../../../common/eventSocket";
 
 import {
   actionNextPiece,
@@ -43,13 +43,11 @@ import {
   actionSpectrumsSpectator,
   actionWinnerIs,
   actionClearIntervalKeyEvent
-} from "../actions/actionRoom";
+} from "../../actions/actionsRoom";
 
-import {
-  actionCleanRoomName,
-  actionIsSpectator,
-  actionError
-} from "../actions/actions";
+import ERROR from "../../../common/error";
+
+import { actionCleanRoomName, actionIsSpectator, actionError } from "../../actions/actionsRedux";
 import Button from "@material-ui/core/Button";
 import _ from "lodash";
 
@@ -69,16 +67,12 @@ const leaveRoom = (state, dispatch) => {
 };
 
 export const reduceRoom = (state, action) => {
-  // console.log("REDUCE ROOM", action.type, state.winner, action, state);
-  // state.brokenLines = [];
-
-  if (state.socket.disconnected === true) {
-    console.error("Warning connection lost");
-  }
+  // if (state.socket.disconnected === true) {
+  //   console.error("Warning connection lost");
+  // }
 
   switch (action.type) {
     case START_GAME:
-      console.log("START GAME", action);
       return startGame(
         { ...state, game: true, endOfGame: false, winner: null },
         action.listPlayers,
@@ -119,14 +113,12 @@ export const reduceRoom = (state, action) => {
       };
 
     case WINNER_IS:
-      console.log("WIIIINER REDUCER", action.winner);
       return {
         ...state,
         winner: action.winner,
         counterAnimation: false
       };
     case CLEAR_INTERVAL_KEY_EVENT:
-      console.error("clear interval reducer room");
       cleanListennerEndGame(state.eventListner, state.clearInterval);
       return { ...state, clearInterval: -1, game: false, endOfGame: true };
 
@@ -140,9 +132,6 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
   const initialState = {
     socket: socket,
     playerName: playerName,
-    clearInterval: -1,
-    eventListner: null,
-    gameInterval: 1000,
     grid: GRID,
     currentPiece: {
       x: 3,
@@ -160,16 +149,18 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     lose: false,
     winner: null,
     score: 0,
-    brokenLines: [], // List of position of broken lines to apply animation
-    counterAnimation: false,
-    game: false,
+    clearInterval: -1,
+    eventListner: null,
+    gameInterval: 1000,
+    brokenLines: [],
     key: 0,
+    game: false,
+    counterAnimation: false,
     endOfGame: false,
     shakeMode: false
   };
 
   const [state, dispatchRoom] = useReducer(reduceRoom, initialState);
-  // Key event Listenner
 
   useEffect(() => {
     if (spectator === true && _.isEmpty(state.listSpectrums)) {
@@ -182,35 +173,24 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
   countRef.current = state.winner;
 
   useEffect(() => {
-    socket.on(
-      eventSocket.START_GAME,
-      (listPlayers, listPieces, optionGames) => {
-        if (spectator === true) {
-          dispatch(actionIsSpectator());
-          // spectator = false;
-        }
-        console.error("START GAME ON", optionGames);
-        listPlayers = listPlayers.filter(value => value !== playerName);
-        dispatchRoom(actionStartGame(listPlayers, listPieces, optionGames));
-        setTimeout(() => {
-          console.log("STATE.ENDOFGAME before launchGame", state.endOfGame);
-          console.log("WINNER IS BEFORE LAUNCH: ", countRef);
-
-          if (countRef.current !== playerName) {
-            console.log("je launch");
-            launchGame(dispatchRoom, optionGames.gameInterval);
-          }
-        }, 4000);
+    socket.on(eventSocket.START_GAME, (listPlayers, listPieces, optionGames) => {
+      if (spectator === true) {
+        dispatch(actionIsSpectator());
       }
-    );
+      listPlayers = listPlayers.filter(value => value !== playerName);
+      dispatchRoom(actionStartGame(listPlayers, listPieces, optionGames));
+      setTimeout(() => {
+        if (countRef.current !== playerName) {
+          launchGame(dispatchRoom, optionGames.gameInterval);
+        }
+      }, 4000);
+    });
 
     socket.on(eventSocket.NEXT_PIECE, newPiece => {
-      console.log("Je recois next_piece du server : ", newPiece);
       dispatchRoom(actionNextPiece(newPiece));
     });
 
     socket.on(eventSocket.LINE_BREAK, nbrLines => {
-      console.log("ON EVENT BREAK", spectator);
       if (spectator !== true) {
         dispatchRoom(actionIndestructiblesLines(nbrLines));
       }
@@ -221,16 +201,13 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     });
 
     socket.on(eventSocket.WINNER_IS, winner => {
-      console.log("WINNER IS ROOM", winner);
       dispatchRoom(actionWinnerIs(winner));
       dispatchRoom(actionClearIntervalKeyEvent());
-      // dispatch room
     });
     socket.on(eventSocket.DISCONNECT, () => {
-      dispatch(actionError("Server down on on"));
+      dispatch(actionError(ERROR.SERVER_DOWN));
     });
     return () => {
-      console.error("UNMOUNT COMPONENT");
       cleanListennerEndGame(state.eventListner, state.clearInterval);
       socket.removeListener(eventSocket.START_GAME);
       socket.removeListener(eventSocket.NEXT_PIECE);
@@ -238,16 +215,8 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
       socket.removeListener(eventSocket.SEND_SPECTRUMS);
       socket.removeListener(eventSocket.WINNER_IS);
     };
-  }, [
-    socket,
-    playerName,
-    spectator,
-    dispatch,
-    state.eventListner,
-    state.clearInterval
-  ]);
+  }, [socket, playerName, spectator, dispatch, state.eventListner, state.clearInterval, state.endOfGame]);
 
-  const isLog = true; //A definir dans les classes + state
   const counter =
     state.counterAnimation === false ? null : (
       <div className={"countdown"}>
@@ -267,9 +236,6 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     );
 
   let winner = null;
-  console.log("STATE END OF GAME", state.endOfGame);
-  console.log("STATE LOSE", state.lose);
-  console.log("STATE", state);
   if (!spectator && state.endOfGame && !state.lose) {
     winner = (
       <div className="winner">
@@ -286,29 +252,22 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     );
   }
 
-  if (isLog) {
-    return (
-      <div className="app">
-        <div className="app-board">
-          {counter}
-          {winner}
-          <Button color="primary" onClick={() => leaveRoom(state, dispatch)}>
-            Leave Room
-          </Button>
-          <AppBoardInfo state={state} />
-          <Game state={state} />
-          {state.score}
-          <h1 style={{ color: "pink" }}>{JSON.stringify(state.lose)}</h1>
-        </div>
-
-        <Spectrum
-          listSpectrums={state.listSpectrums}
-          className="app-spectrum"
-        />
-        {/* <input type="text" onKeyPress={handleKey} /> */}
+  return (
+    <div className="app">
+      <div className="app-board">
+        {counter}
+        {winner}
+        <Button color="primary" onClick={() => leaveRoom(state, dispatch)}>
+          Leave Room
+        </Button>
+        <AppBoardInfo state={state} />
+        <Game state={state} />
+        {state.score}
+        <h1 style={{ color: "pink" }}>{JSON.stringify(state.lose)}</h1>
       </div>
-    );
-  } else return <div />;
+      <Spectrum listSpectrums={state.listSpectrums} className="app-spectrum" />
+    </div>
+  );
 };
 
 const Room = connect(mapStateToProps)(RoomNoConnect);

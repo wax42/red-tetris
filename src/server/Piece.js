@@ -170,18 +170,14 @@ const listPieces = [
   ]
 ];
 
-//  mettre 4 pieces de chaque et centrer pareil pour le carre
-
 class Piece {
   constructor(invisibility) {
-    console.log("Constructor piece", invisibility)
     this.grid = this.generateRandomPiece(invisibility);
   }
 
   generateRandomPiece(invisibility) {
     let piece = listPieces[Math.floor(Math.random() * listPieces.length)]
     if (invisibility === true) {
-      console.log("Genere de l'invisibility")
       piece = piece.map(line => {
         return line.map(value => {
           if (value !== '.') {
@@ -192,12 +188,8 @@ class Piece {
         })
       })
     }
-    console.log("Generate piece", piece);
     return piece
   }
 }
 
-module.exports = {
-  Piece,
-  listPieces
-};
+module.exports = Piece;

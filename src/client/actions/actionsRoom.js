@@ -13,7 +13,7 @@ import {
   SEND_INTERVAL_KEY_EVENT,
   WINNER_IS,
   CLEAR_INTERVAL_KEY_EVENT
-} from "./actionTypes";
+} from "./actionsTypes";
 
 export const actionPieceDown = () => {
   return {

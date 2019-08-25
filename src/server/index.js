@@ -1,5 +1,6 @@
 const eventSocket = require("../common/eventSocket");
 const RoomsManager = require("./RoomsManager");
+const ERROR = require("../common/error");
 
 
 
@@ -7,12 +8,7 @@ const handleClient = client => {
   console.log(eventSocket.CONNECT, client.id);
   client.spectator = false;
 
-  // setTimeout(() => {
-  //   roomsManager.sendListRoomsPlayers(io);
-  // }, 1000); // le temps que le components soit creer
-
   client.on(eventSocket.LIST_ROOMS_PLAYERS, callback => {
-    console.log("On LIST ROOOM PLAYER");
     callback(roomsManager.listRoomsName, roomsManager.listPlayersName);
   });
 
@@ -26,7 +22,7 @@ const handleClient = client => {
         io
       ) === false
     ) {
-      console.error("Error Player with the same name in the room: " + roomName);
+      console.error(ERROR.DUPLICATE_PLAYER_IN_ROOM + roomName);
     }
   });
 
@@ -35,7 +31,7 @@ const handleClient = client => {
       roomsManager.joinRoom(roomName, playerName, client, clientCallback, io) ===
       false
     ) {
-      console.error("Error Player with the same name in the room: " + roomName);
+      console.error(ERROR.DUPLICATE_PLAYER_IN_ROOM + roomName);
     }
   });
 
@@ -43,7 +39,6 @@ const handleClient = client => {
     let roomName = client.roomName;
     if (client.playerName !== undefined) {
       roomsManager.deletePlayer(client, io);
-      console.log("Leave rooom", roomsManager.listPlayersName, client.playerName);
       client.playerName = undefined;
       if (
         client.spectator === false && roomsManager.rooms[roomName] !== undefined &&
@@ -85,7 +80,7 @@ const handleClient = client => {
         }
       }
     }
-    console.log("disconnect", client.id, client.playerName);
+    console.log("disconnect", client.id);
   });
 };
 

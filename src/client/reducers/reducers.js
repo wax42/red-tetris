@@ -1,5 +1,3 @@
-// import io from "socket.io-client";
-
 import {
   CREATE_ROOM,
   JOIN_ROOM,
@@ -8,7 +6,7 @@ import {
   IS_SPECTATOR,
   CLEAN_ROOM_NAME,
   ERROR
-} from "../actions/actionTypes";
+} from "../actions/actionsTypes";
 
 const io = require("socket.io-client")("http://localhost:3001", {
   transports: ["websocket", "polling"]
@@ -26,12 +24,8 @@ const initialState = {
 
 const reducers = (state = initialState, action) => {
 
-  console.log("reducers redux", action)
   if (state.socket === null) {
-    console.log("Connection lost")
     state.socket = io;
-    console.log(io)
-
   }
   if (action.eventSocket !== undefined) {
     return state;
@@ -84,7 +78,6 @@ const reducers = (state = initialState, action) => {
     default:
       return state;
   }
-  // return state;
 };
 
 export default reducers;

@@ -1,9 +1,13 @@
-import { placePiece } from "./gridChange";
+import {
+  placePiece
+} from "./gridChange";
 import _ from "lodash";
 
-import { GRID } from "../common/common";
+import {
+  GRID
+} from "../../../common/common";
 
-import eventSocket from "../common/eventSocket";
+import eventSocket from "../../../common/eventSocket";
 
 import {
   actionPieceDown,
@@ -13,7 +17,7 @@ import {
   actionPieceSpace,
   actionSwitchPiece,
   actionSendIntervalKeyEvent
-} from "./actions/actionRoom";
+} from "../../actions/actionsRoom";
 
 const KEY_SPACE = 32;
 const KEY_DOWN = 40;
@@ -45,7 +49,6 @@ export const handleKey = dispatchRoom => event => {
       dispatchRoom(actionPieceRotate());
       break;
     case KEY_S:
-      console.log("ici");
       event.preventDefault();
       dispatchRoom(actionSwitchPiece());
       break;
@@ -55,7 +58,6 @@ export const handleKey = dispatchRoom => event => {
 };
 
 export const launchGame = (dispatchRoom, gameInterval) => {
-  console.error("Launch game", gameInterval);
   const eventListner = handleKey(dispatchRoom);
   window.addEventListener("keydown", eventListner, false);
   let clearInterval = setInterval(() => {
@@ -108,9 +110,7 @@ export const initializeListSpectrums = (state, listPlayers) => {
 
 export const startGame = (state, listPlayers, listPieces, optionGames) => {
   state = initializeListSpectrums(state, listPlayers);
-
   state.shakeMode = optionGames.shakeMode;
-
   state.lose = false;
   state.currentPiece.piece = listPieces.shift();
   state.currentPiece.x = 3;
@@ -122,25 +122,19 @@ export const startGame = (state, listPlayers, listPieces, optionGames) => {
 };
 
 export const nextPiece = state => {
-  console.log("JE VAIS EMIT POUR NEXT PIECE");
   state.socket.emit(eventSocket.NEXT_PIECE, state.grid);
-
   state.currentPiece.piece = state.listPieces.shift();
   state.currentPiece.x = 3;
   state.currentPiece.y = 0;
-
   state.grid = placePiece(state.grid, state.currentPiece);
-
   return state;
 };
 
 export const lineBreak = state => {
   state.brokenLines = [];
-
   let nbrLine = 0;
   state.grid = state.grid.filter((line, index) => {
     if (_.difference(line, ["0", ".", "8"]).length === 10) {
-      console.log("LINEBREAK++");
       state.brokenLines.push(index);
       nbrLine++;
       return false;

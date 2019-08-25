@@ -5,7 +5,6 @@ class Game {
       invisibility: optionsGames.invisibilityMode,
       spectrum: optionsGames.spectrumMode
     };
-    console.log("Construcor game ", this.optionsGames)
     this.intervallDownPiece = 10;
   }
 

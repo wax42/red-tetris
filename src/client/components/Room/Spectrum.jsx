@@ -10,19 +10,11 @@ const Spectrum = ({ listSpectrums }) => {
         <h1>
           {key} {listSpectrums[key]["score"]}
         </h1>
-        <GameGrid
-          grid={_.slice(listSpectrums[key]["grid"], 4)} //T Check with the team
-        />
+        <GameGrid grid={_.slice(listSpectrums[key]["grid"], 4)} />
       </div>
     );
   }
-  return (
-    <div className="spectrum">
-      {listSpectrum} {/* {listSpect.map(spectrum => ( */}
-      {/* <GameGrid grid={spectrum.grid} /> */}
-      {/* ))} */}
-    </div>
-  );
+  return <div className="spectrum">{listSpectrum}</div>;
 };
 
 export default Spectrum;

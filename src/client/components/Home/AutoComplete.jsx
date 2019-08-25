@@ -40,10 +40,7 @@ const renderSuggestion = (suggestion, { query, isHighlighted }) => {
     <MenuItem selected={isHighlighted} component="div">
       <div>
         {parts.map(part => (
-          <span
-            key={part.text}
-            style={{ fontWeight: part.highlight ? 500 : 400 }}
-          >
+          <span key={part.text} style={{ fontWeight: part.highlight ? 500 : 400 }}>
             {part.text}
           </span>
         ))}
@@ -60,9 +57,7 @@ const getSuggestions = value => {
   return inputLength === 0
     ? []
     : suggestions.filter(suggestion => {
-        const keep =
-          count < 5 &&
-          suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
+        const keep = count < 5 && suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
 
         if (keep) {
           count += 1;
@@ -106,16 +101,10 @@ const useStyles = makeStyles(theme => ({
 
 export const AutoComplete = ({ roomName, setRoomName, listRooms }) => {
   const classes = useStyles();
-  //   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [state, setState] = React.useState({
-    single: ""
-  });
 
   suggestions = _.map(listRooms, value => {
     return { label: value };
   });
-
-  console.log("M BITE", suggestions);
 
   const [stateSuggestions, setSuggestions] = React.useState([]);
 

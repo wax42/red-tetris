@@ -1,22 +1,19 @@
-// import logo from './logo.svg';
 import React, { useEffect, useState } from "react";
 import { Provider, connect } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
-import reducers from "./reducers/reducers";
-import socketMiddleware from "./middlewares/socketMiddleware";
-import Home from "./components/Home";
-import Room from "./components/Room";
+import reducers from "../reducers/reducers";
+import socketMiddleware from "../middlewares/socketMiddleware";
+import Home from "../components/Home/Home";
+import Room from "../components/Room/Room";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { actionJoinRoom, actionListRoomPlayer } from "./actions/actions";
-import eventSocket from "../common/eventSocket";
+import { actionJoinRoom, actionListRoomPlayer } from "../actions/actionsRedux";
+import eventSocket from "../../common/eventSocket";
+import ERROR from "../../common/error";
 
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 
-const store = createStore(
-  reducers,
-  composeWithDevTools(applyMiddleware(socketMiddleware()))
-);
+const store = createStore(reducers, composeWithDevTools(applyMiddleware(socketMiddleware())));
 
 const mapStateToProps = _state => {
   const state = {
@@ -33,30 +30,26 @@ export const routeHashError = (hash, state, actionJoinRoom) => {
   let result = hash.split("[");
 
   if (/^#.+\[{1}[^\[\]]+\]{1}$/.test(hash) === false || result.length !== 2) {
-    return "Hash invalid";
+    return ERROR.HASH_INVALID;
   }
   let room_name = result[0].slice(1);
   let player_name = result[1].slice(0, -1);
   if (/^[A-z0-9]{3,}$/.test(room_name) === false) {
-    return "Room Name incorrect";
+    return ERROR.ROOMNAME_INVALID;
   }
   if (/^[A-z0-9]{3,}$/.test(player_name) === false) {
-    return "Player Name incorrect";
+    return ERROR.PLAYERNAME_INVALID;
   }
-  // Home error
   if (state.listRooms.includes(room_name) === false) {
-    return "Room doesn't exist";
+    return ERROR.ROOMNAME_INEXISTANT;
   }
-  if (
-    state.listPlayers.includes(player_name) === true &&
-    player_name !== state.playerName
-  ) {
-    return "Player name already exists";
+  if (state.listPlayers.includes(player_name) === true && player_name !== state.playerName) {
+    return ERROR.PLAYERNAME_INEXISTANT;
   }
   if (state.playerName !== player_name) {
     actionJoinRoom(room_name, player_name);
   }
-  return "";
+  return null;
 };
 
 export const Routing = ({ state, actionJoinRoom, actionListRoomPlayer }) => {
@@ -65,19 +58,13 @@ export const Routing = ({ state, actionJoinRoom, actionListRoomPlayer }) => {
   useEffect(() => {
     setLoading(true);
     if (state.socket) {
-      state.socket.emit(
-        eventSocket.LIST_ROOMS_PLAYERS,
-        (listRooms, listPlayers) => {
-          setLoading(false);
-          actionListRoomPlayer(listRooms, listPlayers);
-        }
-      );
-      state.socket.on(
-        eventSocket.LIST_ROOMS_PLAYERS,
-        (listRooms, listPlayers) => {
-          actionListRoomPlayer(listRooms, listPlayers);
-        }
-      );
+      state.socket.emit(eventSocket.LIST_ROOMS_PLAYERS, (listRooms, listPlayers) => {
+        setLoading(false);
+        actionListRoomPlayer(listRooms, listPlayers);
+      });
+      state.socket.on(eventSocket.LIST_ROOMS_PLAYERS, (listRooms, listPlayers) => {
+        actionListRoomPlayer(listRooms, listPlayers);
+      });
     }
     return () => {
       state.socket.removeListener(eventSocket.LIST_ROOMS_PLAYERS);
@@ -86,22 +73,15 @@ export const Routing = ({ state, actionJoinRoom, actionListRoomPlayer }) => {
   window.location.path = "/";
   let hash = window.location.hash;
 
-  if (state.error !== null) {
-    return <Home error={state.error} />;
-  }
+  if (state.error !== null) return <Home error={state.error} />;
 
-  if (loading === true) {
-    return <Home error="SPinnner loading" />;
-  }
+  if (loading === true) return <Home error={ERROR.WAITING_CONNECTION} />;
 
-  if (hash === "") {
-    return <Home />;
-  }
+  if (hash === "") return <Home />;
+
   let error = routeHashError(hash, state, actionJoinRoom);
+  if (error !== null) return <Home error={error} />;
 
-  if (error !== "") {
-    return <Home error={error} />;
-  }
   return <Room />;
 };
 
@@ -137,8 +117,4 @@ const Root = () => {
   );
 };
 
-/* if (process.env.NODE_ENV === 'test'){
-  export default Root
-
-} else { */
 export default Root;
