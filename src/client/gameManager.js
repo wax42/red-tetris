@@ -1,11 +1,7 @@
-import {
-  placePiece
-} from "./gridChange";
+import { placePiece } from "./gridChange";
 import _ from "lodash";
 
-import {
-  GRID
-} from "../common/common";
+import { GRID } from "../common/common";
 
 import eventSocket from "../common/eventSocket";
 
@@ -60,15 +56,12 @@ export const handleKey = dispatchRoom => event => {
 
 export const launchGame = (dispatchRoom, gameInterval) => {
   console.error("Launch game", gameInterval);
-  setTimeout(() => {
-    const eventListner = handleKey(dispatchRoom);
-    window.addEventListener("keydown", eventListner, false);
-    let clearInterval = setInterval(() => {
-      dispatchRoom(actionPieceDown());
-    }, gameInterval);
-    dispatchRoom(actionSendIntervalKeyEvent(clearInterval, eventListner));
-    console.log("counter END");
-  }, 4000);
+  const eventListner = handleKey(dispatchRoom);
+  window.addEventListener("keydown", eventListner, false);
+  let clearInterval = setInterval(() => {
+    dispatchRoom(actionPieceDown());
+  }, gameInterval);
+  dispatchRoom(actionSendIntervalKeyEvent(clearInterval, eventListner));
 };
 
 export const cleanListennerEndGame = (eventListner, cleanInterval) => {

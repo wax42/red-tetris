@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useRef } from "react";
 import Game from "./Game";
 import AppBoardInfo from "./AppBoardInfo";
 import Spectrum from "./Spectrum";
@@ -45,7 +45,11 @@ import {
   actionClearIntervalKeyEvent
 } from "../actions/actionRoom";
 
-import { actionCleanRoomName, actionIsSpectator, actionError } from "../actions/actions";
+import {
+  actionCleanRoomName,
+  actionIsSpectator,
+  actionError
+} from "../actions/actions";
 import Button from "@material-ui/core/Button";
 import _ from "lodash";
 
@@ -76,7 +80,7 @@ export const reduceRoom = (state, action) => {
     case START_GAME:
       console.log("START GAME", action);
       return startGame(
-        { ...state, game: true, endOfGame: false },
+        { ...state, game: true, endOfGame: false, winner: null },
         action.listPlayers,
         action.listPieces,
         action.optionGames
@@ -115,9 +119,11 @@ export const reduceRoom = (state, action) => {
       };
 
     case WINNER_IS:
+      console.log("WIIIINER REDUCER", action.winner);
       return {
         ...state,
-        winner: action.winner
+        winner: action.winner,
+        counterAnimation: false
       };
     case CLEAR_INTERVAL_KEY_EVENT:
       console.error("clear interval reducer room");
@@ -171,18 +177,31 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
       });
     }
   });
+  const countRef = useRef(state.winner);
+  countRef.current = state.winner;
 
   useEffect(() => {
-    socket.on(eventSocket.START_GAME, (listPlayers, listPieces, optionGames) => {
-      if (spectator === true) {
-        dispatch(actionIsSpectator());
-        // spectator = false;
+    socket.on(
+      eventSocket.START_GAME,
+      (listPlayers, listPieces, optionGames) => {
+        if (spectator === true) {
+          dispatch(actionIsSpectator());
+          // spectator = false;
+        }
+        console.error("START GAME ON", optionGames);
+        listPlayers = listPlayers.filter(value => value !== playerName);
+        dispatchRoom(actionStartGame(listPlayers, listPieces, optionGames));
+        setTimeout(() => {
+          console.log("STATE.ENDOFGAME before launchGame", state.endOfGame);
+          console.log("WINNER IS BEFORE LAUNCH: ", countRef);
+
+          if (countRef.current !== playerName) {
+            console.log("je launch");
+            launchGame(dispatchRoom, optionGames.gameInterval);
+          }
+        }, 4000);
       }
-      console.error("START GAME ON", optionGames);
-      listPlayers = listPlayers.filter(value => value !== playerName);
-      dispatchRoom(actionStartGame(listPlayers, listPieces, optionGames));
-      launchGame(dispatchRoom, optionGames.gameInterval);
-    });
+    );
 
     socket.on(eventSocket.NEXT_PIECE, newPiece => {
       console.log("Je recois next_piece du server : ", newPiece);
@@ -201,7 +220,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     });
 
     socket.on(eventSocket.WINNER_IS, winner => {
-      console.log("WINNER IS");
+      console.log("WINNER IS ROOM", winner);
       dispatchRoom(actionWinnerIs(winner));
       dispatchRoom(actionClearIntervalKeyEvent());
       // dispatch room
@@ -218,7 +237,14 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
       socket.removeListener(eventSocket.SEND_SPECTRUMS);
       socket.removeListener(eventSocket.WINNER_IS);
     };
-  }, [socket, playerName, spectator, dispatch, state.eventListner, state.clearInterval]);
+  }, [
+    socket,
+    playerName,
+    spectator,
+    dispatch,
+    state.eventListner,
+    state.clearInterval
+  ]);
 
   const isLog = true; //A definir dans les classes + state
   const counter =
@@ -242,6 +268,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
   let winner = null;
   console.log("STATE END OF GAME", state.endOfGame);
   console.log("STATE LOSE", state.lose);
+  console.log("STATE", state);
   if (!spectator && state.endOfGame && !state.lose) {
     winner = (
       <div className="winner">
