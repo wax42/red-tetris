@@ -163,6 +163,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     brokenLines: [], // List of position of broken lines to apply animation
     counterAnimation: false,
     game: false,
+    key: 0,
     endOfGame: false,
     shakeMode: false
   };

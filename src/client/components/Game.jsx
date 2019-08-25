@@ -4,11 +4,12 @@ import { FaStar } from "react-icons/fa";
 
 export const GameGrid = props => {
   const grid = props.grid;
+  console.log("BROKENLINE", props.brokenLines);
   let brokenLines = _.map(props.brokenLines, el => {
     return el - 4;
   });
   const bubbles = new Array(59).fill(" ");
-  // console.log("BROKENLINE GAME GRID", props.brokenLines);
+
   let gameGridClass = "game-grid";
   if (!props.endOfGame && props.shakeMode) {
     gameGridClass += " shake-mode";
@@ -18,9 +19,11 @@ export const GameGrid = props => {
       {grid.map((line, index) => {
         let brokenContainer = null;
         if (props.brokenLines !== undefined && props.brokenLines.length !== 0) {
+          // console.log("JE VAIS TRIGGER BREAK ANIMATION");
           if (_.includes(brokenLines, index)) {
+            // console.log("JE VAIS TRIGGER BREAK ANIMATION 2222");
             brokenContainer = (
-              <div className="broken-line">
+              <div className="broken-line" key={props.key + index}>
                 {_.times(59, i => (
                   <FaStar className="broken-line-box" key={i} />
                 ))}
@@ -47,7 +50,9 @@ export const GamePieces = props => {
   return (
     <div className="game-pieces">
       {pieces.map((piece, index) => {
-        return <GameGrid key={index} grid={piece} />;
+        return (
+          <GameGrid key={index} grid={piece} brokenLines={props.brokenLines} />
+        );
       })}
     </div>
   );
@@ -64,8 +69,9 @@ const Game = props => {
         brokenLines={state.brokenLines}
         shakeMode={state.shakeMode}
         endOfGame={state.endOfGame}
+        key={state.key}
       />
-      <GamePieces pieces={listPieces} />
+      <GamePieces pieces={listPieces} brokenLines={[]} />
     </div>
   );
 };
