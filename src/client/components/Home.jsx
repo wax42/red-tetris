@@ -3,6 +3,7 @@ import { FaHome, FaIdBadge } from "react-icons/fa";
 import { connect } from "react-redux";
 import { actionCreateRoom } from "../actions/actions";
 import { Button, TextField } from "@material-ui/core";
+import { AutoComplete } from "./AutoComplete";
 
 export const buttonCreateRoom = (
   action,
@@ -26,7 +27,19 @@ export const buttonCreateRoom = (
   }
 };
 
-export const HomeCpt = ({ theme, error, actionCreateRoom }) => {
+const mapStateToProps = _state => {
+  const listPlayers = _state.listPlayers;
+  const listRooms = _state.listRooms;
+  return { listPlayers, listRooms };
+};
+
+export const HomeCpt = ({
+  listPlayers,
+  listRooms,
+  theme,
+  error,
+  actionCreateRoom
+}) => {
   const [stateError, setStateError] = useState("");
   const [playerName, setPlayerName] = useState("");
   const [roomName, setRoomName] = useState("");
@@ -40,7 +53,7 @@ export const HomeCpt = ({ theme, error, actionCreateRoom }) => {
               <FaIdBadge className="home-icon" />
               <div>Room name</div>
             </div>
-            <TextField
+            {/* <TextField
               color="red"
               label="Room"
               // value={roomName}
@@ -52,9 +65,12 @@ export const HomeCpt = ({ theme, error, actionCreateRoom }) => {
                 style: {
                   fontFamily: "nunito"
                   /* color: "#f9f6e2",
-                  borderColor: "#f9f6e2" */
-                }
-              }}
+                  borderColor: "#f9f6e2" */}
+
+            <AutoComplete
+              listRooms={listRooms}
+              roomName={roomName}
+              setRoomName={setRoomName}
             />
           </div>
           <div className="home-field">
@@ -111,7 +127,7 @@ export const HomeCpt = ({ theme, error, actionCreateRoom }) => {
 };
 
 const Home = connect(
-  null,
+  mapStateToProps,
   { actionCreateRoom }
 )(HomeCpt);
 
