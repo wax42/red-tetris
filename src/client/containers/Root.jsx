@@ -34,10 +34,10 @@ export const routeHashError = (hash, state, actionJoinRoom) => {
   }
   let room_name = result[0].slice(1);
   let player_name = result[1].slice(0, -1);
-  if (/^[A-z0-9]{3,}$/.test(room_name) === false) {
+  if (/^[A-z0-9]{3,12}$/.test(room_name) === false) {
     return ERROR.ROOMNAME_INVALID;
   }
-  if (/^[A-z0-9]{3,}$/.test(player_name) === false) {
+  if (/^[A-z0-9]{3,12}$/.test(player_name) === false) {
     return ERROR.PLAYERNAME_INVALID;
   }
   if (state.listRooms.includes(room_name) === false) {

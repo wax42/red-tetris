@@ -13,7 +13,8 @@ const eventSocket = {
   WINNER_IS: "winner_is",
   LOSE: "lose",
   LEAVE_ROOM: "leave_room",
-  LIST_ROOMS_PLAYERS: "list_rooms_players"
+  LIST_ROOMS_PLAYERS: "list_rooms_players",
+  GAME_FINISH: "game_finish"
 };
 
 module.exports = eventSocket;

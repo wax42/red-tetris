@@ -1,4 +1,5 @@
 import {
+  GAME_FINISH,
   PIECE_DOWN,
   PIECE_LEFT,
   PIECE_RIGHT,
@@ -14,6 +15,14 @@ import {
   WINNER_IS,
   CLEAR_INTERVAL_KEY_EVENT
 } from "./actionsTypes";
+
+
+export const actionGameFinish = () => {
+  return {
+    type: GAME_FINISH
+  };
+};
+
 
 export const actionPieceDown = () => {
   return {

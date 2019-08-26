@@ -5,6 +5,7 @@ import Spectrum from "./Spectrum";
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
 import {
+  GAME_FINISH,
   PIECE_DOWN,
   PIECE_LEFT,
   PIECE_RIGHT,
@@ -20,12 +21,7 @@ import {
   WINNER_IS,
   CLEAR_INTERVAL_KEY_EVENT
 } from "../../actions/actionsTypes";
-import {
-  launchGame,
-  startGame,
-  cleanListennerEndGame,
-  winnerIs
-} from "./gameManager";
+import { launchGame, startGame, cleanListennerEndGame, winnerIs } from "./gameManager";
 
 import {
   rotatePiece,
@@ -41,6 +37,7 @@ import { GRID, EMPTY_PIECE } from "../../../common/common";
 import eventSocket from "../../../common/eventSocket";
 
 import {
+  actionGameFinish,
   actionNextPiece,
   actionIndestructiblesLines,
   actionSpectrum,
@@ -52,11 +49,7 @@ import {
 
 import ERROR from "../../../common/error";
 
-import {
-  actionCleanRoomName,
-  actionIsSpectator,
-  actionError
-} from "../../actions/actionsRedux";
+import { actionCleanRoomName, actionIsSpectator, actionError } from "../../actions/actionsRedux";
 import Button from "@material-ui/core/Button";
 import _ from "lodash";
 
@@ -78,7 +71,10 @@ const leaveRoom = (state, dispatch) => {
 export const reduceRoom = (state, action) => {
   // if (state.socket.disconnected === true) {
   //   console.error("Warning connection lost");
+
   // }
+  console.log("Action", action);
+  if (state.listPieces.length === 3 && action.type !== NEXT_PIECE) return state;
 
   switch (action.type) {
     case START_GAME:
@@ -112,7 +108,8 @@ export const reduceRoom = (state, action) => {
       return newState;
     case SPECTRUMS_SPECTATOR:
       return { ...state, listSpectrums: action.listSpectrums };
-
+    case GAME_FINISH:
+      return { ...state, game: false };
     case SEND_INTERVAL_KEY_EVENT:
       return {
         ...state,
@@ -123,11 +120,6 @@ export const reduceRoom = (state, action) => {
 
     case WINNER_IS:
       return winnerIs({ ...state, counterAnimation: false }, action.winner);
-    // return {
-    //   ...state,
-    //   winner: action.winner,
-
-    // };
     case CLEAR_INTERVAL_KEY_EVENT:
       cleanListennerEndGame(state.eventListner, state.clearInterval);
       return { ...state, clearInterval: -1, game: false, endOfGame: true };
@@ -153,7 +145,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
       y: 0,
       piece: EMPTY_PIECE
     },
-    listPieces: [EMPTY_PIECE, EMPTY_PIECE, EMPTY_PIECE],
+    listPieces: [EMPTY_PIECE, EMPTY_PIECE, EMPTY_PIECE, EMPTY_PIECE],
     listSpectrums: {},
     admin: false,
     lose: false,
@@ -173,39 +165,37 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
 
   const [state, dispatchRoom] = useReducer(reduceRoom, initialState);
 
-  useEffect(() => {
-    if (spectator === true && _.isEmpty(state.listSpectrums)) {
-      socket.emit(eventSocket.SEND_SPECTRUMS_SPECTATOR, listSpectrums => {
-        dispatchRoom(actionSpectrumsSpectator(listSpectrums));
-      });
-    }
-  });
   const countRef = useRef(state.winner);
   countRef.current = state.winner;
 
   useEffect(() => {
-    socket.on(
-      eventSocket.START_GAME,
-      (listPlayers, listPieces, optionGames) => {
-        if (spectator === true) {
-          dispatch(actionIsSpectator());
-        }
-        listPlayers = listPlayers.filter(value => value !== playerName);
-        dispatchRoom(actionStartGame(listPlayers, listPieces, optionGames));
-        setTimeout(() => {
-          if (countRef.current !== playerName) {
-            launchGame(dispatchRoom, optionGames.gameInterval);
-          }
-        }, 4000);
+    socket.on(eventSocket.START_GAME, (listPlayers, listPieces, optionGames) => {
+      if (spectator === true) {
+        dispatch(actionIsSpectator());
       }
-    );
+      listPlayers = listPlayers.filter(value => value !== playerName);
+      dispatchRoom(actionStartGame(listPlayers, listPieces, optionGames));
+      setTimeout(() => {
+        if (countRef.current !== playerName) {
+          launchGame(dispatchRoom, optionGames.gameInterval);
+        }
+      }, 4000);
+    });
+
+    socket.on(eventSocket.SEND_SPECTRUMS_SPECTATOR, listSpectrums => {
+      dispatchRoom(actionSpectrumsSpectator(listSpectrums));
+    });
 
     socket.on(eventSocket.NEXT_PIECE, newPiece => {
       dispatchRoom(actionNextPiece(newPiece));
     });
 
+    socket.on(eventSocket.GAME_FINISH, () => {
+      dispatchRoom(actionGameFinish());
+    });
+
     socket.on(eventSocket.LINE_BREAK, nbrLines => {
-      if (spectator !== true) {
+      if (spectator !== true && state.lose === false) {
         dispatchRoom(actionIndestructiblesLines(nbrLines));
       }
     });
@@ -228,16 +218,10 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
       socket.removeListener(eventSocket.LINE_BREAK);
       socket.removeListener(eventSocket.SEND_SPECTRUMS);
       socket.removeListener(eventSocket.WINNER_IS);
+      socket.removeListener(eventSocket.GAME_FINISH);
+      socket.removeListener(eventSocket.SEND_SPECTRUMS_SPECTATOR);
     };
-  }, [
-    socket,
-    playerName,
-    spectator,
-    dispatch,
-    state.eventListner,
-    state.clearInterval,
-    state.endOfGame
-  ]);
+  }, [socket, playerName, spectator, dispatch, state.eventListner, state.clearInterval, state.endOfGame, state.lose]);
 
   const counter =
     state.counterAnimation === false ? null : (
@@ -282,7 +266,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
         <Button color="primary" onClick={() => leaveRoom(state, dispatch)}>
           Leave Room
         </Button>
-        <AppBoardInfo state={state} />
+        <AppBoardInfo state={state} spectator={spectator} />
         <Game state={state} />
         {state.score}
         <h1 style={{ color: "pink" }}>{JSON.stringify(state.lose)}</h1>

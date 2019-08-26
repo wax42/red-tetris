@@ -1,16 +1,7 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import eventSocket from "../../../common/eventSocket";
-import {
-  Button,
-  Slider,
-  Checkbox,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow
-} from "@material-ui/core";
+import { Button, Slider, Checkbox, Table, TableBody, TableCell, TableHead, TableRow } from "@material-ui/core";
 import _ from "lodash";
 
 export const buttonPlay = (state, optionGames) => {
@@ -60,11 +51,7 @@ export const Play = ({ state, admin }) => {
           value={shakeMode}
         />
         With Spectrum mode:
-        <Checkbox
-          checked={spectrumMode}
-          onChange={() => setSpectrumMode(!spectrumMode)}
-          value={spectrumMode}
-        />
+        <Checkbox checked={spectrumMode} onChange={() => setSpectrumMode(!spectrumMode)} value={spectrumMode} />
         <Button
           disabled={state.game}
           onClick={() =>
@@ -84,39 +71,57 @@ export const Play = ({ state, admin }) => {
   return <span />;
 };
 
-const ScoreTable = ({ state }) => {
+const StyleSpectator = ({ spectator }) => {
+  console.log(spectator);
+  if (spectator === true) {
+    return <div>S</div>;
+  }
+  return null;
+};
+
+const ScoreTable = ({ state, spectator }) => {
+  const [sort, setSort] = useState(["score"]);
   let listScores = [];
 
-  for (let key in state.listSpectrums) {
-    listScores.push({
-      name: state.listSpectrums[key].playerName,
-      score: state.listSpectrums[key].score,
-      nb_win: state.listSpectrums[key].nb_win
-    });
+  if (_.isEmpty(state.listSpectrums) === false) {
+    for (let key in state.listSpectrums) {
+      listScores.push({
+        name: state.listSpectrums[key].playerName,
+        score: state.listSpectrums[key].score,
+        nb_win: state.listSpectrums[key].nb_win,
+        spectator: state.listSpectrums[key].spectator
+      });
+    }
   }
+
   listScores.push({
     name: state.playerName,
     score: state.score,
-    nb_win: state.nb_win
+    nb_win: state.nb_win,
+    spectator: spectator
   });
 
-  listScores = _.sortBy(listScores, ["score"]);
-
-  listScores = listScores.map((value, index) => ({
-    ...value,
-    rank: index + 1
-  }));
-
-  console.log("Table", listScores, state.listSpectrums);
+  listScores = _.sortBy(listScores, sort);
+  if (sort !== ["name"]) {
+    listScores = _.reverse(listScores);
+  }
+  console.log("appboard", JSON.stringify(listScores));
+  console.log("spectre", JSON.stringify(state.listSpectrums));
 
   return (
     <Table>
       <TableHead>
         <TableRow>
-          <TableCell>Name</TableCell>
-          <TableCell align="right">Score</TableCell>
-          <TableCell align="right">Rank</TableCell>
-          <TableCell align="right">Number of Win</TableCell>
+          <TableCell onClick={() => setSort(["name"])}> Name </TableCell>
+          <TableCell align="right" onClick={() => setSort(["score"])}>
+            Score
+          </TableCell>
+          <TableCell align="right" onClick={() => setSort(["nb_win"])}>
+            Number of Win
+          </TableCell>
+          <TableCell align="right" onClick={() => setSort(["spectator"])}>
+            Spectator
+          </TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -126,8 +131,10 @@ const ScoreTable = ({ state }) => {
               {row.name}
             </TableCell>
             <TableCell align="right">{row.score}</TableCell>
-            <TableCell align="right">{row.rank}</TableCell>
             <TableCell align="right">{row.nb_win}</TableCell>
+            <TableCell align="right">
+              <StyleSpectator spectator={row.spectator} />
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -151,12 +158,12 @@ export const Title = () => {
   return <div className="title">Red Tetris</div>;
 };
 
-const AppBoardInfo = ({ state }) => {
+const AppBoardInfo = ({ state, spectator }) => {
   return (
     <div className="app-board-left">
       <Title />
       <Info state={state} />
-      <ScoreTable state={state} />
+      <ScoreTable state={state} spectator={spectator} />
     </div>
   );
 };

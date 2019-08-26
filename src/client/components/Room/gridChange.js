@@ -1,4 +1,8 @@
-import { nextPiece, lineBreak, cleanListennerEndGame } from "./gameManager";
+import {
+  nextPiece,
+  lineBreak,
+  cleanListennerEndGame
+} from "./gameManager";
 import _ from "lodash";
 import eventSocket from "../../../common/eventSocket";
 
@@ -171,7 +175,6 @@ export const downFloorPiece = state => {
 
   if (checkIslose(state) === true) {
     cleanListennerEndGame(state.eventListner, state.clearInterval);
-    state.game = false;
     state.endOfGame = true;
     state.clearInterval = -1;
     state.lose = true;
@@ -216,7 +219,6 @@ export const downPiece = state => {
     if (checkIslose(state) === true) {
       state.lose = true;
       cleanListennerEndGame(state.eventListner, state.clearInterval);
-      state.game = false;
       state.endOfGame = true;
       state.clearInterval = -1;
       state.socket.emit(eventSocket.LOSE, winner => {

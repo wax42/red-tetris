@@ -7,9 +7,9 @@ import { AutoComplete } from "./AutoComplete";
 import ERROR from "../../../common/error";
 
 export const buttonCreateRoom = (action, setStateError, roomName, playerName) => {
-  if (roomName.length < 3) {
+  if (roomName.length < 3 && roomName.length > 12) {
     setStateError(ERROR.ROOMNAME_INVALID_LENGTH);
-  } else if (playerName.length < 3) {
+  } else if (playerName.length < 3 && playerName.length > 12) {
     setStateError(ERROR.PLAYERNAME_INVALID_LENGTH);
   } else if (/^[A-z0-9]+$/.test(roomName) === false) {
     setStateError(ERROR.ROOMNAME_INVALID);

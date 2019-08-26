@@ -1,7 +1,11 @@
-import { placePiece } from "./gridChange";
+import {
+  placePiece
+} from "./gridChange";
 import _ from "lodash";
 
-import { GRID } from "../../../common/common";
+import {
+  GRID
+} from "../../../common/common";
 
 import eventSocket from "../../../common/eventSocket";
 
@@ -80,14 +84,16 @@ export const initializeListSpectrums = (state, listPlayers) => {
         grid: GRID, // maybe deepcopy
         score: 0,
         playerName: player,
-        nb_win: state.listSpectrums[player].nb_win
+        nb_win: state.listSpectrums[player].nb_win,
+        spectator: false
       };
     } else {
       state.listSpectrums[player] = {
         grid: GRID, // maybe deepcopy
         score: 0,
         playerName: player,
-        nb_win: 0
+        nb_win: 0,
+        spectator: false
       };
     }
   }
@@ -139,7 +145,8 @@ export const lineBreak = state => {
   });
   state.score += nbrLine * 10;
   if (nbrLine !== 0) {
-    state.socket.emit(eventSocket.LINE_BREAK, nbrLine);
+    if (nbrLine > 1)
+      state.socket.emit(eventSocket.LINE_BREAK, nbrLine - 1);
     while (nbrLine !== 0) {
       state.grid.unshift(new Array(10).fill("."));
       nbrLine--;

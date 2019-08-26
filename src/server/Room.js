@@ -54,6 +54,7 @@ class Room {
     if (clientSocket.id === this.admin) {
       this.admin = this.players[0].id;
       this.players[0].socket.emit(eventSocket.IS_NEW_ADMIN);
+      console.log("New admin " + this.players[0].name + " in room" + this.name);
     }
     return true;
   }

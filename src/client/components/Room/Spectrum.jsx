@@ -4,6 +4,7 @@ import _ from "lodash";
 
 const Spectrum = ({ listSpectrums }) => {
   let listSpectrum = [];
+  if (_.isEmpty(listSpectrum) === false) return null;
   for (let key in listSpectrums) {
     listSpectrum.push(
       <div key={key} className="spectrum-grid">
