@@ -266,6 +266,11 @@ body,
   width: 100%;
 }
 
+.error-container {
+  font-size: 2em;
+  text-align: center;
+}
+
 $boxes: 59;
 
 .broken-line {
@@ -491,9 +496,10 @@ $boxes: 100;
 }
 
 .bird-container {
-  margin-top: 100px;
+  position: absolute;
+  margin-top: 130px;
   animation-name: fly;
-  animation-duration: 17s;
+  animation-duration: 13s;
   animation-timing-function: ease-in;
   animation-iteration-count: infinite;
   animation-direction: normal;
@@ -604,7 +610,7 @@ $boxes: 100;
 
 @keyframes fly {
   0% {
-    transform: translateX(210vw);
+    transform: translateX(200vw);
   }
   100% {
     transform: translateX(-20vw);

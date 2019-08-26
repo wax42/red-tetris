@@ -2,7 +2,7 @@ import React, { useEffect, useState, createRef } from "react";
 import { FaHome, FaIdBadge } from "react-icons/fa";
 import { connect } from "react-redux";
 import { actionCreateRoom } from "../../actions/actionsRedux";
-import { Button, TextField } from "@material-ui/core";
+import { Button, TextField, Snackbar } from "@material-ui/core";
 import { AutoComplete } from "./AutoComplete";
 import ERROR from "../../../common/error";
 
@@ -28,9 +28,11 @@ const mapStateToProps = _state => {
 };
 
 export const HomeCpt = ({ listPlayers, listRooms, theme, error, actionCreateRoom }) => {
-  const [stateError, setStateError] = useState("");
+  const [stateError, setStateError] = useState(error);
   const [playerName, setPlayerName] = useState("");
   const [roomName, setRoomName] = useState("");
+
+  console.log(stateError);
   return (
     <div>
       <div className="home-title">Red Tetris</div>
@@ -69,10 +71,19 @@ export const HomeCpt = ({ listPlayers, listRooms, theme, error, actionCreateRoom
           </Button>
         </form>
       </div>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        key="key-msg"
+        open={stateError !== null}
+        onClose={() => setStateError(null)}
+        ContentProps={{
+          "aria-describedby": "message-id"
+        }}
+        message={<span id="message-id">{stateError}</span>}
+      />
 
-      <h1 style={{ color: "pink" }}>
-        {error} {stateError}
-      </h1>
+      <div className="error-container">{stateError}</div>
+
       <div className="bird-container">
         <div className="bird">
           <div className="bird-beak2" />
