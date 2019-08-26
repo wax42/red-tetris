@@ -20,7 +20,12 @@ import {
   WINNER_IS,
   CLEAR_INTERVAL_KEY_EVENT
 } from "../../actions/actionsTypes";
-import { launchGame, startGame, cleanListennerEndGame } from "./gameManager";
+import {
+  launchGame,
+  startGame,
+  cleanListennerEndGame,
+  winnerIs
+} from "./gameManager";
 
 import {
   rotatePiece,
@@ -47,7 +52,11 @@ import {
 
 import ERROR from "../../../common/error";
 
-import { actionCleanRoomName, actionIsSpectator, actionError } from "../../actions/actionsRedux";
+import {
+  actionCleanRoomName,
+  actionIsSpectator,
+  actionError
+} from "../../actions/actionsRedux";
 import Button from "@material-ui/core/Button";
 import _ from "lodash";
 
@@ -113,11 +122,12 @@ export const reduceRoom = (state, action) => {
       };
 
     case WINNER_IS:
-      return {
-        ...state,
-        winner: action.winner,
-        counterAnimation: false
-      };
+      return winnerIs({ ...state, counterAnimation: false }, action.winner);
+    // return {
+    //   ...state,
+    //   winner: action.winner,
+
+    // };
     case CLEAR_INTERVAL_KEY_EVENT:
       cleanListennerEndGame(state.eventListner, state.clearInterval);
       return { ...state, clearInterval: -1, game: false, endOfGame: true };
@@ -149,6 +159,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     lose: false,
     winner: null,
     score: 0,
+    nb_win: 0,
     clearInterval: -1,
     eventListner: null,
     gameInterval: 1000,
@@ -173,18 +184,21 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
   countRef.current = state.winner;
 
   useEffect(() => {
-    socket.on(eventSocket.START_GAME, (listPlayers, listPieces, optionGames) => {
-      if (spectator === true) {
-        dispatch(actionIsSpectator());
-      }
-      listPlayers = listPlayers.filter(value => value !== playerName);
-      dispatchRoom(actionStartGame(listPlayers, listPieces, optionGames));
-      setTimeout(() => {
-        if (countRef.current !== playerName) {
-          launchGame(dispatchRoom, optionGames.gameInterval);
+    socket.on(
+      eventSocket.START_GAME,
+      (listPlayers, listPieces, optionGames) => {
+        if (spectator === true) {
+          dispatch(actionIsSpectator());
         }
-      }, 4000);
-    });
+        listPlayers = listPlayers.filter(value => value !== playerName);
+        dispatchRoom(actionStartGame(listPlayers, listPieces, optionGames));
+        setTimeout(() => {
+          if (countRef.current !== playerName) {
+            launchGame(dispatchRoom, optionGames.gameInterval);
+          }
+        }, 4000);
+      }
+    );
 
     socket.on(eventSocket.NEXT_PIECE, newPiece => {
       dispatchRoom(actionNextPiece(newPiece));
@@ -215,7 +229,15 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
       socket.removeListener(eventSocket.SEND_SPECTRUMS);
       socket.removeListener(eventSocket.WINNER_IS);
     };
-  }, [socket, playerName, spectator, dispatch, state.eventListner, state.clearInterval, state.endOfGame]);
+  }, [
+    socket,
+    playerName,
+    spectator,
+    dispatch,
+    state.eventListner,
+    state.clearInterval,
+    state.endOfGame
+  ]);
 
   const counter =
     state.counterAnimation === false ? null : (

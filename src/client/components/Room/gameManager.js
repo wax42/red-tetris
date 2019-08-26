@@ -1,11 +1,7 @@
-import {
-  placePiece
-} from "./gridChange";
+import { placePiece } from "./gridChange";
 import _ from "lodash";
 
-import {
-  GRID
-} from "../../../common/common";
+import { GRID } from "../../../common/common";
 
 import eventSocket from "../../../common/eventSocket";
 
@@ -72,39 +68,37 @@ export const cleanListennerEndGame = (eventListner, cleanInterval) => {
 };
 
 export const initializeListSpectrums = (state, listPlayers) => {
-  state.listSpectrums = {};
-  for (let player of listPlayers) {
-    state.listSpectrums[player] = {
-      grid: [
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-        [".", ".", ".", ".", ".", ".", ".", ".", ".", "."]
-      ],
-      score: 0,
-      playerName: player
-    };
+  let keys = Object.keys(state.listSpectrums);
+  let toDelete = _.difference(keys, listPlayers);
+  for (let player of toDelete) {
+    delete state.listSpectrums[player];
   }
+  keys = Object.keys(state.listSpectrums);
+  for (let player of listPlayers) {
+    if (_.includes(keys, player)) {
+      state.listSpectrums[player] = {
+        grid: GRID, // maybe deepcopy
+        score: 0,
+        playerName: player,
+        nb_win: state.listSpectrums[player].nb_win
+      };
+    } else {
+      state.listSpectrums[player] = {
+        grid: GRID, // maybe deepcopy
+        score: 0,
+        playerName: player,
+        nb_win: 0
+      };
+    }
+  }
+  return state;
+};
+
+export const winnerIs = (state, winner) => {
+  if (state.playerName === winner) {
+    state.nb_win += 1;
+  }
+  state.winner = winner;
   return state;
 };
 
@@ -112,6 +106,7 @@ export const startGame = (state, listPlayers, listPieces, optionGames) => {
   state = initializeListSpectrums(state, listPlayers);
   state.shakeMode = optionGames.shakeMode;
   state.lose = false;
+  state.score = 0;
   state.currentPiece.piece = listPieces.shift();
   state.currentPiece.x = 3;
   state.currentPiece.y = 0;

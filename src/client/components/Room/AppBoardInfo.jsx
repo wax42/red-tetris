@@ -1,7 +1,17 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import eventSocket from "../../../common/eventSocket";
-import { Button, Slider, Checkbox } from "@material-ui/core";
+import {
+  Button,
+  Slider,
+  Checkbox,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow
+} from "@material-ui/core";
+import _ from "lodash";
 
 export const buttonPlay = (state, optionGames) => {
   if (state.clearInterval === -1) {
@@ -50,7 +60,11 @@ export const Play = ({ state, admin }) => {
           value={shakeMode}
         />
         With Spectrum mode:
-        <Checkbox checked={spectrumMode} onChange={() => setSpectrumMode(!spectrumMode)} value={spectrumMode} />
+        <Checkbox
+          checked={spectrumMode}
+          onChange={() => setSpectrumMode(!spectrumMode)}
+          value={spectrumMode}
+        />
         <Button
           disabled={state.game}
           onClick={() =>
@@ -68,6 +82,57 @@ export const Play = ({ state, admin }) => {
     );
   }
   return <span />;
+};
+
+const ScoreTable = ({ state }) => {
+  let listScores = [];
+
+  for (let key in state.listSpectrums) {
+    listScores.push({
+      name: state.listSpectrums[key].playerName,
+      score: state.listSpectrums[key].score,
+      nb_win: state.listSpectrums[key].nb_win
+    });
+  }
+  listScores.push({
+    name: state.playerName,
+    score: state.score,
+    nb_win: state.nb_win
+  });
+
+  listScores = _.sortBy(listScores, ["score"]);
+
+  listScores = listScores.map((value, index) => ({
+    ...value,
+    rank: index + 1
+  }));
+
+  console.log("Table", listScores, state.listSpectrums);
+
+  return (
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>Name</TableCell>
+          <TableCell align="right">Score</TableCell>
+          <TableCell align="right">Rank</TableCell>
+          <TableCell align="right">Number of Win</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {listScores.map(row => (
+          <TableRow key={row.name}>
+            <TableCell component="th" scope="row">
+              {row.name}
+            </TableCell>
+            <TableCell align="right">{row.score}</TableCell>
+            <TableCell align="right">{row.rank}</TableCell>
+            <TableCell align="right">{row.nb_win}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
 };
 
 const Admin = connect(mapStateToProps)(Play);
@@ -91,6 +156,7 @@ const AppBoardInfo = ({ state }) => {
     <div className="app-board-left">
       <Title />
       <Info state={state} />
+      <ScoreTable state={state} />
     </div>
   );
 };

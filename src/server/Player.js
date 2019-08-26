@@ -1,8 +1,6 @@
 const eventSocket = require("../common/eventSocket");
 const Piece = require("./Piece");
-const {
-  GRID
-} = require("../common/common");
+const { GRID } = require("../common/common");
 
 class Player {
   constructor(name, room, clientSocket) {
@@ -15,9 +13,13 @@ class Player {
     this.grid = GRID;
     this.lose = false;
     this.createListener();
+    this.nb_win = 0;
   }
   generateSpectrum(grid) {
-    if (this.room.game !== null && this.room.game.optionsGames.spectrum === true) {
+    if (
+      this.room.game !== null &&
+      this.room.game.optionsGames.spectrum === true
+    ) {
       let bool = false;
       for (let x = 0; x < 10; x++) {
         for (let y = 0; y < 24; y++) {
@@ -34,7 +36,8 @@ class Player {
       playerName: this.name,
       score: this.score,
       lose: this.lose,
-      grid: grid
+      grid: grid,
+      nb_win: this.nb_win
     };
     this.grid = grid;
     return spectrum;
@@ -52,7 +55,8 @@ class Player {
               playerName: player.name,
               score: player.score,
               grid: player.grid,
-              lose: player.lose
+              lose: player.lose,
+              nb_win: player.nb_win
             };
           }
         }
@@ -60,7 +64,7 @@ class Player {
       });
     }
 
-    this.socket.on(eventSocket.START_GAME, (optionGames) => {
+    this.socket.on(eventSocket.START_GAME, optionGames => {
       this.socket.spectator = false;
       this.room.newGame(optionGames);
 
@@ -74,13 +78,20 @@ class Player {
           let piece = new Piece(this.room.game.optionsGames.invisibility);
           listPieces.push(piece.grid);
         }
-        this.room.players[i].socket.emit(eventSocket.START_GAME, listPlayerName, listPieces, optionGames);
+        this.room.players[i].socket.emit(
+          eventSocket.START_GAME,
+          listPlayerName,
+          listPieces,
+          optionGames
+        );
       }
-
     });
 
     this.socket.on(eventSocket.NEXT_PIECE, grid => {
-      let piece = this.room.game !== null ? new Piece(this.room.game.optionsGames.invisibility) : new Piece(true);
+      let piece =
+        this.room.game !== null
+          ? new Piece(this.room.game.optionsGames.invisibility)
+          : new Piece(true);
       this.socket.emit(eventSocket.NEXT_PIECE, piece.grid);
       this.socket
         .to(this.roomName)
@@ -95,6 +106,10 @@ class Player {
     this.socket.on(eventSocket.LOSE, cb => {
       this.lose = true;
       let winner = this.room.game.checkWhoIsWinner();
+      for (let i in this.room.game.players)
+        if (winner === this.room.game.players[i].name) {
+          this.room.game.players[i].nb_win += 1;
+        }
       if (winner !== null) {
         console.log("Winner is ", winner);
         this.socket.to(this.roomName).emit(eventSocket.WINNER_IS, winner);
