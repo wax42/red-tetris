@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HOME.JSX should render self and subcomponent Home 1`] = `ShallowWrapper {}`;

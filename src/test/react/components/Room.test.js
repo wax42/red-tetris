@@ -4,7 +4,7 @@ import {
   RoomNoConnect,
   mapStateToProps,
   reduceRoom
-} from "../../../client/components/Room";
+} from "../../../client/components/Room/Room";
 import {
   START_GAME,
   PIECE_DOWN,
@@ -20,7 +20,7 @@ import {
   SEND_INTERVAL_KEY_EVENT,
   CLEAR_INTERVAL_KEY_EVENT,
   WINNER_IS
-} from "../../../client/actions/actionTypes";
+} from "../../../client/actions/actionsTypes";
 import _ from "lodash";
 
 const gridOnePieceWithShadow = [

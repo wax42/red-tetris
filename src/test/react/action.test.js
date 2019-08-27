@@ -6,7 +6,7 @@ import {
   IS_NEW_ADMIN,
   IS_SPECTATOR,
   CLEAN_ROOM_NAME
-} from "../../client/actions/actionTypes";
+} from "../../client/actions/actionsTypes";
 import {
   actionIsSpectator,
   actionIsNewAdmin,
@@ -14,7 +14,7 @@ import {
   actionCreateRoom,
   actionJoinRoom,
   actionCleanRoomName
-} from "../../client/actions/actions";
+} from "../../client/actions/actionsRedux";
 
 describe("ACTION.JS", () => {
   it("should return action type spectator", () => {

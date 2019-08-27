@@ -13,7 +13,7 @@ import {
   SEND_INTERVAL_KEY_EVENT,
   WINNER_IS,
   CLEAR_INTERVAL_KEY_EVENT
-} from "../../client/actions/actionTypes";
+} from "../../client/actions/actionsTypes";
 import {
   actionPieceDown,
   actionPieceLeft,

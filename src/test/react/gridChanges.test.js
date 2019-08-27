@@ -18,7 +18,7 @@ import {
   rightPiece,
   switchPiece,
   addIndestructiblesLines
-} from "../../client/gridChange";
+} from "../../client/components/Room/gridChange";
 import _ from "lodash";
 
 const gridEmpty = [

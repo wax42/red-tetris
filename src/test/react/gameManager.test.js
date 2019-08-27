@@ -8,7 +8,7 @@ import {
   startGame,
   nextPiece,
   lineBreak
-} from "../../client/gameManager";
+} from "../../client/components/Room/gameManager";
 import _ from "lodash";
 import eventSocket from "../../common/eventSocket";
 
