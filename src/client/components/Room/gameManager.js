@@ -1,11 +1,7 @@
-import {
-  placePiece
-} from "./gridChange";
+import { placePiece } from "./gridChange";
 import _ from "lodash";
 
-import {
-  GRID
-} from "../../../common/common";
+import { GRID } from "../../../common/common";
 
 import eventSocket from "../../../common/eventSocket";
 
@@ -145,8 +141,7 @@ export const lineBreak = state => {
   });
   state.score += nbrLine * 10;
   if (nbrLine !== 0) {
-    if (nbrLine > 1)
-      state.socket.emit(eventSocket.LINE_BREAK, nbrLine - 1);
+    state.socket.emit(eventSocket.LINE_BREAK, nbrLine);
     while (nbrLine !== 0) {
       state.grid.unshift(new Array(10).fill("."));
       nbrLine--;

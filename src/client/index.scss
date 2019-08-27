@@ -22,8 +22,30 @@ body,
   // height: 100%;
   padding: 0;
   background-color: $primary;
+
   /* background-image: url("./assets/redtetris-background.png"); */
   /* background: linear-gradient(to right bottom, #405de6, #fcaf45); */
+}
+
+@media only screen and (max-width: 900px) {
+  .app-board {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+@media only screen and (min-width: 901px) {
+  .app-board {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+hr {
+  margin-top: 50px;
+  width: 65%;
 }
 
 .app {
@@ -32,12 +54,12 @@ body,
   height: 100%;
 }
 
-.app-board {
+/* .app-board {
   //position: fixed;
   display: flex;
   flex-direction: row;
   justify-content: center;
-}
+} */
 
 .app-board-left {
   display: flex;
@@ -45,6 +67,15 @@ body,
   padding-right: 50px;
 }
 
+.title-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  min-width: 400px;
+  .leave-button {
+    font-size: 3em;
+  }
+}
 .title {
   white-space: nowrap;
   user-select: none;
@@ -52,22 +83,34 @@ body,
   font-family: "Anton", sans-serif;
   color: #fff;
   font-size: 70px;
+  text-shadow: -1px 0 $secondary, 0 4px $secondary, 4px 0 $secondary,
+    0 -1px $secondary;
+}
+
+.info-container {
   min-width: 200px;
-  text-shadow: -1px 0 $secondary, 0 4px $secondary, 4px 0 $secondary, 0 -1px $secondary;
-}
-
-.info {
-  /* border: 5px inset; */
   border: 5px inset $secondary;
-  border-radius: 3px;
-  height: 100%;
+  padding: 30px 60px;
+  border-radius: 10px;
   background-color: $primary-light;
-  /*  border-width: 2px;
-  border-style: inset; */
-}
-
-.app-spectrum {
-  display: flex;
+  .info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    .btn-play {
+      margin-top: 30px;
+    }
+  }
+  .title-winner {
+    white-space: nowrap;
+    user-select: none;
+    text-align: center;
+    font-family: "Anton", sans-serif;
+    color: #fff;
+    font-size: 40px;
+    text-shadow: -1px 0 $secondary, 0 4px $secondary, 4px 0 $secondary,
+      0 -1px $secondary;
+  }
 }
 
 .spectrum {
@@ -79,21 +122,88 @@ body,
   width: 100%;
   // height: 100%;
   //margin-top: 20px;
+  .spectrum-info {
+    padding: 10px 0;
+    flex-direction: column;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    div {
+      font-family: sans-serif;
+      color: #9d9d9c;
+      padding: 5px;
+    }
+  }
 }
 
-.spectrum > .game-grid {
+/* .spectrum > .game-grid {
   box-shadow: none;
   padding: 20px;
-}
-
-.spectrum > .game-grid > .line > .box {
-  width: 20px;
-  height: 20px;
-  /* background-color: rgb(255, 255, 255); */
-}
+} */
 
 .spectrum-grid {
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  //box-shadow: 10px 10px 20px $secondary, 0 1px 4px rgba(0, 0, 0, 0.89);
+
+  .line {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    .box {
+      width: 1vw;
+      height: 1vw;
+      background-color: #fff;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.904), 0 1px 4px rgba(0, 0, 0, 0.89);
+    }
+
+    .color-form0 {
+      background-color: rgb(46, 45, 45);
+    }
+
+    .color-form1 {
+      /* border: 3px solid #020002; */
+      background-color: rgb(233, 89, 89);
+    }
+
+    .color-form2 {
+      background-color: rgb(33, 184, 204);
+    }
+
+    .color-form3 {
+      background-color: rgb(180, 219, 118);
+    }
+
+    .color-form4 {
+      background-color: rgb(241, 230, 63);
+    }
+
+    .color-form5 {
+      background-color: rgb(230, 130, 225);
+    }
+
+    .color-form6 {
+      background-color: rgb(103, 101, 202);
+    }
+
+    .color-form7 {
+      background-color: rgb(153, 114, 204);
+    }
+
+    .color-form8 {
+      background-color: rgb(34, 63, 71);
+    }
+
+    .color-form9 {
+      background-color: rgb(241, 143, 143);
+    }
+
+    .color-form10 {
+      background-color: #9d9d9c;
+    }
+  }
 }
 
 .game {
@@ -109,7 +219,59 @@ body,
   flex-direction: column;
   box-shadow: 10px 10px 20px $secondary, 0 1px 4px rgba(0, 0, 0, 0.89);
 
-  /* border: 6px double #ffffff; */
+  .line {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    .box {
+      width: 30px;
+      height: 30px;
+      /* background-color: aquamarine; */
+      background-color: #fff;
+      /* border: 2px solid #fcaf45; */
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.904), 0 1px 4px rgba(0, 0, 0, 0.89);
+    }
+    .color-form0 {
+      background-color: rgb(46, 45, 45);
+    }
+
+    .color-form1 {
+      /* border: 3px solid #020002; */
+      background-color: rgb(233, 89, 89);
+    }
+
+    .color-form2 {
+      background-color: rgb(33, 184, 204);
+    }
+
+    .color-form3 {
+      background-color: rgb(180, 219, 118);
+    }
+
+    .color-form4 {
+      background-color: rgb(241, 230, 63);
+    }
+
+    .color-form5 {
+      background-color: rgb(230, 130, 225);
+    }
+
+    .color-form6 {
+      background-color: rgb(103, 101, 202);
+    }
+
+    .color-form7 {
+      background-color: rgb(153, 114, 204);
+    }
+
+    .color-form8 {
+      background-color: rgb(34, 63, 71);
+    }
+
+    .color-form9 {
+      background-color: rgb(241, 143, 143);
+    }
+  }
 }
 
 .shake-mode {
@@ -149,62 +311,6 @@ body,
   margin-bottom: 10px;
 }
 
-.line {
-  display: flex;
-  flex-direction: row;
-  position: relative;
-}
-
-.box {
-  width: 30px;
-  height: 30px;
-  /* background-color: aquamarine; */
-  background-color: #fff;
-  /* border: 2px solid #fcaf45; */
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.904), 0 1px 4px rgba(0, 0, 0, 0.89);
-}
-
-.color-form0 {
-  background-color: rgb(46, 45, 45);
-}
-
-.color-form1 {
-  /* border: 3px solid #020002; */
-  background-color: rgb(233, 89, 89);
-}
-
-.color-form2 {
-  background-color: rgb(33, 184, 204);
-}
-
-.color-form3 {
-  background-color: rgb(180, 219, 118);
-}
-
-.color-form4 {
-  background-color: rgb(241, 230, 63);
-}
-
-.color-form5 {
-  background-color: rgb(230, 130, 225);
-}
-
-.color-form6 {
-  background-color: rgb(103, 101, 202);
-}
-
-.color-form7 {
-  background-color: rgb(153, 114, 204);
-}
-
-.color-form8 {
-  background-color: rgb(34, 63, 71);
-}
-
-.color-form9 {
-  background-color: rgb(241, 143, 143);
-}
-
 /* Home Component */
 .home {
   user-select: none;
@@ -242,11 +348,12 @@ body,
   font-size: 50px;
   min-width: 200px;
   margin: 35px 0;
-  text-shadow: -1px 0 $secondary, 0 4px $secondary, 4px 0 $secondary, 0 -1px $secondary;
+  text-shadow: -1px 0 $secondary, 0 4px $secondary, 4px 0 $secondary,
+    0 -1px $secondary;
 }
 
 .home-field {
-  padding: 10px 0;
+  padding: 20px 0 0 0;
 }
 
 .home-icon {
@@ -266,9 +373,10 @@ body,
   width: 100%;
 }
 
-.error-container {
-  font-size: 2em;
-  text-align: center;
+.snackbar-error {
+  div {
+    justify-content: center;
+  }
 }
 
 $boxes: 59;
@@ -498,6 +606,7 @@ $boxes: 100;
 .bird-container {
   position: absolute;
   margin-top: 130px;
+  top: 1300px;
   animation-name: fly;
   animation-duration: 13s;
   animation-timing-function: ease-in;

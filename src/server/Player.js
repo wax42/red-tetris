@@ -1,8 +1,6 @@
 const eventSocket = require("../common/eventSocket");
 const Piece = require("./Piece");
-const {
-  GRID
-} = require("../common/common");
+const { GRID } = require("../common/common");
 
 class Player {
   constructor(name, room, clientSocket) {
@@ -78,7 +76,7 @@ class Player {
         }
       }
     }
-    this.socket.emit(eventSocket.SEND_SPECTRUMS_SPECTATOR, listSpectrums)
+    this.socket.emit(eventSocket.SEND_SPECTRUMS_SPECTATOR, listSpectrums);
     this.socket
       .to(this.roomName)
       .emit(eventSocket.SEND_SPECTRUMS, this.generateSpectrum(GRID));
@@ -109,9 +107,9 @@ class Player {
 
     this.socket.on(eventSocket.NEXT_PIECE, grid => {
       let piece =
-        this.room.game !== null ?
-        new Piece(this.room.game.optionsGames.invisibility) :
-        new Piece(true);
+        this.room.game !== null
+          ? new Piece(this.room.game.optionsGames.invisibility)
+          : new Piece(true);
       this.socket.emit(eventSocket.NEXT_PIECE, piece.grid);
       this.socket
         .to(this.roomName)
@@ -120,7 +118,8 @@ class Player {
 
     this.socket.on(eventSocket.LINE_BREAK, nbrLine => {
       this.score += nbrLine * 10;
-      this.socket.to(this.roomName).emit(eventSocket.LINE_BREAK, nbrLine);
+      if (nbrLine !== 1)
+        this.socket.to(this.roomName).emit(eventSocket.LINE_BREAK, nbrLine - 1);
     });
 
     this.socket.on(eventSocket.LOSE, cb => {

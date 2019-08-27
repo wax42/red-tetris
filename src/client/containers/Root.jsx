@@ -13,7 +13,10 @@ import ERROR from "../../common/error";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 
-const store = createStore(reducers, composeWithDevTools(applyMiddleware(socketMiddleware())));
+const store = createStore(
+  reducers,
+  composeWithDevTools(applyMiddleware(socketMiddleware()))
+);
 
 const mapStateToProps = _state => {
   const state = {
@@ -43,7 +46,10 @@ export const routeHashError = (hash, state, actionJoinRoom) => {
   if (state.listRooms.includes(room_name) === false) {
     return ERROR.ROOMNAME_INEXISTANT;
   }
-  if (state.listPlayers.includes(player_name) === true && player_name !== state.playerName) {
+  if (
+    state.listPlayers.includes(player_name) === true &&
+    player_name !== state.playerName
+  ) {
     return ERROR.PLAYERNAME_INEXISTANT;
   }
   if (state.playerName !== player_name) {
@@ -58,13 +64,19 @@ export const Routing = ({ state, actionJoinRoom, actionListRoomPlayer }) => {
   useEffect(() => {
     setLoading(true);
     if (state.socket) {
-      state.socket.emit(eventSocket.LIST_ROOMS_PLAYERS, (listRooms, listPlayers) => {
-        setLoading(false);
-        actionListRoomPlayer(listRooms, listPlayers);
-      });
-      state.socket.on(eventSocket.LIST_ROOMS_PLAYERS, (listRooms, listPlayers) => {
-        actionListRoomPlayer(listRooms, listPlayers);
-      });
+      state.socket.emit(
+        eventSocket.LIST_ROOMS_PLAYERS,
+        (listRooms, listPlayers) => {
+          setLoading(false);
+          actionListRoomPlayer(listRooms, listPlayers);
+        }
+      );
+      state.socket.on(
+        eventSocket.LIST_ROOMS_PLAYERS,
+        (listRooms, listPlayers) => {
+          actionListRoomPlayer(listRooms, listPlayers);
+        }
+      );
     }
     return () => {
       state.socket.removeListener(eventSocket.LIST_ROOMS_PLAYERS);

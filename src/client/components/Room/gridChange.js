@@ -1,8 +1,4 @@
-import {
-  nextPiece,
-  lineBreak,
-  cleanListennerEndGame
-} from "./gameManager";
+import { nextPiece, lineBreak, cleanListennerEndGame } from "./gameManager";
 import _ from "lodash";
 import eventSocket from "../../../common/eventSocket";
 
@@ -183,6 +179,7 @@ export const downFloorPiece = state => {
         state.nb_win += 1;
       }
       state.winner = winner;
+      console.log("Je recois le winner et je t'enc");
     });
     nextPiece(state);
     return state;
