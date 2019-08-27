@@ -214,7 +214,7 @@ export const Info = ({ state, admin }) => {
     return (
       <div className="info-container">
         <Play admin={admin} state={state} />
-        {win}
+        <div style={{ padding: "10px 0px" }}>{win}</div>
       </div>
     );
   return null;

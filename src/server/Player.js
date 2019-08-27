@@ -132,7 +132,7 @@ class Player {
       if (winner !== null) {
         console.log("Winner is ", winner);
         this.socket.to(this.roomName).emit(eventSocket.WINNER_IS, winner);
-        cb(winner);
+        this.socket.emit(eventSocket.WINNER_IS, winner);
       }
       if (this.room.game.players.length === 1 || winner !== null) {
         delete this.room.game;

@@ -18,7 +18,7 @@ export const GameGrid = props => {
           if (_.includes(brokenLines, index)) {
             brokenContainer = (
               <div className="broken-line" key={props.keyBrokenLines + index}>
-                {_.times(59, i => (
+                {_.times(100, i => (
                   <FaStar className="broken-line-box" key={i} />
                 ))}
               </div>

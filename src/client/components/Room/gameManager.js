@@ -85,7 +85,7 @@ export const initializeListSpectrums = (state, listPlayers) => {
       };
     } else {
       state.listSpectrums[player] = {
-        grid: GRID, // maybe deepcopy
+        grid: GRID,
         score: 0,
         playerName: player,
         nb_win: 0,

@@ -174,13 +174,7 @@ export const downFloorPiece = state => {
     state.endOfGame = true;
     state.clearInterval = -1;
     state.lose = true;
-    state.socket.emit(eventSocket.LOSE, winner => {
-      if (state.playerName === winner) {
-        state.nb_win += 1;
-      }
-      state.winner = winner;
-      console.log("Je recois le winner et je t'enc");
-    });
+    state.socket.emit(eventSocket.LOSE);
     nextPiece(state);
     return state;
   }
@@ -218,12 +212,7 @@ export const downPiece = state => {
       cleanListennerEndGame(state.eventListner, state.clearInterval);
       state.endOfGame = true;
       state.clearInterval = -1;
-      state.socket.emit(eventSocket.LOSE, winner => {
-        if (state.playerName === winner) {
-          state.nb_win += 1;
-        }
-        state.winner = winner;
-      });
+      state.socket.emit(eventSocket.LOSE);
       nextPiece(state);
       return state;
     }

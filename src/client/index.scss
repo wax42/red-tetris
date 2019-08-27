@@ -90,13 +90,18 @@ hr {
 .info-container {
   min-width: 200px;
   border: 5px inset $secondary;
-  padding: 30px 60px;
+  // padding: 30px 60px 0px 60px;
+  padding: 0px 60px;
   border-radius: 10px;
   background-color: $primary-light;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
   .info {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    padding-top: 30px;
     .btn-play {
       margin-top: 30px;
     }
@@ -400,13 +405,24 @@ $boxes: 100;
 
 @for $i from 1 through $boxes {
   @keyframes anim-#{$i} {
-    $a: random(300) + px;
-    $b: random(400) + px;
-
-    //
+    $a: 1px;
+    $b: 1px;
     0% {
-      top: -50%;
-      left: 50%;
+      // top: -50%;
+      background: white;
+      width: 30px;
+      height: 30px;
+      // left: 50%;
+    }
+
+    15% {
+      $a: random(1000) - 500 + px;
+      $b: random(1000) - 500 + px;
+      top: $a;
+      left: $b;
+      background: hsla(10 * $i, 100%, 50%, 1);
+      width: 5px;
+      height: 5px;
     }
 
     50% {
@@ -425,7 +441,7 @@ $boxes: 100;
     &:nth-child(#{$i}) {
       display: block;
       left: $i * 5px;
-      animation-duration: 2s;
+      animation-duration: 3s;
       animation-name: anim-#{$i};
       z-index: 10;
       // animation-iteration-count: ease;
