@@ -88,12 +88,13 @@ export const actionSpectrumsSpectator = listSpectrums => {
   };
 };
 
-export const actionStartGame = (listPlayers, listPieces, optionGames) => {
+export const actionStartGame = (listPlayers, listPieces, optionGames, clearTimeout) => {
   return {
     type: START_GAME,
     listPlayers: listPlayers,
     listPieces: listPieces,
-    optionGames: optionGames
+    optionGames: optionGames,
+    clearTimeout: clearTimeout
   };
 };
 

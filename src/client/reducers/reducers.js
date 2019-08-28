@@ -5,7 +5,7 @@ import {
   IS_NEW_ADMIN,
   IS_SPECTATOR,
   CLEAN_ROOM_NAME,
-  ERROR
+  ERROR_REDUX
 } from "../actions/actionsTypes";
 
 const io = require("socket.io-client")("http://localhost:3001", {
@@ -23,7 +23,6 @@ const initialState = {
 };
 
 const reducers = (state = initialState, action) => {
-
   if (state.socket === null) {
     state.socket = io;
   }
@@ -31,7 +30,7 @@ const reducers = (state = initialState, action) => {
     return state;
   }
   switch (action.type) {
-    case ERROR:
+    case ERROR_REDUX:
       return {
         ...state,
         error: action.error,

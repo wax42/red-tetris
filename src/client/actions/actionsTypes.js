@@ -11,7 +11,7 @@ export const ROOM_ADD_PLAYER = "ROOM_ADD_PLAYER";
 export const ROOM_DEL_PLAYER = "ROOM_DEL_PLAYER";
 export const IS_NEW_ADMIN = "IS_NEW_ADMIN";
 export const IS_SPECTATOR = "IS_SPECTATOR";
-export const ERROR = "ERROR";
+export const ERROR_REDUX = "ERROR_REDUX";
 
 /* ACTION  ROOM */
 

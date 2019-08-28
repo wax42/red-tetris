@@ -1,6 +1,8 @@
 import {
   CREATE_ROOM,
-  JOIN_ROOM
+  JOIN_ROOM,
+  CLEAN_ROOM_NAME,
+  ERROR_REDUX
 } from "../actions/actionsTypes";
 import {
   actionIsNewAdmin,
@@ -14,10 +16,14 @@ const socketMiddleware = () => {
   return store => next => action => {
 
     let state = store.getState();
+
+    if (action.type === CLEAN_ROOM_NAME || action.type === ERROR_REDUX) {
+      state.socket.removeListener(eventSocket.IS_NEW_ADMIN);
+    }
+
     if (action.eventSocket === undefined) {
       return next(action);
     }
-
     if (state.socket.disconnected === true) {
       store.dispatch(actionError(ERROR.SERVER_DOWN))
       return next(action);
@@ -36,6 +42,7 @@ const socketMiddleware = () => {
             if (data.spectator === true) store.dispatch(actionIsSpectator());
           }
         );
+        state.socket.on(eventSocket.IS_NEW_ADMIN, () => store.dispatch(actionIsNewAdmin()));
         break;
       case JOIN_ROOM:
         action.eventSocket = undefined;
@@ -48,7 +55,7 @@ const socketMiddleware = () => {
             if (data.spectator === true) store.dispatch(actionIsSpectator());
           }
         );
-        state.socket.on(eventSocket.IS_NEW_ADMIN, () => store.dispatch(actionIsNewAdmin(true)));
+        state.socket.on(eventSocket.IS_NEW_ADMIN, () => store.dispatch(actionIsNewAdmin()));
         break;
       default:
         break;

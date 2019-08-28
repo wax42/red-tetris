@@ -66,7 +66,7 @@ export const reduceRoom = (state, action) => {
   switch (action.type) {
     case START_GAME:
       return startGame(
-        { ...state, game: true, endOfGame: false, winner: null },
+        { ...state, game: true, endOfGame: false, winner: null, clearTimeout: action.clearTimeout },
         action.listPlayers,
         action.listPieces,
         action.optionGames
@@ -108,7 +108,7 @@ export const reduceRoom = (state, action) => {
     case WINNER_IS:
       return winnerIs({ ...state, counterAnimation: false }, action.winner);
     case CLEAR_INTERVAL_KEY_EVENT:
-      cleanListennerEndGame(state.eventListner, state.clearInterval);
+      cleanListennerEndGame(state.eventListner, state.clearInterval, state.clearTimeout);
       return { ...state, clearInterval: -1, game: false, endOfGame: true };
 
     default:
@@ -140,6 +140,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     score: 0,
     nb_win: 0,
     clearInterval: -1,
+    clearTimeout: -1,
     eventListner: null,
     gameInterval: 1000,
     brokenLines: [],
@@ -161,12 +162,12 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
         dispatch(actionIsSpectator());
       }
       listPlayers = listPlayers.filter(value => value !== playerName);
-      dispatchRoom(actionStartGame(listPlayers, listPieces, optionGames));
-      setTimeout(() => {
+      let clearTimeout = setTimeout(() => {
         if (countRef.current !== playerName) {
           launchGame(dispatchRoom, optionGames.gameInterval);
         }
       }, 4000);
+      dispatchRoom(actionStartGame(listPlayers, listPieces, optionGames, clearTimeout));
     });
 
     socket.on(eventSocket.SEND_SPECTRUMS_SPECTATOR, listSpectrums => {
@@ -199,7 +200,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
       dispatch(actionError(ERROR.SERVER_DOWN));
     });
     return () => {
-      cleanListennerEndGame(state.eventListner, state.clearInterval);
+      cleanListennerEndGame(state.eventListner, state.clearInterval, state.clearTimeout);
       socket.removeListener(eventSocket.START_GAME);
       socket.removeListener(eventSocket.NEXT_PIECE);
       socket.removeListener(eventSocket.LINE_BREAK);
@@ -208,7 +209,17 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
       socket.removeListener(eventSocket.GAME_FINISH);
       socket.removeListener(eventSocket.SEND_SPECTRUMS_SPECTATOR);
     };
-  }, [socket, playerName, spectator, dispatch, state.eventListner, state.clearInterval, state.endOfGame, state.lose]);
+  }, [
+    socket,
+    playerName,
+    spectator,
+    dispatch,
+    state.eventListner,
+    state.clearInterval,
+    state.endOfGame,
+    state.lose,
+    state.clearTimeout
+  ]);
 
   const counter =
     state.counterAnimation === false ? null : (

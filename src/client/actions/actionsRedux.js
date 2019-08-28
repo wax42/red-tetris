@@ -5,7 +5,7 @@ import {
   IS_NEW_ADMIN,
   IS_SPECTATOR,
   CLEAN_ROOM_NAME,
-  ERROR
+  ERROR_REDUX
 } from "./actionsTypes";
 import eventSocket from "../../common/eventSocket";
 
@@ -13,7 +13,7 @@ import eventSocket from "../../common/eventSocket";
 
 export const actionError = error => {
   return {
-    type: ERROR,
+    type: ERROR_REDUX,
     error: error
   };
 };

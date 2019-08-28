@@ -1,7 +1,11 @@
-import { placePiece } from "./gridChange";
+import {
+  placePiece
+} from "./gridChange";
 import _ from "lodash";
 
-import { GRID } from "../../../common/common";
+import {
+  GRID
+} from "../../../common/common";
 
 import eventSocket from "../../../common/eventSocket";
 
@@ -14,6 +18,9 @@ import {
   actionSwitchPiece,
   actionSendIntervalKeyEvent
 } from "../../actions/actionsRoom";
+import {
+  timeout
+} from "q";
 
 const KEY_SPACE = 32;
 const KEY_DOWN = 40;
@@ -62,9 +69,10 @@ export const launchGame = (dispatchRoom, gameInterval) => {
   dispatchRoom(actionSendIntervalKeyEvent(clearInterval, eventListner));
 };
 
-export const cleanListennerEndGame = (eventListner, cleanInterval) => {
+export const cleanListennerEndGame = (eventListner, cleanInterval, cleanTimeout) => {
   window.removeEventListener("keydown", eventListner, false);
   clearInterval(cleanInterval);
+  clearTimeout(cleanTimeout);
 };
 
 export const initializeListSpectrums = (state, listPlayers) => {

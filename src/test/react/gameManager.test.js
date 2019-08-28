@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import {
   handleKey,
   launchGame,
-  cleanListennerEndGame,
+  cleanListennerEndGame(state.eventListner, state.clearInterval, state.clearTimeout);,
   initializeListSpectrums,
   startGame,
   nextPiece,
@@ -295,7 +295,7 @@ describe("GAMEMANAGER.JS - lineBreak", () => {
   });
 });
 
-describe("GAMEMANAGER.JS - cleanListennerEndGame", () => {
+describe("GAMEMANAGER.JS - cleanListennerEndGame(state.eventListner, state.clearInterval, state.clearTimeout);", () => {
   it("should clear event listeners and interval", () => {
     const mockCallbackRemoveEventListener = jest.fn();
     const window = {
@@ -305,7 +305,7 @@ describe("GAMEMANAGER.JS - cleanListennerEndGame", () => {
       clearInterval: 42
     };
     jest.useFakeTimers();
-    const newState = cleanListennerEndGame(state);
+    const newState = cleanListennerEndGame(state.eventListner, state.clearInterval, state.clearTimeout);(state);
     expect(newState.clearInterval).toEqual(-1);
   });
 });
