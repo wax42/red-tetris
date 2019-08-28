@@ -5,7 +5,7 @@ import {
   IS_NEW_ADMIN,
   IS_SPECTATOR,
   CLEAN_ROOM_NAME
-} from "../../client/actions/actionTypes";
+} from "../../client/actions/actionsTypes";
 
 import {
   actionIsSpectator,

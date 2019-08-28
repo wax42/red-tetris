@@ -5,7 +5,7 @@ import AppBoardInfo, {
   Play,
   mapStateToProps,
   buttonPlay
-} from "../../../client/components/AppBoardInfo";
+} from "../../../client/components/Room/AppBoardInfo";
 import { shallow } from "enzyme";
 
 describe("APPBOARDINFO.JSX", () => {

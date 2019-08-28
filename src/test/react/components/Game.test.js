@@ -1,5 +1,8 @@
 import React from "react";
-import Game, { GamePieces, GameGrid } from "../../../client/components/Game";
+import Game, {
+  GamePieces,
+  GameGrid
+} from "../../../client/components/Room/Game";
 import { shallow } from "enzyme";
 import _ from "lodash";
 

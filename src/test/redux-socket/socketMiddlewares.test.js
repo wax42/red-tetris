@@ -4,7 +4,7 @@ import {
   CREATE_ROOM,
   JOIN_ROOM,
   LINE_BREAK
-} from "../../client/actions/actionTypes";
+} from "../../client/actions/actionsTypes";
 
 const create = () => {
   const mockEmit = (eventSocket, room, player, cb) => {

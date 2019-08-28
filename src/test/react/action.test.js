@@ -5,26 +5,35 @@ import {
   LIST_ROOM_PLAYER,
   IS_NEW_ADMIN,
   IS_SPECTATOR,
-  CLEAN_ROOM_NAME
-} from "../../client/actions/actionTypes";
+  CLEAN_ROOM_NAME,
+  ERROR
+} from "../../client/actions/actionsTypes";
 import {
   actionIsSpectator,
   actionIsNewAdmin,
   actionListRoomPlayer,
   actionCreateRoom,
   actionJoinRoom,
-  actionCleanRoomName
-} from "../../client/actions/actions";
+  actionCleanRoomName,
+  actionError
+} from "../../client/actions/actionsRedux";
 
 describe("ACTION.JS", () => {
+  it("should return action type error", () => {
+    const error = "test error";
+    const action = { type: ERROR, error };
+    expect(actionError("test error")).toEqual(action);
+  });
+
   it("should return action type spectator", () => {
     const action = { type: IS_SPECTATOR };
     expect(actionIsSpectator()).toEqual(action);
   });
 
   it("should return action type newAdmin", () => {
-    const action = { type: IS_NEW_ADMIN };
-    expect(actionIsNewAdmin()).toEqual(action);
+    const admin = "player1";
+    const action = { type: IS_NEW_ADMIN, admin };
+    expect(actionIsNewAdmin("player1")).toEqual(action);
   });
 
   it("should return action type listRoomPlayer", () => {

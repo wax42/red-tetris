@@ -1,7 +1,7 @@
 import React from "react";
 import { shallow } from "enzyme";
 import _ from "lodash";
-import Spectrum from "../../../client/components/Spectrum";
+import Spectrum from "../../../client/components/Room/Spectrum";
 
 describe("SPECTRUM.JSX", () => {
   it("should render self and subcomponent Spectrum", () => {

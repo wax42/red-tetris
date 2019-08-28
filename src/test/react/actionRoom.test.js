@@ -12,8 +12,9 @@ import {
   SPECTRUMS_SPECTATOR,
   SEND_INTERVAL_KEY_EVENT,
   WINNER_IS,
-  CLEAR_INTERVAL_KEY_EVENT
-} from "../../client/actions/actionTypes";
+  CLEAR_INTERVAL_KEY_EVENT,
+  GAME_FINISH
+} from "../../client/actions/actionsTypes";
 import {
   actionPieceDown,
   actionPieceLeft,
@@ -28,10 +29,16 @@ import {
   actionStartGame,
   actionSendIntervalKeyEvent,
   actionClearIntervalKeyEvent,
-  actionWinnerIs
-} from "../../client/actions/actionRoom";
+  actionWinnerIs,
+  actionGameFinish
+} from "../../client/actions/actionsRoom";
 
 describe("ACTIONROOM.JS", () => {
+  it("should return type pieceDown", () => {
+    const action = { type: GAME_FINISH };
+    expect(actionGameFinish()).toEqual(action);
+  });
+
   it("should return type pieceDown", () => {
     const action = { type: PIECE_DOWN };
     expect(actionPieceDown()).toEqual(action);

@@ -4,7 +4,7 @@ import Home, {
   getRoomName,
   getPlayerName,
   buttonCreateRoom
-} from "../../../client/components/Home";
+} from "../../../client/components/Home/Home";
 import { shallow } from "enzyme";
 
 describe("HOME.JSX", () => {
