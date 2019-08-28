@@ -2,33 +2,6 @@ import Player from "../../server/Player";
 import Room from "../../server/Room";
 import _ from "lodash";
 
-const gridEmpty = [
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-  [".", ".", ".", ".", ".", ".", ".", ".", ".", "."]
-];
-
 const gridInit = [
   [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
   [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
@@ -98,29 +71,15 @@ describe("SERVER/PLAYER.JS - ", () => {
   const on = (e, cb) => {
     mock();
   };
-  const players = [
-    {
-      score: 0,
-      name: "player1",
 
-      roomName: "room",
-      id: "123",
-      socket: {
-        id: "123",
-        on: jest.fn(),
-        join: jest.fn()
-      },
-      // grid: _.cloneDeep(gridEmpty),
-      lose: false
-    }
-  ];
+  const players = ["player1", "player2"];
 
   const optionsGames = {
     invisibilityMode: false,
-    spectrumMode: true
+    spectrumMode: false
   };
 
-  /* it("should generate the  spectrum", () => {
+  it("should generate the spectrum", () => {
     const clientSocket = {
       id: "123",
       on,
@@ -134,22 +93,17 @@ describe("SERVER/PLAYER.JS - ", () => {
       }
     };
     const room = new Room("room", name, clientSocket);
-    room.game = null;
-    //room.game.players = players;
-    // room.newGame(players, optionsGames);
-    //room.game = true;
-
+    room.newGame(players, optionsGames);
     const player = new Player(name, room, clientSocket);
     player.grid = _.cloneDeep(gridInit);
     const spectrum = {
       playerName: name,
       score: 0,
       lose: false,
-      // grid: _.cloneDeep(gridSpectrum)
-      grid: _.cloneDeep(gridEmpty)
+      grid: _.cloneDeep(gridSpectrum)
     };
     expect(player.generateSpectrum(gridInit)).toEqual(spectrum);
-  }); */
+  });
 
   /* it("should create listener", () => {
     const cb = jest.fn();
@@ -170,6 +124,4 @@ describe("SERVER/PLAYER.JS - ", () => {
     player.room = {};
     expect(cb).toHaveBeenCalled();
   }); */
-
-  it("", () => {});
 });
