@@ -18,9 +18,6 @@ import {
   actionSwitchPiece,
   actionSendIntervalKeyEvent
 } from "../../actions/actionsRoom";
-import {
-  timeout
-} from "q";
 
 const KEY_SPACE = 32;
 const KEY_DOWN = 40;
