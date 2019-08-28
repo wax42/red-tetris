@@ -11,7 +11,7 @@ import _ from "lodash";
 
 let suggestions = [];
 
-const renderInputComponent = inputProps => {
+export const renderInputComponent = inputProps => {
   const { classes, inputRef = () => {}, ref, ...other } = inputProps;
 
   return (
@@ -32,7 +32,7 @@ const renderInputComponent = inputProps => {
   );
 };
 
-const renderSuggestion = (suggestion, { query, isHighlighted }) => {
+export const renderSuggestion = (suggestion, { query, isHighlighted }) => {
   const matches = match(suggestion.label, query);
   const parts = parse(suggestion.label, matches);
 
@@ -49,7 +49,7 @@ const renderSuggestion = (suggestion, { query, isHighlighted }) => {
   );
 };
 
-const getSuggestions = value => {
+export const getSuggestions = value => {
   const inputValue = deburr(value.trim()).toLowerCase();
   const inputLength = inputValue.length;
   let count = 0;
@@ -67,7 +67,7 @@ const getSuggestions = value => {
       });
 };
 
-function getSuggestionValue(suggestion) {
+export function getSuggestionValue(suggestion) {
   return suggestion.label;
 }
 

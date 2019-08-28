@@ -2,7 +2,7 @@ const eventSocket = require("../common/eventSocket");
 const RoomsManager = require("./RoomsManager");
 const ERROR = require("../common/error");
 
-export const handleClient = client => {
+const handleClient = client => {
   console.log(eventSocket.CONNECT, client.id);
   client.spectator = false;
 

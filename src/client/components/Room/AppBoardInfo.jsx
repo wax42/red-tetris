@@ -36,7 +36,7 @@ export const mapStateToProps = _state => {
   return { admin };
 };
 
-const leaveRoom = (state, dispatch) => {
+export const leaveRoom = (state, dispatch) => {
   dispatch(actionCleanRoomName());
   state.socket.emit(eventSocket.LEAVE_ROOM);
   window.location.hash = "";
@@ -120,14 +120,14 @@ export const Play = ({ state, admin }) => {
   );
 };
 
-const StyleSpectator = ({ spectator }) => {
+export const StyleSpectator = ({ spectator }) => {
   if (spectator === true) {
     return <FaEye />;
   }
   return null;
 };
 
-const ScoreTable = ({ state, spectator }) => {
+export const ScoreTable = ({ state, spectator }) => {
   const [sort, setSort] = useState(["score"]);
   let listScores = [];
 

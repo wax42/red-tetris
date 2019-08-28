@@ -23,7 +23,7 @@ export const buttonCreateRoom = (action, setStateError, roomName, playerName, li
   }
 };
 
-const mapStateToProps = _state => {
+export const mapStateToProps = _state => {
   const listPlayers = _state.listPlayers;
   const listRooms = _state.listRooms;
   return { listPlayers, listRooms };
