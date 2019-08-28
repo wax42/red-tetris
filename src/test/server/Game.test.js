@@ -29,6 +29,10 @@ const gridEmpty = [
 ];
 
 describe("SERVER/GAME.JS", () => {
+  const optionsGames = {
+    invisibilityMode: true,
+    spectrumMode: false
+  };
   const players = [
     {
       score: 0,
@@ -51,20 +55,27 @@ describe("SERVER/GAME.JS", () => {
       lose: true
     }
   ];
+  const interval = {
+    intervallDownPiece: 10
+  };
   it("should create the Game instance", () => {
-    const game = new Game(players);
+    const game = new Game(players, optionsGames);
     expect(game.players).toEqual(players);
-    // expect(game.optionsGames.invisibility).toEqual(false);
+    expect(game.optionsGames.invisibility).toEqual(
+      optionsGames.invisibilityMode
+    );
+    expect(game.optionsGames.spectrum).toEqual(optionsGames.spectrumMode);
+    expect(game.intervallDownPiece).toEqual(10);
   });
 
   it("should return the player name if there is a winner", () => {
-    const game = new Game(players);
+    const game = new Game(players, optionsGames);
     const winner = "player1";
     expect(game.checkWhoIsWinner()).toEqual(winner);
   });
 
   it("should return null if there is not a winner", () => {
-    const game = new Game(players);
+    const game = new Game(players, optionsGames);
     game.players[1].lose = false;
     expect(game.checkWhoIsWinner()).toBeNull();
   });

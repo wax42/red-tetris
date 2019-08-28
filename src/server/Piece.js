@@ -176,20 +176,20 @@ class Piece {
   }
 
   generateRandomPiece(invisibility) {
-    let piece = listPieces[Math.floor(Math.random() * listPieces.length)]
+    let piece = listPieces[Math.floor(Math.random() * listPieces.length)];
     if (invisibility === true) {
       piece = piece.map(line => {
         return line.map(value => {
-          if (value !== '.') {
-            return '10';
+          if (value !== ".") {
+            return "10";
           } else {
-            return value
+            return value;
           }
-        })
-      })
+        });
+      });
     }
-    return piece
+    return piece;
   }
 }
 
-module.exports = Piece;
+module.exports = { Piece, listPieces };
