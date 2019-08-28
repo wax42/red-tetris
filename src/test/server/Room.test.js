@@ -34,7 +34,13 @@ const playerName = "player1";
 const clientSocket = {
   id: "123",
   on: jest.fn(),
-  join: jest.fn()
+  join: jest.fn(),
+  emit: jest.fn(),
+  to: () => {
+    return {
+      emit: jest.fn()
+    };
+  }
 };
 
 describe("SERVER/ROOM.JS", () => {
@@ -54,7 +60,8 @@ describe("SERVER/ROOM.JS", () => {
           socket: {
             id: "123",
             on: jest.fn(),
-            join: jest.fn()
+            join: jest.fn(),
+            emit: jest.fn()
           },
           grid: _.cloneDeep(gridEmpty),
           lose: false
@@ -68,6 +75,10 @@ describe("SERVER/ROOM.JS", () => {
   });
 
   it("should create a instance of Game", () => {
+    const optionsGames = {
+      invisibilityMode: false,
+      spectrumMode: true
+    };
     const players = [
       {
         score: 0,
@@ -100,12 +111,16 @@ describe("SERVER/ROOM.JS", () => {
     ];
     const room = new Room(name, playerName, clientSocket);
     room.players = _.cloneDeep(players);
-    room.newGame();
+    room.newGame(optionsGames);
     expect(room.game.players.length).toEqual(2);
     expect(room.game.players).toEqual(players);
   });
 
   it("should delete a player to players room", () => {
+    const optionsGames = {
+      invisibilityMode: false,
+      spectrumMode: true
+    };
     const players = [
       {
         score: 0,
@@ -118,7 +133,8 @@ describe("SERVER/ROOM.JS", () => {
           on: jest.fn(),
           join: jest.fn(),
           leave: jest.fn(),
-          emit: jest.fn()
+          emit: jest.fn(),
+          removeAllListeners: jest.fn()
         },
         grid: _.cloneDeep(gridEmpty),
         lose: false
@@ -134,7 +150,8 @@ describe("SERVER/ROOM.JS", () => {
           on: jest.fn(),
           join: jest.fn(),
           leave: jest.fn(),
-          emit: jest.fn()
+          emit: jest.fn(),
+          removeAllListeners: jest.fn()
         },
         grid: _.cloneDeep(gridEmpty),
         lose: true
@@ -142,7 +159,7 @@ describe("SERVER/ROOM.JS", () => {
     ];
     const room1 = new Room(name, playerName, clientSocket);
     room1.players = _.cloneDeep(players);
-    room1.game = new Game([...players]);
+    room1.game = new Game([...players], optionsGames);
 
     expect(room1.players.length).toEqual(2);
     room1.deletePlayer(players[0].socket);

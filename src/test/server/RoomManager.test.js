@@ -10,7 +10,12 @@ describe("SERVER/ROOMMANAGER.JS", () => {
     on: jest.fn(),
     join: jest.fn(),
     leave: jest.fn(),
-    emit: jest.fn()
+    emit: jest.fn(),
+    to: () => {
+      return {
+        emit: jest.fn()
+      };
+    }
   };
   const io = {
     emit: () => {}
@@ -154,7 +159,7 @@ describe("SERVER/ROOMMANAGER.JS", () => {
         deletePlayer: deletePlayer
       }
     };
-    roomsManager.deletePlayer(clientSocket);
+    roomsManager.deletePlayer(clientSocket, io);
     expect(roomsManager.listPlayersName).toEqual(["player2"]);
   });
 
@@ -171,7 +176,7 @@ describe("SERVER/ROOMMANAGER.JS", () => {
         deletePlayer: deletePlayer
       }
     };
-    roomsManager.deletePlayer(clientSocket);
+    roomsManager.deletePlayer(clientSocket, io);
     expect(roomsManager.listPlayersName).toEqual(["player2"]);
   });
 

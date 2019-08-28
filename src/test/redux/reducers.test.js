@@ -13,8 +13,9 @@ import {
   actionListRoomPlayer,
   actionCreateRoom,
   actionJoinRoom,
-  actionCleanRoomName
-} from "../../client/actions/actions";
+  actionCleanRoomName,
+  actionError
+} from "../../client/actions/actionsRedux";
 
 import reducers from "../../client/reducers/reducers";
 
@@ -26,7 +27,10 @@ describe("REDUCERS.JS", () => {
     listRooms: [],
     listPlayers: [],
     timeId: null,
-    nextPieceEvent: false
+    nextPieceEvent: false,
+    error: null,
+    playerName: null,
+    roomName: null
   };
   it("should return the new state if action IS_SPECTATOR", () => {
     const newState = {
@@ -93,17 +97,34 @@ describe("REDUCERS.JS", () => {
       ...state,
       admin: true
     };
-    expect(reducers(state, actionIsNewAdmin())).toEqual(newState);
+    expect(reducers(state, actionIsNewAdmin(true))).toEqual(newState);
   });
 
   it("should return the new state if action CLEAN_ROOM_NAME", () => {
-    const newState = { ...state, roomName: undefined };
+    const newState = { ...state };
     expect(reducers(state, actionCleanRoomName())).toEqual(newState);
   });
 
-  it("shoud return the state unmodified if action.eventSocket is defined", () => {
+  it("should return the state unmodified if action.eventSocket is defined", () => {
     const room = "room";
     const player = "player1";
     expect(reducers(state, actionJoinRoom(room, player))).toEqual(state);
+  });
+
+  it("should return the new state with the correct error if action is ERROR_REDUX", () => {
+    const errorMsg = "test error";
+    const newState = { ...state, error: errorMsg };
+    expect(reducers(state, actionError(errorMsg))).toEqual(newState);
+  });
+
+  it("should return the default state is action is not catch", () => {
+    expect(reducers(state, { type: "test" })).toEqual(state);
+  });
+
+  it("should set the socket state if socket is null", () => {
+    const newState = { ...state };
+    newState.socket = null;
+    reducers(newState, { type: "test" });
+    expect(newState.socket).not.toEqual(null);
   });
 });

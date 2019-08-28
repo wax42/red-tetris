@@ -2,9 +2,7 @@ const eventSocket = require("../common/eventSocket");
 const RoomsManager = require("./RoomsManager");
 const ERROR = require("../common/error");
 
-
-
-const handleClient = client => {
+export const handleClient = client => {
   console.log(eventSocket.CONNECT, client.id);
   client.spectator = false;
 
@@ -28,8 +26,13 @@ const handleClient = client => {
 
   client.on(eventSocket.JOIN_ROOM, (roomName, playerName, clientCallback) => {
     if (
-      roomsManager.joinRoom(roomName, playerName, client, clientCallback, io) ===
-      false
+      roomsManager.joinRoom(
+        roomName,
+        playerName,
+        client,
+        clientCallback,
+        io
+      ) === false
     ) {
       console.error(ERROR.DUPLICATE_PLAYER_IN_ROOM + roomName);
     }
@@ -41,7 +44,8 @@ const handleClient = client => {
       roomsManager.deletePlayer(client, io);
       client.playerName = undefined;
       if (
-        client.spectator === false && roomsManager.rooms[roomName] !== undefined &&
+        client.spectator === false &&
+        roomsManager.rooms[roomName] !== undefined &&
         roomsManager.rooms[roomName].game !== null
       ) {
         let winner = roomsManager.rooms[roomName].game.checkWhoIsWinner();
