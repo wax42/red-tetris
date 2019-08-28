@@ -6,7 +6,7 @@ import { Button, TextField, Snackbar } from "@material-ui/core";
 import { AutoComplete } from "./AutoComplete";
 import ERROR from "../../../common/error";
 
-export const buttonCreateRoom = (action, setStateError, roomName, playerName) => {
+export const buttonCreateRoom = (action, setStateError, roomName, playerName, listPlayers) => {
   if (roomName.length < 3 || roomName.length > 12) {
     setStateError(ERROR.ROOMNAME_INVALID_LENGTH);
   } else if (playerName.length < 3 || playerName.length > 12) {
@@ -15,6 +15,8 @@ export const buttonCreateRoom = (action, setStateError, roomName, playerName) =>
     setStateError(ERROR.ROOMNAME_INVALID);
   } else if (/^[A-z0-9]+$/.test(playerName) === false) {
     setStateError(ERROR.PLAYERNAME_INVALID);
+  } else if (listPlayers.includes(playerName) === true) {
+    setStateError(ERROR.PLAYERNAME_INEXISTANT);
   } else {
     window.location.hash = `#${roomName}[${playerName}]`;
     action(roomName, playerName);
@@ -89,7 +91,7 @@ export const HomeCpt = ({ listPlayers, listRooms, error = "", actionCreateRoom }
             color="secondary"
             size="large"
             variant="outlined"
-            onClick={() => buttonCreateRoom(actionCreateRoom, setStateError, roomName, playerName)}
+            onClick={() => buttonCreateRoom(actionCreateRoom, setStateError, roomName, playerName, listPlayers)}
           >
             Start
           </Button>

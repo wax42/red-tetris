@@ -33,7 +33,6 @@ class RoomsManager {
     if (this.listRoomsName.includes(roomName) === false || this.listPlayersName.includes(playerName) === true) {
       clientCallback(ERROR.DUPLICATE_PLAYER_IN_ROOM + roomName, {
         spectator: false,
-        admin: false,
         error: true
       });
       return false;
@@ -48,14 +47,12 @@ class RoomsManager {
     if (this.rooms[roomName].game !== null) {
       clientCallback("Success join room in spectator mode: " + roomName, {
         spectator: true,
-        admin: false,
         error: false
       });
       console.log("Success join room in spectator mode:  " + roomName)
     } else {
       clientCallback("Success join room: " + roomName, {
         spectator: false,
-        admin: false,
         error: false
       });
       console.log("Success join room:  " + roomName)

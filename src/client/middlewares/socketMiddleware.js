@@ -32,18 +32,23 @@ const socketMiddleware = () => {
     switch (action.type) {
       case CREATE_ROOM:
         action.eventSocket = undefined;
+        let event = eventSocket.CREATE_ROOM;
+        if (state.listRooms.includes(action.room) === true) {
+          action.type = JOIN_ROOM;
+          event = eventSocket.JOIN_ROOM;
+        }
         state.socket.emit(
-          eventSocket.CREATE_ROOM,
+          event,
           action.room,
           action.player,
           (msg, data) => {
             if (data.error === true) store.dispatch(actionError(msg));
-            if (data.admin === false) store.dispatch(actionIsNewAdmin(false));
             if (data.spectator === true) store.dispatch(actionIsSpectator());
           }
         );
         state.socket.on(eventSocket.IS_NEW_ADMIN, () => store.dispatch(actionIsNewAdmin()));
-        break;
+        return next(action);
+
       case JOIN_ROOM:
         action.eventSocket = undefined;
         state.socket.emit(
@@ -56,7 +61,8 @@ const socketMiddleware = () => {
           }
         );
         state.socket.on(eventSocket.IS_NEW_ADMIN, () => store.dispatch(actionIsNewAdmin()));
-        break;
+        return next(action);
+
       default:
         break;
     }
