@@ -58,7 +58,6 @@ const gridSpectrum = [
 
 describe("SERVER/PLAYER.JS - ", () => {
   const name = "player1";
-  //   const room = "room";
   const spectrum = {
     playerName: name,
     score: 0,
@@ -68,60 +67,54 @@ describe("SERVER/PLAYER.JS - ", () => {
   const mock = jest.fn();
   mock.mockReturnValue(spectrum);
 
-  const on = (e, cb) => {
-    mock();
-  };
 
-  const players = ["player1", "player2"];
+
+  const on = (e, test) => {};
 
   const optionsGames = {
     invisibilityMode: false,
-    spectrumMode: false
+    spectrumMode: true
   };
 
+  const clientSocket = {
+    id: "123",
+    on,
+    join: jest.fn(),
+    leave: jest.fn(),
+    emit: jest.fn(),
+    to: () => {
+      return {
+        emit: jest.fn()
+      };
+    }
+  };
+  const room = new Room("room", name, clientSocket);
+  room.newGame(optionsGames);
+
+
   it("should generate the spectrum", () => {
-    const clientSocket = {
-      id: "123",
-      on,
-      join: jest.fn(),
-      leave: jest.fn(),
-      emit: jest.fn(),
-      to: () => {
-        return {
-          emit: jest.fn()
-        };
-      }
-    };
-    const room = new Room("room", name, clientSocket);
-    room.newGame(players, optionsGames);
     const player = new Player(name, room, clientSocket);
-    player.grid = _.cloneDeep(gridInit);
     const spectrum = {
       playerName: name,
       score: 0,
       lose: false,
-      grid: _.cloneDeep(gridSpectrum)
+      grid: _.cloneDeep(gridSpectrum),
+      nb_win: 0,
+      spectator: true
     };
-    expect(player.generateSpectrum(gridInit)).toEqual(spectrum);
+    expect(spectrum).toEqual(player.generateSpectrum(gridInit));
   });
 
-  /* it("should create listener", () => {
-    const cb = jest.fn();
-    const on = (eventsocket, callbackClient) => {
-      //   console.log("YOOOO");
-      //   console.log(callbackClient);
-      cb();
-    };
-    const clientSocket = {
-      id: "123",
-      on,
-      join: jest.fn(),
-      leave: jest.fn(),
-      emit: jest.fn()
-    };
-    const room = new Room("room", name, clientSocket);
-    const player = new Player(name, room, clientSocket);
-    player.room = {};
-    expect(cb).toHaveBeenCalled();
-  }); */
+
+  it("should creates players", () => {
+    room.addPlayer("player2", clientSocket);
+
+    room.game = null;
+    room.addPlayer("player2", clientSocket);
+
+
+    expect(true).toEqual(true);
+    // expect(player.generateSpectrum).toHaveBeenCalled();
+  });
+
 });

@@ -1,6 +1,10 @@
 const eventSocket = require("../common/eventSocket");
-const { Piece } = require("./Piece");
-const { GRID } = require("../common/common");
+const {
+  Piece
+} = require("./Piece");
+const {
+  GRID
+} = require("../common/common");
 
 class Player {
   constructor(name, room, clientSocket) {
@@ -85,9 +89,7 @@ class Player {
       this.socket.spectator = false;
       this.score = 0;
       this.room.newGame(optionGames);
-
       let listPlayerName = this.room.game.players.map(value => value.name);
-
       this.lose = false;
       for (let i = 0; i < this.room.players.length; i++) {
         this.room.players[i].lose = false;
@@ -107,9 +109,9 @@ class Player {
 
     this.socket.on(eventSocket.NEXT_PIECE, grid => {
       let piece =
-        this.room.game !== null
-          ? new Piece(this.room.game.optionsGames.invisibility)
-          : new Piece(true);
+        this.room.game !== null ?
+        new Piece(this.room.game.optionsGames.invisibility) :
+        new Piece(true);
       this.socket.emit(eventSocket.NEXT_PIECE, piece.grid);
       this.socket
         .to(this.roomName)
@@ -122,7 +124,7 @@ class Player {
         this.socket.to(this.roomName).emit(eventSocket.LINE_BREAK, nbrLine - 1);
     });
 
-    this.socket.on(eventSocket.LOSE, cb => {
+    this.socket.on(eventSocket.LOSE, () => {
       this.lose = true;
       let winner = this.room.game.checkWhoIsWinner();
       for (let i in this.room.game.players)
