@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createRef } from "react";
+import React, { useState } from "react";
 import { FaHome, FaIdBadge } from "react-icons/fa";
 import { connect } from "react-redux";
 import { actionCreateRoom } from "../../actions/actionsRedux";
@@ -6,13 +6,7 @@ import { Button, TextField, Snackbar } from "@material-ui/core";
 import { AutoComplete } from "./AutoComplete";
 import ERROR from "../../../common/error";
 
-export const buttonCreateRoom = (
-  action,
-  setStateError,
-  roomName,
-  playerName
-) => {
-  console.log(roomName, playerName, "CReatre room");
+export const buttonCreateRoom = (action, setStateError, roomName, playerName) => {
   if (roomName.length < 3 || roomName.length > 12) {
     setStateError(ERROR.ROOMNAME_INVALID_LENGTH);
   } else if (playerName.length < 3 || playerName.length > 12) {
@@ -33,17 +27,10 @@ const mapStateToProps = _state => {
   return { listPlayers, listRooms };
 };
 
-export const HomeCpt = ({
-  listPlayers,
-  listRooms,
-  error = "",
-  actionCreateRoom
-}) => {
+export const HomeCpt = ({ listPlayers, listRooms, error = "", actionCreateRoom }) => {
   const [stateError, setStateError] = useState("");
   const [playerName, setPlayerName] = useState("");
   const [roomName, setRoomName] = useState("");
-
-  console.log(stateError);
 
   let Error = (
     <Snackbar
@@ -51,7 +38,6 @@ export const HomeCpt = ({
       anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       key="error-root"
       open={error !== ""}
-      // onClose={() => setStateError(null)}
       ContentProps={{
         "aria-describedby": "message-id"
       }}
@@ -59,14 +45,12 @@ export const HomeCpt = ({
     />
   );
   if (stateError !== "") {
-    console.log("REntre ici");
     Error = (
       <Snackbar
         className="snackbar-error"
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         key="error-root"
         open={stateError !== ""}
-        // onClose={() => setStateError(null)}
         ContentProps={{
           "aria-describedby": "message-id"
         }}
@@ -74,7 +58,6 @@ export const HomeCpt = ({
       />
     );
   }
-
   return (
     <div>
       <div className="home-title">Red Tetris</div>
@@ -85,11 +68,7 @@ export const HomeCpt = ({
               <FaIdBadge className="home-icon" />
               <div>Room name</div>
             </div>
-            <AutoComplete
-              listRooms={listRooms}
-              roomName={roomName}
-              setRoomName={setRoomName}
-            />
+            <AutoComplete listRooms={listRooms} roomName={roomName} setRoomName={setRoomName} />
           </div>
           <div className="home-field">
             <div className="home-field-title">
@@ -100,7 +79,6 @@ export const HomeCpt = ({
               color="primary"
               label="Player"
               className={"homeTextField"}
-              // value={playerName}
               onChange={e => setPlayerName(e.target.value)}
               margin="normal"
               variant="outlined"
@@ -111,25 +89,13 @@ export const HomeCpt = ({
             color="secondary"
             size="large"
             variant="outlined"
-            onClick={() =>
-              buttonCreateRoom(
-                actionCreateRoom,
-                setStateError,
-                roomName,
-                playerName
-              )
-            }
+            onClick={() => buttonCreateRoom(actionCreateRoom, setStateError, roomName, playerName)}
           >
             Start
           </Button>
         </form>
       </div>
       {Error}
-      {/* <div className="error-container">
-        {error}
-        {stateError}
-      </div> */}
-
       <div className="bird-container">
         <div className="bird">
           <div className="bird-beak2" />

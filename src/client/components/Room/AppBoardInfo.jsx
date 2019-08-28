@@ -49,7 +49,7 @@ export const Play = ({ state, admin }) => {
   const [spectrumMode, setSpectrumMode] = useState(false);
 
   const classes = useStyles();
-  if (admin == false) {
+  if (admin === false) {
     return null;
   }
   return (
@@ -97,13 +97,7 @@ export const Play = ({ state, admin }) => {
           label="Shake mode"
         />
         <FormControlLabel
-          control={
-            <Checkbox
-              checked={spectrumMode}
-              onChange={() => setSpectrumMode(!spectrumMode)}
-              value={spectrumMode}
-            />
-          }
+          control={<Checkbox checked={spectrumMode} onChange={() => setSpectrumMode(!spectrumMode)} value={spectrumMode} />}
           label="Spectrum mode"
         />
       </div>
@@ -127,7 +121,6 @@ export const Play = ({ state, admin }) => {
 };
 
 const StyleSpectator = ({ spectator }) => {
-  console.log(spectator);
   if (spectator === true) {
     return <FaEye />;
   }
@@ -160,9 +153,6 @@ const ScoreTable = ({ state, spectator }) => {
   if (sort !== ["name"]) {
     listScores = _.reverse(listScores);
   }
-  console.log("appboard", JSON.stringify(listScores));
-  console.log("spectre", JSON.stringify(state.listSpectrums));
-
   return (
     <Table>
       <TableHead>
@@ -201,10 +191,8 @@ export const Info = ({ state, admin }) => {
   const [win, setWin] = useState(null);
 
   useEffect(() => {
-    console.log(state.winner);
     if (state.winner !== null) {
       setWin(<div className="title-winner">Winner is {state.winner}</div>);
-      console.log("Set win");
     } else {
       setWin(null);
     }

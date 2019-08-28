@@ -7,19 +7,20 @@ const Spectrum = ({ listSpectrums }) => {
   let listSpectrum = [];
   if (_.isEmpty(listSpectrum) === false) return null;
   for (let key in listSpectrums) {
+    let classLose = "";
+    if (listSpectrums[key]["lose"] === true) {
+      classLose = "spectrum-lose";
+    }
     listSpectrum.push(
       <div key={key} style={{ padding: "30px" }}>
-        <div className="spectrum-info">
+        <div className={`spectrum-info ${classLose}`}>
           <div>{key}</div>
 
           <div>
             <FaTrophy /> {listSpectrums[key]["score"]}
           </div>
         </div>
-        <GameGrid
-          class="spectrum-grid"
-          grid={_.slice(listSpectrums[key]["grid"], 4)}
-        />
+        <GameGrid class="spectrum-grid" grid={_.slice(listSpectrums[key]["grid"], 4)} />
       </div>
     );
   }

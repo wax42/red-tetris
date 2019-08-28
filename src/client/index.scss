@@ -1,17 +1,11 @@
 @import url("https://fonts.googleapis.com/css?family=Faster+One&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Anton&display=swap");
 
-/* Just to debug */
-
-h1 {
-  color: #833ab4;
-}
 
 $primary: #f9f6e2;
 $primary-light: #f9f9f9;
 $primary-dark: #c6c3b0;
 
-// $secondary: #f23430;
 $secondary: #ff6d5b;
 $secondary-light: #ff9f88;
 $secondary-dark: #c63b31;
@@ -19,12 +13,8 @@ $secondary-dark: #c63b31;
 html,
 body,
 #root {
-  // height: 100%;
   padding: 0;
   background-color: $primary;
-
-  /* background-image: url("./assets/redtetris-background.png"); */
-  /* background: linear-gradient(to right bottom, #405de6, #fcaf45); */
 }
 
 @media only screen and (max-width: 900px) {
@@ -54,13 +44,6 @@ hr {
   height: 100%;
 }
 
-/* .app-board {
-  //position: fixed;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-} */
-
 .app-board-left {
   display: flex;
   flex-direction: column;
@@ -72,10 +55,12 @@ hr {
   flex-direction: row;
   justify-content: center;
   min-width: 400px;
+
   .leave-button {
     font-size: 3em;
   }
 }
+
 .title {
   white-space: nowrap;
   user-select: none;
@@ -90,22 +75,24 @@ hr {
 .info-container {
   min-width: 200px;
   border: 5px inset $secondary;
-  // padding: 30px 60px 0px 60px;
   padding: 0px 60px;
   border-radius: 10px;
   background-color: $primary-light;
   display: flex;
   justify-content: space-between;
   flex-direction: column;
+
   .info {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     padding-top: 30px;
+
     .btn-play {
       margin-top: 30px;
     }
   }
+
   .title-winner {
     white-space: nowrap;
     user-select: none;
@@ -119,14 +106,11 @@ hr {
 }
 
 .spectrum {
-  /* background-color: rgb(255, 255, 255); */
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  /* font-size: 30px; */
   width: 100%;
-  // height: 100%;
-  //margin-top: 20px;
+
   .spectrum-info {
     padding: 10px 0;
     flex-direction: column;
@@ -143,20 +127,21 @@ hr {
   }
 }
 
-/* .spectrum > .game-grid {
-  box-shadow: none;
-  padding: 20px;
-} */
+.spectrum-lose {
+  div {
+    color: $secondary-dark !important;
+  }
+}
 
 .spectrum-grid {
   display: flex;
   flex-direction: column;
-  //box-shadow: 10px 10px 20px $secondary, 0 1px 4px rgba(0, 0, 0, 0.89);
 
   .line {
     display: flex;
     flex-direction: row;
     position: relative;
+
     .box {
       width: 1vw;
       height: 1vw;
@@ -169,7 +154,6 @@ hr {
     }
 
     .color-form1 {
-      /* border: 3px solid #020002; */
       background-color: rgb(233, 89, 89);
     }
 
@@ -215,8 +199,6 @@ hr {
   display: flex;
   flex-direction: row;
   padding-top: 70px;
-
-  /* background-color: black; */
 }
 
 .game-grid {
@@ -228,20 +210,19 @@ hr {
     display: flex;
     flex-direction: row;
     position: relative;
+
     .box {
       width: 30px;
       height: 30px;
-      /* background-color: aquamarine; */
       background-color: #fff;
-      /* border: 2px solid #fcaf45; */
       box-shadow: 0 1px 6px rgba(0, 0, 0, 0.904), 0 1px 4px rgba(0, 0, 0, 0.89);
     }
+
     .color-form0 {
       background-color: rgb(46, 45, 45);
     }
 
     .color-form1 {
-      /* border: 3px solid #020002; */
       background-color: rgb(233, 89, 89);
     }
 
@@ -284,6 +265,7 @@ hr {
 }
 
 @keyframes shake {
+
   10%,
   90% {
     transform: translate3d(-50px, 0px, 0);
@@ -312,7 +294,7 @@ hr {
   flex-direction: column;
 }
 
-.game-pieces > * {
+.game-pieces>* {
   margin-bottom: 10px;
 }
 
@@ -407,12 +389,11 @@ $boxes: 100;
   @keyframes anim-#{$i} {
     $a: 1px;
     $b: 1px;
+
     0% {
-      // top: -50%;
       background: white;
       width: 30px;
       height: 30px;
-      // left: 50%;
     }
 
     15% {
@@ -444,9 +425,7 @@ $boxes: 100;
       animation-duration: 3s;
       animation-name: anim-#{$i};
       z-index: 10;
-      // animation-iteration-count: ease;
       animation-direction: normal;
-      //animation-timing-function: ease-in;
       background: hsla(10 * $i, 100%, 50%, 1);
       animation-fill-mode: forwards;
       color: #fff;
@@ -454,7 +433,7 @@ $boxes: 100;
   }
 }
 
-// COUNTDOWN START
+/* COUNTDOWN START */
 
 .countdown {
   top: 50%;
@@ -467,6 +446,7 @@ $boxes: 100;
 }
 
 @keyframes shadow {
+
   0%,
   100% {
     transform: scale(0.5);
@@ -537,19 +517,21 @@ $boxes: 100;
   z-index: 100;
   width: 100%;
   transform: translate(-50%, -50%);
+
   span {
     font-family: sans-serif;
     text-transform: uppercase;
     display: block;
   }
+
   .text1 {
     font-size: 60px;
     font-weight: 700;
     letter-spacing: 8px;
-    //position: relative;
     margin-bottom: 40px;
     animation: winner-looser-text1 3s 1;
   }
+
   .text2 {
     font-size: 30px;
     font-weight: 700;
@@ -561,10 +543,12 @@ $boxes: 100;
   0% {
     margin-bottom: -5px;
   }
+
   30% {
     letter-spacing: 30px;
     margin-bottom: -5px;
   }
+
   85% {
     letter-spacing: 8px;
     margin-bottom: -5px;
@@ -575,9 +559,11 @@ $boxes: 100;
   0% {
     opacity: 0;
   }
+
   85% {
     opacity: 0.3;
   }
+
   100% {
     opacity: 1;
   }
@@ -649,6 +635,7 @@ $boxes: 100;
   width: 150px;
   border-bottom: 1px solid black;
 }
+
 .bird-beak2 {
   margin-left: -120px;
   border-radius: 0% 0% 0% 80%;
@@ -666,6 +653,7 @@ $boxes: 100;
   height: 200px;
   width: 150px;
 }
+
 .bird-eye {
   margin-top: -165px;
   margin-left: 55px;
@@ -674,6 +662,7 @@ $boxes: 100;
   height: 25px;
   border-radius: 50%;
 }
+
 .bird-pupil {
   margin-top: -17px;
   margin-left: 55px;
@@ -691,7 +680,6 @@ $boxes: 100;
   height: 150px;
   background-color: $secondary-light;
   border-radius: 38% 62% 6% 94% / 26% 75% 25% 74%;
-  /*   transform: rotate(5deg); */
   transform-origin: top left;
   animation: flap 1s;
   animation-iteration-count: infinite;
@@ -719,6 +707,7 @@ $boxes: 100;
   from {
     transform: rotate(-10deg);
   }
+
   to {
     transform: rotate(12deg);
   }
@@ -728,6 +717,7 @@ $boxes: 100;
   from {
     transform: rotate(-20deg) translateY(-30px);
   }
+
   to {
     transform: rotate(0deg) translateY(30px);
   }
@@ -737,6 +727,7 @@ $boxes: 100;
   0% {
     transform: translateX(200vw);
   }
+
   100% {
     transform: translateX(-20vw);
   }

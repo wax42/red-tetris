@@ -10,6 +10,7 @@ export const GameGrid = props => {
   if (!props.endOfGame && props.shakeMode) {
     gameGridClass += " shake-mode";
   }
+
   return (
     <div className={gameGridClass}>
       {grid.map((line, index) => {
@@ -44,14 +45,7 @@ export const GamePieces = props => {
   return (
     <div className="game-pieces">
       {pieces.map((piece, index) => {
-        return (
-          <GameGrid
-            class="game-grid"
-            key={index}
-            grid={piece}
-            brokenLines={props.brokenLines}
-          />
-        );
+        return <GameGrid class="game-grid" key={index} grid={piece} brokenLines={props.brokenLines} />;
       })}
     </div>
   );

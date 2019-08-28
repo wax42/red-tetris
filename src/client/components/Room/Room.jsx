@@ -21,12 +21,7 @@ import {
   WINNER_IS,
   CLEAR_INTERVAL_KEY_EVENT
 } from "../../actions/actionsTypes";
-import {
-  launchGame,
-  startGame,
-  cleanListennerEndGame,
-  winnerIs
-} from "./gameManager";
+import { launchGame, startGame, cleanListennerEndGame, winnerIs } from "./gameManager";
 
 import {
   rotatePiece,
@@ -55,8 +50,6 @@ import {
 import ERROR from "../../../common/error";
 
 import { actionIsSpectator, actionError } from "../../actions/actionsRedux";
-import Button from "@material-ui/core/Button";
-import _ from "lodash";
 
 export const mapStateToProps = state => {
   return {
@@ -68,14 +61,8 @@ export const mapStateToProps = state => {
 };
 
 export const reduceRoom = (state, action) => {
-  // if (state.socket.disconnected === true) {
-  //   console.error("Warning connection lost");
-
-  // }
-  console.log("Action", action);
   if (state.listPieces.length === 3 && action.type !== NEXT_PIECE) return state;
 
-  console.log("action", action);
   switch (action.type) {
     case START_GAME:
       return startGame(
@@ -169,21 +156,18 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
   countRef.current = state.winner;
 
   useEffect(() => {
-    socket.on(
-      eventSocket.START_GAME,
-      (listPlayers, listPieces, optionGames) => {
-        if (spectator === true) {
-          dispatch(actionIsSpectator());
-        }
-        listPlayers = listPlayers.filter(value => value !== playerName);
-        dispatchRoom(actionStartGame(listPlayers, listPieces, optionGames));
-        setTimeout(() => {
-          if (countRef.current !== playerName) {
-            launchGame(dispatchRoom, optionGames.gameInterval);
-          }
-        }, 4000);
+    socket.on(eventSocket.START_GAME, (listPlayers, listPieces, optionGames) => {
+      if (spectator === true) {
+        dispatch(actionIsSpectator());
       }
-    );
+      listPlayers = listPlayers.filter(value => value !== playerName);
+      dispatchRoom(actionStartGame(listPlayers, listPieces, optionGames));
+      setTimeout(() => {
+        if (countRef.current !== playerName) {
+          launchGame(dispatchRoom, optionGames.gameInterval);
+        }
+      }, 4000);
+    });
 
     socket.on(eventSocket.SEND_SPECTRUMS_SPECTATOR, listSpectrums => {
       dispatchRoom(actionSpectrumsSpectator(listSpectrums));
@@ -208,7 +192,6 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
     });
 
     socket.on(eventSocket.WINNER_IS, winner => {
-      console.log("winner Is fdp");
       dispatchRoom(actionWinnerIs(winner));
       dispatchRoom(actionClearIntervalKeyEvent());
     });
@@ -225,16 +208,7 @@ export const RoomNoConnect = ({ socket, roomName, playerName, spectator }) => {
       socket.removeListener(eventSocket.GAME_FINISH);
       socket.removeListener(eventSocket.SEND_SPECTRUMS_SPECTATOR);
     };
-  }, [
-    socket,
-    playerName,
-    spectator,
-    dispatch,
-    state.eventListner,
-    state.clearInterval,
-    state.endOfGame,
-    state.lose
-  ]);
+  }, [socket, playerName, spectator, dispatch, state.eventListner, state.clearInterval, state.endOfGame, state.lose]);
 
   const counter =
     state.counterAnimation === false ? null : (
