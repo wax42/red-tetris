@@ -5,6 +5,7 @@ import ReactDOM from "react-dom";
 import Home from "../client/components/Home/Home";
 import renderer from "react-test-renderer";
 import { shallow } from "enzyme";
+import ERROR from "../common/error";
 import Root, { routeHashError, Routing } from "../client/containers/Root";
 
 describe("ROOT.JSX - render Root component", () => {
@@ -28,9 +29,8 @@ describe.each([
   "#room[player[]",
   "#[player]"
 ])("ROOT.JSX - RouteHashError - Hash invalid", hash => {
-  const res = "Hash invalid";
-  it("should return 'Hash invalid' if is not well formated'", () => {
-    expect(routeHashError(hash, null, null)).toEqual(res);
+  it("should return ERROR.HASH_INVALID", () => {
+    expect(routeHashError(hash, null, null)).toEqual(ERROR.HASH_INVALID);
   });
 });
 
@@ -40,25 +40,25 @@ describe.each([
   "#room-1[player]",
   "#(roo[player]"
 ])("ROOT.JSX - RouteHashError - Room Name incorrect", hash => {
-  const res = "Room Name incorrect";
   it("sould return 'Room Name incorrect' if char is not alphanumeric and length < 3", () => {
-    expect(routeHashError(hash, null, null)).toEqual(res);
+    expect(routeHashError(hash, null, null)).toEqual(ERROR.ROOMNAME_INVALID);
   });
 });
 
 describe.each(["#room[p]", "#room[pl]", "#room[player+9]", "#room[-player]"])(
   "ROOT.JSX - RouteHashError - Player Name incorrect",
   hash => {
-    const res = "Player Name incorrect";
     it("sould return 'Player Name incorrect' if char is not alphanumeric and length < 3", () => {
-      expect(routeHashError(hash, null, null)).toEqual(res);
+      expect(routeHashError(hash, null, null)).toEqual(
+        ERROR.PLAYERNAME_INVALID
+      );
     });
   }
 );
 
 describe("ROOT.JSX - RouteHashError - Room doesn't exist", () => {
-  const res = "Room doesn't exist";
   const hash = "#room[player]";
+  const res = ERROR.ROOMNAME_INEXISTANT;
   it("sould return 'Room doesn't exist' ", () => {
     const state = {
       listRooms: []
@@ -80,7 +80,7 @@ describe("ROOT.JSX - RouteHashError - Room doesn't exist", () => {
 });
 
 describe("ROOT.JSX - RouteHashError - Player name already exists", () => {
-  const res = "Player name already exists";
+  const res = ERROR.PLAYERNAME_INEXISTANT;
   const hash = "#room[player]";
   it("sould return 'Player name already exists' ", () => {
     const state = {
@@ -101,7 +101,7 @@ describe("ROOT.JSX - RouteHashError - Player name already exists", () => {
 describe("ROOT.JSX - RouteHashError - Can't join if i am the creator", () => {
   it("should return an empty string", () => {
     const hash = "#room[player]";
-    const res = "";
+    const res = null;
     const state = {
       listRooms: ["room"],
       listPlayers: ["player1"],
@@ -117,35 +117,27 @@ describe("ROOT.JSX - RouteHashError - Can't join if i am the creator", () => {
       playerName: ""
     };
 
-    function actionJoinRoom(callback, room, player) {
-      callback(room, player);
-    }
-    const mock = jest.fn();
-    actionJoinRoom(mock, "room", "player");
-    expect(mock).toHaveBeenCalled();
-    // expect(mock).toHaveBeenCalledWith(mock, "room", "player");
+    const actionJoinRoom = jest.fn();
+
+    actionJoinRoom(actionJoinRoom, "room", "player");
+    expect(actionJoinRoom).toHaveBeenCalled();
   });
-  /*   it("it should called actionRoom", () => {
-    const hash = "#room[player]";
+  it("it should called actionJoinRoom", () => {
+    const hash = "#room[player1]";
     const state = {
       listRooms: ["room"],
-      listPlayers: ["player1"],
+      listPlayers: ["player"],
       playerName: "player"
     };
 
-    function actionJoinRoom(callback, room, player) {
-      if (player !== state.playerName) {
-        callback();
-      }
-    }
-    const mock = jest.fn();
-    actionJoinRoom(mock, "room", "player");
-    expect(mock).not.toHaveBeenCalled();
+    const actionJoinRoom = jest.fn();
+    routeHashError(hash, state, actionJoinRoom);
+    expect(actionJoinRoom).toHaveBeenCalled();
     // expect(mock).toHaveBeenCalled(undefined, "room", "player");
-  }); */
+  });
 });
 
-describe("ROOT.JSX - Routing component", () => {
+/* describe("ROOT.JSX - Routing component", () => {
   it("should render Home if loading === true", () => {
     const loading = true;
     const routingParams = {
@@ -153,8 +145,6 @@ describe("ROOT.JSX - Routing component", () => {
       actionJoinRoom: null,
       actionListRoomPlayer: null
     };
-    /*  const div = document.createElement("div");
-    ReactDOM.render(<Routing state={routingParams} />, div); */
-    //Routing(routingParams);
+    
   });
-});
+}); */

@@ -36,7 +36,7 @@ export const mapStateToProps = _state => {
   return { admin };
 };
 
-const leaveRoom = (state, dispatch) => {
+export const leaveRoom = (state, dispatch) => {
   dispatch(actionCleanRoomName());
   state.socket.emit(eventSocket.LEAVE_ROOM);
   window.location.hash = "";
@@ -97,7 +97,13 @@ export const Play = ({ state, admin }) => {
           label="Shake mode"
         />
         <FormControlLabel
-          control={<Checkbox checked={spectrumMode} onChange={() => setSpectrumMode(!spectrumMode)} value={spectrumMode} />}
+          control={
+            <Checkbox
+              checked={spectrumMode}
+              onChange={() => setSpectrumMode(!spectrumMode)}
+              value={spectrumMode}
+            />
+          }
           label="Spectrum mode"
         />
       </div>

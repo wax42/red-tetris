@@ -4,7 +4,8 @@ import AppBoardInfo, {
   Info,
   Play,
   mapStateToProps,
-  buttonPlay
+  buttonPlay,
+  leaveRoom
 } from "../../../client/components/Room/AppBoardInfo";
 import { shallow } from "enzyme";
 
@@ -127,5 +128,24 @@ describe("APPBOARDINFO.JSX", () => {
     buttonPlay(state, dispatchRoom);
     expect(dispatchRoom).toHaveBeenCalled();
     // expect(enzymeWrapper.find("Info")).toBe();
+  });
+
+  it("should dispatch action and reset the hash to empty", () => {
+    const dispatch = jest.fn();
+    const emit = jest.fn();
+    const window = {
+      location: {
+        hash: "room[player]"
+      }
+    };
+
+    const state = {
+      socket: {
+        emit
+      }
+    };
+    leaveRoom(state, dispatch);
+    expect(dispatch).toHaveBeenCalled();
+    expect(emit).toHaveBeenCalled();
   });
 });

@@ -7,7 +7,8 @@ import {
   initializeListSpectrums,
   startGame,
   nextPiece,
-  lineBreak
+  lineBreak,
+  winnerIs
 } from "../../client/components/Room/gameManager";
 import _ from "lodash";
 import eventSocket from "../../common/eventSocket";
@@ -161,49 +162,6 @@ describe("GAMEMANAGER.JS - initializeListSpectrums", () => {
     expect(initializeListSpectrums(state, listPlayers2)).toEqual(state);
   });
 
-  /*  it("should return the state with other player spectrum", () => {
-    const listPlayers = ["player2"];
-    const state = {
-      grid: _.cloneDeep(gridEmpty)
-    };
-    const newState = {
-      grid: _.cloneDeep(gridEmpty),
-      listSpectrums: {
-        player2: {
-          grid: [
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."]
-          ],
-          score: 0,
-          playerName: "player2"
-        }
-      }
-    };
-    expect(initializeListSpectrums(state, listPlayers)).toEqual(newState);
-  }); */
-
   /*   it("should return the state with other player spectrum", () => {
     const listPlayers = ["player2", "player3"];
     const state = {
@@ -278,7 +236,7 @@ describe("GAMEMANAGER.JS - initializeListSpectrums", () => {
   }); */
 });
 
-/* describe("GAMEMANAGER.JS - nextPiece", () => {
+describe("GAMEMANAGER.JS - nextPiece", () => {
   const emit = (a, b, callback) => {
     callback();
   };
@@ -365,19 +323,86 @@ describe("GAMEMANAGER.JS - lineBreak", () => {
     expect(mockCallback).toHaveBeenCalledWith(eventSocket.LINE_BREAK, 1);
     expect(newState.grid).toEqual(gridEmpty);
   });
-}); */
+});
 
-/* describe("GAMEMANAGER.JS - cleanListennerEndGame", () => {
+describe("GAMEMANAGER.JS - cleanListennerEndGame", () => {
   it("should clear event listeners and interval", () => {
     const mockCallbackRemoveEventListener = jest.fn();
+    const cleanInterval = 123;
+    const cleanTimeout = 123;
+
     const window = {
-      addEventListener: mockCallbackRemoveEventListener
+      removeEventListener: mockCallbackRemoveEventListener
     };
-    const state = {
-      clearInterval: 42
-    };
-    jest.useFakeTimers();
-    const newState = cleanListennerEndGame(state);
-    expect(newState.clearInterval).toEqual(-1);
+    // jest.useFakeTimers();
+    cleanListennerEndGame(() => {}, cleanInterval, cleanTimeout);
+    //expect(mockCallbackRemoveEventListener).toHaveBeenCalled();
   });
-}); */
+});
+
+describe("GAMEMANAGER.JS - winnerIs", () => {
+  it("should increment the nbr of win by 1 if player is the winner", () => {
+    const player = "player1";
+    const state = {
+      nb_win: 0,
+      playerName: "player1"
+    };
+    winnerIs(state, player);
+    expect(state.nb_win).toEqual(1);
+  });
+
+  it("should not increment the nbr of win by 1 if player is not the winner", () => {
+    const player = "player2";
+    const state = {
+      nb_win: 0,
+      playerName: "player1"
+    };
+    winnerIs(state, player);
+    expect(state.nb_win).toEqual(0);
+  });
+});
+
+describe("GAMEMANAGER.JS - launchGame", () => {
+  it("should increment the nbr of win by 1 if player is the winner", () => {
+    const dispatchRoom = jest.fn();
+    const gameInterval = 1000;
+    launchGame(dispatchRoom, gameInterval);
+    expect(dispatchRoom).toHaveBeenCalled();
+  });
+});
+
+describe("GAMEMANAGER.JS - handleKey", () => {
+  it("should dispatch the right action given the keyCode", () => {
+    const KEY_SPACE = 32;
+    const KEY_DOWN = 40;
+    const KEY_UP = 38;
+    const KEY_LEFT = 37;
+    const KEY_RIGHT = 39;
+    const KEY_S = 83;
+    const dispatchRoom = jest.fn();
+    const event = {
+      keyCode: 0,
+      preventDefault: jest.fn()
+    };
+    event.keyCode = KEY_SPACE;
+    handleKey(dispatchRoom)(event);
+    expect(dispatchRoom).toHaveBeenCalled();
+    event.keyCode = KEY_DOWN;
+    handleKey(dispatchRoom)(event);
+    expect(dispatchRoom).toHaveBeenCalled();
+    event.keyCode = KEY_UP;
+    handleKey(dispatchRoom)(event);
+    expect(dispatchRoom).toHaveBeenCalled();
+    event.keyCode = KEY_LEFT;
+    handleKey(dispatchRoom)(event);
+    expect(dispatchRoom).toHaveBeenCalled();
+    event.keyCode = KEY_RIGHT;
+    handleKey(dispatchRoom)(event);
+    expect(dispatchRoom).toHaveBeenCalled();
+    event.keyCode = KEY_S;
+    handleKey(dispatchRoom)(event);
+    expect(dispatchRoom).toHaveBeenCalled();
+    event.keyCode = 0;
+    handleKey(dispatchRoom)(event);
+  });
+});
