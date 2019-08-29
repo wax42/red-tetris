@@ -188,4 +188,43 @@ describe("APPBOARDINFO.JSX", () => {
                 leaveRoom(state, dispatch);
               })
 
-            });
+  it("should dispatch action and call lauchGame if the user click", () => {
+    const dispatchRoom = jest.fn();
+    const listPlayers = ["player1", "player2"];
+    const listPieces = [""];
+    const emit = (listPlayers, listPieces) => {
+      dispatchRoom();
+    };
+    const state = {
+      dispatchRoom: jest.fn(),
+      winner: "",
+      admin: false,
+      clearInterval: -1,
+      socket: {
+        emit
+      }
+    };
+    buttonPlay(state, dispatchRoom);
+    expect(dispatchRoom).toHaveBeenCalled();
+    // expect(enzymeWrapper.find("Info")).toBe();
+  });
+
+  it("should dispatch action and reset the hash to empty", () => {
+    const dispatch = jest.fn();
+    const emit = jest.fn();
+    const window = {
+      location: {
+        hash: "room[player]"
+      }
+    };
+
+    const state = {
+      socket: {
+        emit
+      }
+    };
+    leaveRoom(state, dispatch);
+    expect(dispatch).toHaveBeenCalled();
+    expect(emit).toHaveBeenCalled();
+  });
+});

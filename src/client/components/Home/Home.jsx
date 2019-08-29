@@ -6,7 +6,13 @@ import { Button, TextField, Snackbar } from "@material-ui/core";
 import { AutoComplete } from "./AutoComplete";
 import ERROR from "../../../common/error";
 
-export const buttonCreateRoom = (action, setStateError, roomName, playerName, listPlayers) => {
+export const buttonCreateRoom = (
+  action,
+  setStateError,
+  roomName,
+  playerName,
+  listPlayers
+) => {
   if (roomName.length < 3 || roomName.length > 12) {
     setStateError(ERROR.ROOMNAME_INVALID_LENGTH);
   } else if (playerName.length < 3 || playerName.length > 12) {
@@ -29,7 +35,12 @@ export const mapStateToProps = _state => {
   return { listPlayers, listRooms };
 };
 
-export const HomeCpt = ({ listPlayers, listRooms, error = "", actionCreateRoom }) => {
+export const HomeCpt = ({
+  listPlayers,
+  listRooms,
+  error = "",
+  actionCreateRoom
+}) => {
   const [stateError, setStateError] = useState("");
   const [playerName, setPlayerName] = useState("");
   const [roomName, setRoomName] = useState("");
@@ -70,7 +81,11 @@ export const HomeCpt = ({ listPlayers, listRooms, error = "", actionCreateRoom }
               <FaIdBadge className="home-icon" />
               <div>Room name</div>
             </div>
-            <AutoComplete listRooms={listRooms} roomName={roomName} setRoomName={setRoomName} />
+            <AutoComplete
+              listRooms={listRooms}
+              roomName={roomName}
+              setRoomName={setRoomName}
+            />
           </div>
           <div className="home-field">
             <div className="home-field-title">
@@ -91,7 +106,15 @@ export const HomeCpt = ({ listPlayers, listRooms, error = "", actionCreateRoom }
             color="secondary"
             size="large"
             variant="outlined"
-            onClick={() => buttonCreateRoom(actionCreateRoom, setStateError, roomName, playerName, listPlayers)}
+            onClick={() =>
+              buttonCreateRoom(
+                actionCreateRoom,
+                setStateError,
+                roomName,
+                playerName,
+                listPlayers
+              )
+            }
           >
             Start
           </Button>

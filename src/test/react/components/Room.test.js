@@ -19,9 +19,11 @@ import {
   SPECTRUMS_SPECTATOR,
   SEND_INTERVAL_KEY_EVENT,
   CLEAR_INTERVAL_KEY_EVENT,
-  WINNER_IS
+  WINNER_IS,
+  GAME_FINISH
 } from "../../../client/actions/actionsTypes";
 import _ from "lodash";
+import { addIndestructiblesLines } from "../../../client/components/Room/gridChange";
 
 const gridOnePieceWithShadow = [
   [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
@@ -129,7 +131,8 @@ describe("ROOM.JSX", () => {
       socket: "",
       roomName: "room",
       playerName: "player1",
-      spectator: false
+      spectator: false,
+      listPieces: []
     };
     const action = {
       type: "test"
@@ -147,7 +150,9 @@ describe("ROOM.JSX", () => {
         x: 0,
         y: 0,
         Piece: []
-      }
+      },
+      listPieces: [],
+      listSpectrums: {}
     };
     const action = {
       type: START_GAME,
@@ -177,7 +182,12 @@ describe("ROOM.JSX", () => {
           [".", "1", ".", "."],
           [".", "1", ".", "."]
         ]
-      ]
+      ],
+      optionGames: {
+        invisibilityMode: false,
+        spectrumMode: true,
+        shakeMode: false
+      }
     };
     const cb = jest.fn();
     const startGame = (state, listPlayers, listPieces) => {
@@ -566,11 +576,10 @@ describe("ROOM.JSX", () => {
     );
   });
 
-  it("should call addIndestructiblesLines function if action type === CLEAR_INTERVAL_KEY_EVENT", () => {
+  /* it("should call addIndestructiblesLines function if action type === CLEAR_INTERVAL_KEY_EVENT", () => {
     const state = _.cloneDeep(_state);
     const action = {
       type: CLEAR_INTERVAL_KEY_EVENT,
-      winner: "player2",
       listPlayers: ["player1", "player2"],
       listPieces: [
         [
@@ -594,37 +603,59 @@ describe("ROOM.JSX", () => {
       ]
     };
     const newState = reduceRoom(state, action);
-    expect(newState).toEqual({ ...state, clearInterval: -1 });
+    addIndestructiblesLines({ ...state }, 0);
+    expect(newState).toEqual({ ...state });
+  }); */
+
+  it("should return the new state with game set to false", () => {
+    const state = {
+      game: true,
+      listPieces: []
+    };
+    const action = {
+      type: GAME_FINISH
+    };
+    expect(reduceRoom(state, action)).toEqual({ ...state, game: false });
   });
 
-  it("should call addIndestructiblesLines function if action type === WINNER_IS", () => {
-    const state = _.cloneDeep(_state);
-    const action = {
-      type: WINNER_IS,
-      winner: "player2",
-      listPlayers: ["player1", "player2"],
-      listPieces: [
-        [
-          [".", "1", ".", "."],
-          [".", "1", ".", "."],
-          [".", "1", ".", "."],
-          [".", "1", ".", "."]
-        ],
-        [
-          [".", "1", ".", "."],
-          [".", "1", "1", "."],
-          [".", ".", "1", "."],
-          [".", ".", ".", "."]
-        ],
-        [
-          [".", ".", ".", "."],
-          [".", "1", "1", "."],
-          [".", "1", "1", "."],
-          [".", ".", ".", "."]
-        ]
-      ]
+  it("should return the new state if action type is CLEAR_INTERVAL_KEY_EVENT", () => {
+    const state = {
+      game: true,
+      listPieces: [],
+      clearInterval: 1234,
+      eventListner: () => {},
+      clearTimeout: "",
+      endOfGame: false
     };
-    const newState = reduceRoom(state, action);
-    expect(newState).toEqual({ ...state, winner: action.winner });
+    const action = {
+      type: CLEAR_INTERVAL_KEY_EVENT
+    };
+    expect(reduceRoom(state, action)).toEqual({
+      ...state,
+      clearInterval: -1,
+      game: false,
+      endOfGame: true
+    });
+  });
+
+  it("should return the new state if action type is SEND_INTERVAL_KEY_EVENT", () => {
+    const state = {
+      game: false,
+      listPieces: [],
+      clearTimeout: "",
+      endOfGame: false,
+      counterAnimation: true
+    };
+    const action = {
+      type: SEND_INTERVAL_KEY_EVENT,
+      clearInterval: 1234,
+      eventListener: () => {}
+    };
+    expect(reduceRoom(state, action)).toEqual({
+      ...state,
+      clearInterval: 1234,
+
+      counterAnimation: false
+    });
   });
 });

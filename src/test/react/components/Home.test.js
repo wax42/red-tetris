@@ -26,101 +26,84 @@ describe("HOME.JSX", () => {
     };
   });
 
-
-
-  it("should receive  listPlayers and listRooms", () => {
-    let _state = {
-      listPlayers: "a",
-      listRooms: "a",
-    };
-    let state = mapStateToProps(_state);
-    expect(_state).toEqual(state);
-  })
-
-  it("should set stateError  ERROR.PLAYERNAME_INEXISTANT  ", () => {
-    let roomName = "roda";
-    let playerName = "test";
-    let listPlayers = ["test"];
-    const action = jest.fn();
-    const setStateError = msg => {};
-
-    buttonCreateRoom(
-      action,
-      setStateError,
-      roomName, playerName, listPlayers
-    );
-  });
-
-
-  it("should set stateError   ERROR.PLAYER_INVALID", () => {
-    let roomName = "roda";
-    let playerName = "+_ser";
+  it("should set stateError to ERROR.ROOMNAME_INVALID_LENGTH if roomName < 3 or > 12", () => {
+    let roomName = "ab";
+    let playerName = "player1";
     let listPlayers = [];
-    const action = jest.fn();
-    const setStateError = msg => {};
 
-    buttonCreateRoom(
-      action,
-      setStateError,
-      roomName, playerName, listPlayers
-    );
+    const action = jest.fn();
+    const setStateError = jest.fn();
+    buttonCreateRoom(action, setStateError, roomName, playerName, listPlayers);
+    expect(setStateError).toHaveBeenCalledWith(ERROR.ROOMNAME_INVALID_LENGTH);
+    roomName = "qbcdefghijklmnop";
+    playerName = "player1";
+    buttonCreateRoom(action, setStateError, roomName, playerName, listPlayers);
+    expect(setStateError).toHaveBeenCalledWith(ERROR.ROOMNAME_INVALID_LENGTH);
   });
 
-  it("should set stateError   ERROR.ROOMNAME_INVALID", () => {
-    let roomName = "ro-_da";
-    let playerName = "ersda";
-    let listPlayers = [];
-    const action = jest.fn();
-    const setStateError = msg => {};
-
-    buttonCreateRoom(
-      action,
-      setStateError,
-      roomName, playerName, listPlayers
-    );
-  });
-
-
-  it("should set stateError ERROR.PLAYERNAME_INVALID_LENGTH", () => {
-    let roomName = "rooda";
-    let playerName = "er";
-    let listPlayers = [];
-    const action = jest.fn();
-    const setStateError = msg => {};
-
-    buttonCreateRoom(
-      action,
-      setStateError,
-      roomName, playerName, listPlayers
-    );
-  });
-
-
-  it("should set stateError ERROR.ROOMNAME_INVALID_LENGTH", () => {
-    let roomName = "roomasdasdsadsasda";
-    let playerName = "player";
-    let listPlayers = [];
-    const action = jest.fn();
-    const setStateError = msg => {};
-
-    buttonCreateRoom(
-      action,
-      setStateError,
-      roomName, playerName, listPlayers
-    );
-  });
-
-  it("should create room", () => {
+  it("should set stateError to ERROR.PLAYERNAME_INVALID_LENGTH if playerName < 3 or > 12", () => {
     let roomName = "room";
-    let playerName = "player";
+    let playerName = "ab";
     let listPlayers = [];
-    const action = jest.fn();
-    const setStateError = msg => {};
 
-    buttonCreateRoom(
-      action,
-      setStateError,
-      roomName, playerName, listPlayers
-    );
+    const action = jest.fn();
+    const setStateError = jest.fn();
+    buttonCreateRoom(action, setStateError, roomName, playerName, listPlayers);
+    expect(setStateError).toHaveBeenCalledWith(ERROR.PLAYERNAME_INVALID_LENGTH);
+  });
+
+  it("should set stateError to ERROR.ROOMNAME_INVALID if char are not alphanumerical", () => {
+    let roomName = "room()";
+    let playerName = "player1";
+    let listPlayers = [];
+
+    const action = jest.fn();
+    const setStateError = jest.fn();
+    buttonCreateRoom(action, setStateError, roomName, playerName, listPlayers);
+    expect(setStateError).toHaveBeenCalledWith(ERROR.ROOMNAME_INVALID);
+  });
+
+  it("should set stateError to ERROR.PLAYERNAME_INVALID if char are not alphanumerical", () => {
+    let roomName = "room";
+    let playerName = "player+";
+    let listPlayers = [];
+
+    const action = jest.fn();
+    const setStateError = jest.fn();
+    buttonCreateRoom(action, setStateError, roomName, playerName, listPlayers);
+    expect(setStateError).toHaveBeenCalledWith(ERROR.PLAYERNAME_INVALID);
+  });
+
+  it("should set stateError to ERROR.PLAYERNAME_INEXISTANT if player name is already use", () => {
+    let roomName = "room";
+    let playerName = "player1";
+    let listPlayers = ["player1"];
+
+    const action = jest.fn();
+    const setStateError = jest.fn();
+    buttonCreateRoom(action, setStateError, roomName, playerName, listPlayers);
+    expect(setStateError).toHaveBeenCalledWith(ERROR.PLAYERNAME_INEXISTANT);
+  });
+
+  it("should set the correct hash if roomName and playerName are well formated", () => {
+    let roomName = "room";
+    let playerName = "player1";
+    let listPlayers = [];
+
+    const action = jest.fn();
+    const setStateError = jest.fn();
+    buttonCreateRoom(action, setStateError, roomName, playerName, listPlayers);
+    expect(setStateError).not.toHaveBeenCalled();
+    expect(action).toHaveBeenCalled();
+  });
+
+  it("should return the listPlayers and listRooms of the state", () => {
+    const listPlayers = ["player1", "player2"];
+    const listRooms = ["room"];
+    const state = {
+      listPlayers: ["player1", "player2"],
+      listRooms: ["room"]
+    };
+    expect(mapStateToProps(state)).toEqual({ listPlayers, listRooms });
   });
 });

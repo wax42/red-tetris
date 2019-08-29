@@ -97,7 +97,13 @@ export const Play = ({ state, admin }) => {
           label="Shake mode"
         />
         <FormControlLabel
-          control={<Checkbox checked={spectrumMode} onChange={() => setSpectrumMode(!spectrumMode)} value={spectrumMode} />}
+          control={
+            <Checkbox
+              checked={spectrumMode}
+              onChange={() => setSpectrumMode(!spectrumMode)}
+              value={spectrumMode}
+            />
+          }
           label="Spectrum mode"
         />
       </div>
