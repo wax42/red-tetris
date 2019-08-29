@@ -12,9 +12,19 @@ import AppBoardInfo, {
 import { shallow } from "enzyme";
 
 describe("APPBOARDINFO.JSX", () => {
-  /* it("should render self and subcomponent ScoreTAble", () => {
+  it("should render self and subcomponent ScoreTAble", () => {
     const setup = () => {
-      const state = {};
+      const state = {
+        playerName: "test",
+        listSpectrums: {
+          test: {
+            playerName: "test",
+            score: 0,
+            nb_win: 0,
+            spectator: true
+          }
+        }
+      };
       const enzymeWrapper = shallow(
         <ScoreTable state={state} spectator="true" />
       );
@@ -24,7 +34,7 @@ describe("APPBOARDINFO.JSX", () => {
     };
     const { enzymeWrapper } = setup();
     expect(enzymeWrapper.find("ScoreTable")).toBeTruthy();
-  }); */
+  });
 
   it("should render self and subcomponent StyleSpectator", () => {
     const setup = () => {

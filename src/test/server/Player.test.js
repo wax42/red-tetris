@@ -1,5 +1,6 @@
 import Player from "../../server/Player";
 import Room from "../../server/Room";
+const eventSocket = require("../../common/eventSocket");
 import _ from "lodash";
 
 const gridInit = [
@@ -67,13 +68,18 @@ describe("SERVER/PLAYER.JS - ", () => {
   const mock = jest.fn();
   mock.mockReturnValue(spectrum);
 
-
-
-  const on = (e, test) => {};
+  const cb = (msg, data) => {};
 
   const optionsGames = {
     invisibilityMode: false,
     spectrumMode: true
+  };
+
+  const on = (e, cb) => {
+    if (e === eventSocket.START_GAME) cb(optionsGames);
+    if (e === eventSocket.NEXT_PIECE) cb(gridInit);
+    if (e === eventSocket.LINE_BREAK) cb(0);
+    if (e === eventSocket.LOSE) cb();
   };
 
   const clientSocket = {
@@ -91,7 +97,6 @@ describe("SERVER/PLAYER.JS - ", () => {
   const room = new Room("room", name, clientSocket);
   room.newGame(optionsGames);
 
-
   it("should generate the spectrum", () => {
     const player = new Player(name, room, clientSocket);
     const spectrum = {
@@ -100,11 +105,10 @@ describe("SERVER/PLAYER.JS - ", () => {
       lose: false,
       grid: _.cloneDeep(gridSpectrum),
       nb_win: 0,
-      spectator: true
+      spectator: false
     };
     expect(spectrum).toEqual(player.generateSpectrum(gridInit));
   });
-
 
   it("should creates players", () => {
     room.addPlayer("player2", clientSocket);
@@ -112,9 +116,7 @@ describe("SERVER/PLAYER.JS - ", () => {
     room.game = null;
     room.addPlayer("player2", clientSocket);
 
-
     expect(true).toEqual(true);
     // expect(player.generateSpectrum).toHaveBeenCalled();
   });
-
 });
