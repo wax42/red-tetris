@@ -56,9 +56,10 @@ export const Play = ({ state, admin }) => {
     <div className="info">
       <div>
         <Grid container spacing={2}>
-          <Grid item>Moon Mode</Grid>
+          <Grid item>Hard mode</Grid>
           <Grid item xs>
             <Slider
+              disabled={state.game}
               classes={{ root: classes.root }}
               value={gameInterval}
               onChange={(event, value) => {
@@ -72,7 +73,7 @@ export const Play = ({ state, admin }) => {
               marks={true}
             />
           </Grid>
-          <Grid item>Hard Mode</Grid>
+          <Grid item>Moon mode</Grid>
         </Grid>
         <FormControlLabel
           control={
