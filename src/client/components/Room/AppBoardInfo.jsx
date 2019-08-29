@@ -98,13 +98,7 @@ export const Play = ({ state, admin }) => {
           label="Shake mode"
         />
         <FormControlLabel
-          control={
-            <Checkbox
-              checked={spectrumMode}
-              onChange={() => setSpectrumMode(!spectrumMode)}
-              value={spectrumMode}
-            />
-          }
+          control={<Checkbox checked={spectrumMode} onChange={() => setSpectrumMode(!spectrumMode)} value={spectrumMode} />}
           label="Spectrum mode"
         />
       </div>
@@ -168,9 +162,6 @@ export const ScoreTable = ({ state, spectator }) => {
           <TableCell align="center" onClick={() => setSort(["score"])}>
             Score
           </TableCell>
-          <TableCell align="center" onClick={() => setSort(["nb_win"])}>
-            Number of Win
-          </TableCell>
           <TableCell align="center" onClick={() => setSort(["spectator"])}>
             Spectator
           </TableCell>
@@ -183,7 +174,6 @@ export const ScoreTable = ({ state, spectator }) => {
               {row.name}
             </TableCell>
             <TableCell align="center">{row.score}</TableCell>
-            <TableCell align="center">{row.nb_win}</TableCell>
             <TableCell align="center">
               <StyleSpectator spectator={row.spectator} />
             </TableCell>
