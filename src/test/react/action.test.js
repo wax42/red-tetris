@@ -6,7 +6,7 @@ import {
   IS_NEW_ADMIN,
   IS_SPECTATOR,
   CLEAN_ROOM_NAME,
-  ERROR
+  ERROR_REDUX
 } from "../../client/actions/actionsTypes";
 import {
   actionIsSpectator,
@@ -21,7 +21,7 @@ import {
 describe("ACTION.JS", () => {
   it("should return action type error", () => {
     const error = "test error";
-    const action = { type: ERROR, error };
+    const action = { type: ERROR_REDUX, error };
     expect(actionError("test error")).toEqual(action);
   });
 

@@ -4,9 +4,8 @@ import {
   buttonCreateRoom,
   mapStateToProps
 } from "../../../client/components/Home/Home";
-import {
-  shallow
-} from "enzyme";
+import { shallow } from "enzyme";
+import ERROR from "../../../common/error";
 
 describe("HOME.JSX", () => {
   it("should render self and subcomponent Home", () => {
@@ -17,7 +16,7 @@ describe("HOME.JSX", () => {
         error: ""
       };
 
-      const enzymeWrapper = shallow( < HomeCpt / > );
+      const enzymeWrapper = shallow(<HomeCpt />);
 
       return {
         props,
