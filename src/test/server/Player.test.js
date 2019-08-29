@@ -102,7 +102,7 @@ describe("SERVER/PLAYER.JS - ", () => {
     const spectrum = {
       playerName: name,
       score: 0,
-      lose: false,
+      lose: true,
       grid: _.cloneDeep(gridSpectrum),
       nb_win: 0,
       spectator: false
